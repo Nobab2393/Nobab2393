@@ -1,0 +1,437 @@
+{
+  "version": 2,
+  "skills": {
+    "add-captions": {
+      "source": "DojoCodingLabs/remotion-superpowers",
+      "commit": "970efd2d2f4ce2492231a31ee684c2ead883f4bc",
+      "sourceType": "github",
+      "skillPath": "skills/add-captions/SKILL.md",
+      "computedHash": "057c90160d67cfd830d0a11a3b1938aa44a679efe1856074b1919020cd51c426",
+      "installMode": "copy"
+    },
+    "add-music": {
+      "source": "DojoCodingLabs/remotion-superpowers",
+      "commit": "970efd2d2f4ce2492231a31ee684c2ead883f4bc",
+      "sourceType": "github",
+      "skillPath": "skills/add-music/SKILL.md",
+      "computedHash": "33576cfe054ac39f14df3c5a0c91bf17b6a86a7e522826606fc081901072b81b",
+      "installMode": "copy"
+    },
+    "add-transitions": {
+      "source": "DojoCodingLabs/remotion-superpowers",
+      "commit": "970efd2d2f4ce2492231a31ee684c2ead883f4bc",
+      "sourceType": "github",
+      "skillPath": "skills/add-transitions/SKILL.md",
+      "computedHash": "a4f150d18958d0bed92139f353278407e25f3d6460922183ff038500a3f1d82b",
+      "installMode": "copy"
+    },
+    "add-voiceover": {
+      "source": "DojoCodingLabs/remotion-superpowers",
+      "commit": "970efd2d2f4ce2492231a31ee684c2ead883f4bc",
+      "sourceType": "github",
+      "skillPath": "skills/add-voiceover/SKILL.md",
+      "computedHash": "e4bb0f83cb41ccf8e13416f3dd5617dfaed5fc2c07b4dea0890bcb50698d5301",
+      "installMode": "copy"
+    },
+    "agnes-ai-generation": {
+      "source": "Yacey/agnes-ai-generation-skill",
+      "commit": "e41a012095ec59fb071a27c12f67a7c5db58e0ce",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "9f82493032ef6549307d6b1a29c1ba852be699cc44cccc037e52ddaad97895f0",
+      "installMode": "copy"
+    },
+    "analyze-footage": {
+      "source": "DojoCodingLabs/remotion-superpowers",
+      "commit": "970efd2d2f4ce2492231a31ee684c2ead883f4bc",
+      "sourceType": "github",
+      "skillPath": "skills/analyze-footage/SKILL.md",
+      "computedHash": "e9ed0c3bfb9968449e0a7706ac473305bbb578e1e983bf96e38de560d243ff38",
+      "installMode": "copy"
+    },
+    "asset-passport": {
+      "source": "machina-exm/film-studio-skills",
+      "commit": "314517381b1be72c1404c068a9e37a064ec4215c",
+      "sourceType": "github",
+      "skillPath": "skills/asset-passport/SKILL.md",
+      "computedHash": "42f8248c54b92333c770ebd90f97ac987bede46803926fd9150d201b0e931555",
+      "installMode": "copy"
+    },
+    "bfl-api": {
+      "source": "black-forest-labs/skills",
+      "commit": "8907d515b0ac270a988ec7a239add81ee13d6cba",
+      "sourceType": "github",
+      "skillPath": "skills/bfl-api/SKILL.md",
+      "computedHash": "212076bb906421fa8f55095048fabb5ff7a4094818df1ce31e265fd4c840cc73",
+      "installMode": "copy"
+    },
+    "create-short": {
+      "source": "DojoCodingLabs/remotion-superpowers",
+      "commit": "970efd2d2f4ce2492231a31ee684c2ead883f4bc",
+      "sourceType": "github",
+      "skillPath": "skills/create-short/SKILL.md",
+      "computedHash": "fff1351dbde24adbdf89246dc4af8e6016036970a8a06b93f997ea994923b17d",
+      "installMode": "copy"
+    },
+    "create-video": {
+      "source": "DojoCodingLabs/remotion-superpowers",
+      "commit": "970efd2d2f4ce2492231a31ee684c2ead883f4bc",
+      "sourceType": "github",
+      "skillPath": "skills/create-video/SKILL.md",
+      "computedHash": "7e4dcc10bd3469d20d57de46d51086e86b34138da508e286668d52f9f02be49a",
+      "installMode": "copy"
+    },
+    "directing-stickman-videos": {
+      "source": "kaomei/stickman-video-director",
+      "commit": "7e6dd4241a73abc1e97341136c36cbff73c22458",
+      "sourceType": "github",
+      "skillPath": "skills/directing-stickman-videos/SKILL.md",
+      "computedHash": "618426913a57935bb53ad511dda4958fbaac724b22a4f58842b70887180b881e",
+      "installMode": "copy"
+    },
+    "film-breakdown": {
+      "source": "machina-exm/film-studio-skills",
+      "commit": "314517381b1be72c1404c068a9e37a064ec4215c",
+      "sourceType": "github",
+      "skillPath": "skills/film-breakdown/SKILL.md",
+      "computedHash": "a3e0d952552d8803b5d893b4b49c4a74152a054a469d153195b6b4e6167e721c",
+      "installMode": "copy"
+    },
+    "find-footage": {
+      "source": "DojoCodingLabs/remotion-superpowers",
+      "commit": "970efd2d2f4ce2492231a31ee684c2ead883f4bc",
+      "sourceType": "github",
+      "skillPath": "skills/find-footage/SKILL.md",
+      "computedHash": "f36314b3178b3ae4406c5cfbecc9d3e24e97777197922ede69783394cc128790",
+      "installMode": "copy"
+    },
+    "flux-3-archival-formats": {
+      "source": "black-forest-labs/skills",
+      "commit": "8907d515b0ac270a988ec7a239add81ee13d6cba",
+      "sourceType": "github",
+      "skillPath": "skills/flux-3-archival-formats/SKILL.md",
+      "computedHash": "aaa82e6190aa4116338348b8901cc83d9eed2cb8127e7858422761936904327a",
+      "installMode": "copy"
+    },
+    "flux-3-audio-dialogue": {
+      "source": "black-forest-labs/skills",
+      "commit": "8907d515b0ac270a988ec7a239add81ee13d6cba",
+      "sourceType": "github",
+      "skillPath": "skills/flux-3-audio-dialogue/SKILL.md",
+      "computedHash": "e5e4907b1666231d24d6a390ed2c0e61b77714cf7148cf8027450751908e6b95",
+      "installMode": "copy"
+    },
+    "flux-3-cinematic-inserts": {
+      "source": "black-forest-labs/skills",
+      "commit": "8907d515b0ac270a988ec7a239add81ee13d6cba",
+      "sourceType": "github",
+      "skillPath": "skills/flux-3-cinematic-inserts/SKILL.md",
+      "computedHash": "c231dfc0fcc3edeeed2f7297c85c7877b080789980f4aaf6368faeaaa90d7de3",
+      "installMode": "copy"
+    },
+    "flux-3-generate": {
+      "source": "black-forest-labs/skills",
+      "commit": "8907d515b0ac270a988ec7a239add81ee13d6cba",
+      "sourceType": "github",
+      "skillPath": "skills/flux-3-generate/SKILL.md",
+      "computedHash": "66c59004f6f8a4f9cace4499aa2b8542d03ff3d1514c2b9c479f0909ad0d9d76",
+      "installMode": "copy"
+    },
+    "flux-3-keyframes-continuation": {
+      "source": "black-forest-labs/skills",
+      "commit": "8907d515b0ac270a988ec7a239add81ee13d6cba",
+      "sourceType": "github",
+      "skillPath": "skills/flux-3-keyframes-continuation/SKILL.md",
+      "computedHash": "145c71cec47d1f9fad04d2b69eec9910067e210a07dcde20da6237365ad78835",
+      "installMode": "copy"
+    },
+    "flux-3-product-ads": {
+      "source": "black-forest-labs/skills",
+      "commit": "8907d515b0ac270a988ec7a239add81ee13d6cba",
+      "sourceType": "github",
+      "skillPath": "skills/flux-3-product-ads/SKILL.md",
+      "computedHash": "2b5d4de1bc58dde0bc360c038bacee2b02f3aaf015b7d81357125335544a2e9c",
+      "installMode": "copy"
+    },
+    "flux-3-prompt-doctor": {
+      "source": "black-forest-labs/skills",
+      "commit": "8907d515b0ac270a988ec7a239add81ee13d6cba",
+      "sourceType": "github",
+      "skillPath": "skills/flux-3-prompt-doctor/SKILL.md",
+      "computedHash": "c0ea3a1ab96416513d6bcea6760dd0014c62bdfdbda6c57ec46b1bfd8916cc01",
+      "installMode": "copy"
+    },
+    "flux-3-video": {
+      "source": "black-forest-labs/skills",
+      "commit": "8907d515b0ac270a988ec7a239add81ee13d6cba",
+      "sourceType": "github",
+      "skillPath": "skills/flux-3-video/SKILL.md",
+      "computedHash": "1b39f4b8e53ec49f9c7c830c55e0b7a9d62f76fd713bafb900ced6d19d60156f",
+      "installMode": "copy"
+    },
+    "flux-image-best-practices": {
+      "source": "black-forest-labs/skills",
+      "commit": "8907d515b0ac270a988ec7a239add81ee13d6cba",
+      "sourceType": "github",
+      "skillPath": "skills/flux-image-best-practices/SKILL.md",
+      "computedHash": "3c94c331a1e12ebc298385dbfc4f6a2f25c215afaab811b50360fdfaf9721f47",
+      "installMode": "copy"
+    },
+    "generate-clip": {
+      "source": "DojoCodingLabs/remotion-superpowers",
+      "commit": "970efd2d2f4ce2492231a31ee684c2ead883f4bc",
+      "sourceType": "github",
+      "skillPath": "skills/generate-clip/SKILL.md",
+      "computedHash": "d033d3518774cf401981f79d164eb42d8c1e338b0c836ed2af2358fd853c3a3d",
+      "installMode": "copy"
+    },
+    "generate-image": {
+      "source": "DojoCodingLabs/remotion-superpowers",
+      "commit": "970efd2d2f4ce2492231a31ee684c2ead883f4bc",
+      "sourceType": "github",
+      "skillPath": "skills/generate-image/SKILL.md",
+      "computedHash": "ee901e857a1d7a436e4c9a9918dee7fc42a836ee187b501fda0a6d8b01b703d4",
+      "installMode": "copy"
+    },
+    "h3lite": {
+      "source": "Rimagination/h3lite",
+      "commit": "9bafafa6f1741fd6eb49d46b078e2dbb0feec3be",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "9101976d23735ce59d8a1b3c33e65282865388e15f5657d4450225d09b395a3d",
+      "installMode": "copy"
+    },
+    "higgsfield-image-auto": {
+      "source": "AKCodez/higgsfield-claude-skills",
+      "commit": "f6698ab7a87223b67a76ce748ca1b936a8b5d399",
+      "sourceType": "github",
+      "skillPath": "higgsfield-image-auto/SKILL.md",
+      "computedHash": "e43389593b2685e3c14dfe632f9e28b2182b55e810dbb312809fc3c155a03166",
+      "installMode": "copy"
+    },
+    "lazy-frames": {
+      "source": "cosmicstack-labs/lazy-frames",
+      "commit": "a1ae5329ffa8814420f3185f0c61cc81a6018fab",
+      "sourceType": "github",
+      "skillPath": "skill/SKILL.md",
+      "computedHash": "23d2d325c2cdf840a5c86e01087aba9eeb6f588d9b28f1a9876fdfe23db14326",
+      "installMode": "copy"
+    },
+    "reference-board": {
+      "source": "machina-exm/film-studio-skills",
+      "commit": "314517381b1be72c1404c068a9e37a064ec4215c",
+      "sourceType": "github",
+      "skillPath": "skills/reference-board/SKILL.md",
+      "computedHash": "528a74faf00d0e612fc562ab92c2e2e7c4537fe1f7384e761fea22efa6a225ed",
+      "installMode": "copy"
+    },
+    "remotion-production": {
+      "source": "DojoCodingLabs/remotion-superpowers",
+      "commit": "970efd2d2f4ce2492231a31ee684c2ead883f4bc",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-production/SKILL.md",
+      "computedHash": "197e9471781c87e8d303956820f413252f1805514715bfc39122a8a553719222",
+      "installMode": "copy"
+    },
+    "review-video": {
+      "source": "DojoCodingLabs/remotion-superpowers",
+      "commit": "970efd2d2f4ce2492231a31ee684c2ead883f4bc",
+      "sourceType": "github",
+      "skillPath": "skills/review-video/SKILL.md",
+      "computedHash": "ad398b4359d42f227c01bf52d5b58db6aeb7d52acbe0aad124ddfb7178f5eaf4",
+      "installMode": "copy"
+    },
+    "seedance-3d-cgi": {
+      "source": "beshuaxian/higgsfield-seedance2-jineng",
+      "commit": "83dcb10ee38c9694ac0f455ec55a62f2be3b8a14",
+      "sourceType": "github",
+      "skillPath": "skills/02-3d-cgi/zh-CN/SKILL.md",
+      "computedHash": "f8ab7b7483e6c9d16d535814bb033f0ade583ea3b091f22b9b77bb29e68e3bbb",
+      "installMode": "copy"
+    },
+    "seedance-anime-action": {
+      "source": "beshuaxian/higgsfield-seedance2-jineng",
+      "commit": "83dcb10ee38c9694ac0f455ec55a62f2be3b8a14",
+      "sourceType": "github",
+      "skillPath": "skills/08-anime-action/zh-CN/SKILL.md",
+      "computedHash": "78e58f5610ce604fe9142f1ca4cd438d45c7185cc7622d4448fd536c08544fbe",
+      "installMode": "copy"
+    },
+    "seedance-auto-generate": {
+      "source": "AKCodez/higgsfield-claude-skills",
+      "commit": "f6698ab7a87223b67a76ce748ca1b936a8b5d399",
+      "sourceType": "github",
+      "skillPath": "seedance-auto-generate/SKILL.md",
+      "computedHash": "cb44476ba1ab7ba0e23ca1188f9bc9c8ec5166fb334a4372b30908e3cc66a51b",
+      "installMode": "copy"
+    },
+    "seedance-brand-story": {
+      "source": "beshuaxian/higgsfield-seedance2-jineng",
+      "commit": "83dcb10ee38c9694ac0f455ec55a62f2be3b8a14",
+      "sourceType": "github",
+      "skillPath": "skills/12-brand-story/zh-CN/SKILL.md",
+      "computedHash": "8fd5efadd63055652f148024a7880e7cff68bf492ec0a715585eb7f713e66920",
+      "installMode": "copy"
+    },
+    "seedance-cartoon": {
+      "source": "beshuaxian/higgsfield-seedance2-jineng",
+      "commit": "83dcb10ee38c9694ac0f455ec55a62f2be3b8a14",
+      "sourceType": "github",
+      "skillPath": "skills/03-cartoon/zh-CN/SKILL.md",
+      "computedHash": "2e6a3f66d1af76c77d751846e8f04be5bdbbbd588ed41910ff31cfdcba37385f",
+      "installMode": "copy"
+    },
+    "seedance-cinematic": {
+      "source": "beshuaxian/higgsfield-seedance2-jineng",
+      "commit": "83dcb10ee38c9694ac0f455ec55a62f2be3b8a14",
+      "sourceType": "github",
+      "skillPath": "skills/01-cinematic/zh-CN/SKILL.md",
+      "computedHash": "009be0787625a9fc389fcca594cbb041fa83208529bc7275efff9b49f5a11c65",
+      "installMode": "copy"
+    },
+    "seedance-comic-to-video": {
+      "source": "beshuaxian/higgsfield-seedance2-jineng",
+      "commit": "83dcb10ee38c9694ac0f455ec55a62f2be3b8a14",
+      "sourceType": "github",
+      "skillPath": "skills/04-comic-to-video/zh-CN/SKILL.md",
+      "computedHash": "c4bc61c65b3010ec951abb15d44afc9090db0e2bd83330405da79c3f8decc734",
+      "installMode": "copy"
+    },
+    "seedance-ecommerce-ad": {
+      "source": "beshuaxian/higgsfield-seedance2-jineng",
+      "commit": "83dcb10ee38c9694ac0f455ec55a62f2be3b8a14",
+      "sourceType": "github",
+      "skillPath": "skills/07-ecommerce-ad/zh-CN/SKILL.md",
+      "computedHash": "20fa4e1d76c492b7770dc6f913de18a49b622c0ca69ddc2d799a82d4927e5d41",
+      "installMode": "copy"
+    },
+    "seedance-fashion-lookbook": {
+      "source": "beshuaxian/higgsfield-seedance2-jineng",
+      "commit": "83dcb10ee38c9694ac0f455ec55a62f2be3b8a14",
+      "sourceType": "github",
+      "skillPath": "skills/13-fashion-lookbook/zh-CN/SKILL.md",
+      "computedHash": "fdde64932a118ec97f6f3aba22dd7549f31fd1fc7bf66795f6ac22d9cc8f694a",
+      "installMode": "copy"
+    },
+    "seedance-fight-scenes": {
+      "source": "beshuaxian/higgsfield-seedance2-jineng",
+      "commit": "83dcb10ee38c9694ac0f455ec55a62f2be3b8a14",
+      "sourceType": "github",
+      "skillPath": "skills/05-fight-scenes/zh-CN/SKILL.md",
+      "computedHash": "3c033edefbaa4d8372818b0fb70f67c8cfd0030fdbce986540022cb9e309650f",
+      "installMode": "copy"
+    },
+    "seedance-food-beverage": {
+      "source": "beshuaxian/higgsfield-seedance2-jineng",
+      "commit": "83dcb10ee38c9694ac0f455ec55a62f2be3b8a14",
+      "sourceType": "github",
+      "skillPath": "skills/14-food-beverage/zh-CN/SKILL.md",
+      "computedHash": "6b45dc8539615f42c992d5b96358aba0900f2e14943b696438c4e809bc7f2482",
+      "installMode": "copy"
+    },
+    "seedance-motion-design-ad": {
+      "source": "beshuaxian/higgsfield-seedance2-jineng",
+      "commit": "83dcb10ee38c9694ac0f455ec55a62f2be3b8a14",
+      "sourceType": "github",
+      "skillPath": "skills/06-motion-design-ad/zh-CN/SKILL.md",
+      "computedHash": "10f478652aad01c86c3d5183c31aa64d4627cf967e9713d8460f9d6aaf1bdf24",
+      "installMode": "copy"
+    },
+    "seedance-music-video": {
+      "source": "beshuaxian/higgsfield-seedance2-jineng",
+      "commit": "83dcb10ee38c9694ac0f455ec55a62f2be3b8a14",
+      "sourceType": "github",
+      "skillPath": "skills/10-music-video/zh-CN/SKILL.md",
+      "computedHash": "07e886ed742bd1f760d48c0bfcf16a59615462b8384200aa8f0c312c5a23c369",
+      "installMode": "copy"
+    },
+    "seedance-product-360": {
+      "source": "beshuaxian/higgsfield-seedance2-jineng",
+      "commit": "83dcb10ee38c9694ac0f455ec55a62f2be3b8a14",
+      "sourceType": "github",
+      "skillPath": "skills/09-product-360/zh-CN/SKILL.md",
+      "computedHash": "a02117c579375fec7d37f427f1dd5532dda55517a70d73a8141d45dbe94cb56c",
+      "installMode": "copy"
+    },
+    "seedance-real-estate": {
+      "source": "beshuaxian/higgsfield-seedance2-jineng",
+      "commit": "83dcb10ee38c9694ac0f455ec55a62f2be3b8a14",
+      "sourceType": "github",
+      "skillPath": "skills/15-real-estate/zh-CN/SKILL.md",
+      "computedHash": "c36288cb82a25909eb39a2360d458cfd896778c821b18c3c36214396824212e4",
+      "installMode": "copy"
+    },
+    "seedance-social-hook": {
+      "source": "beshuaxian/higgsfield-seedance2-jineng",
+      "commit": "83dcb10ee38c9694ac0f455ec55a62f2be3b8a14",
+      "sourceType": "github",
+      "skillPath": "skills/11-social-hook/zh-CN/SKILL.md",
+      "computedHash": "ce0b5a67db814fe5cffc96eb339a4266756f3d5a0930c6d5f61c816f5809d2ed",
+      "installMode": "copy"
+    },
+    "setup": {
+      "source": "DojoCodingLabs/remotion-superpowers",
+      "commit": "970efd2d2f4ce2492231a31ee684c2ead883f4bc",
+      "sourceType": "github",
+      "skillPath": "skills/setup/SKILL.md",
+      "computedHash": "5c0c552001b9a5b079e19a3d2330041c6d579b0d22bc75a708377874c0b4b596",
+      "installMode": "copy"
+    },
+    "setup-guide": {
+      "source": "DojoCodingLabs/remotion-superpowers",
+      "commit": "970efd2d2f4ce2492231a31ee684c2ead883f4bc",
+      "sourceType": "github",
+      "skillPath": "skills/setup-guide/SKILL.md",
+      "computedHash": "08f500267c625cf9daf641060a6838e65c7c8c3e59a07da1b2ef5a537fe3c35c",
+      "installMode": "copy"
+    },
+    "shot-prompt": {
+      "source": "machina-exm/film-studio-skills",
+      "commit": "314517381b1be72c1404c068a9e37a064ec4215c",
+      "sourceType": "github",
+      "skillPath": "skills/shot-prompt/SKILL.md",
+      "computedHash": "4d730777ac5447c7e40efd6862ad3c40c27de643d911447e0fe35355f41bdb22",
+      "installMode": "copy"
+    },
+    "stress-test": {
+      "source": "machina-exm/film-studio-skills",
+      "commit": "314517381b1be72c1404c068a9e37a064ec4215c",
+      "sourceType": "github",
+      "skillPath": "skills/stress-test/SKILL.md",
+      "computedHash": "70123fc1d88d23d459533aee97045ad1e010ce25e747f1a27e1d6bd2e90c7261",
+      "installMode": "copy"
+    },
+    "studio-init": {
+      "source": "machina-exm/film-studio-skills",
+      "commit": "314517381b1be72c1404c068a9e37a064ec4215c",
+      "sourceType": "github",
+      "skillPath": "skills/studio-init/SKILL.md",
+      "computedHash": "33325162fb23482f8a09b616990c83bfd0d3817ba98a7fe8e9751eb35f1e790f",
+      "installMode": "copy"
+    },
+    "transcribe": {
+      "source": "DojoCodingLabs/remotion-superpowers",
+      "commit": "970efd2d2f4ce2492231a31ee684c2ead883f4bc",
+      "sourceType": "github",
+      "skillPath": "skills/transcribe/SKILL.md",
+      "computedHash": "8bbcc6d3fb955136b4aeba09ad079797a27e2e3adfa3c343bfd7dab3421a8242",
+      "installMode": "copy"
+    },
+    "ugc-hot-girl": {
+      "source": "AKCodez/higgsfield-claude-skills",
+      "commit": "f6698ab7a87223b67a76ce748ca1b936a8b5d399",
+      "sourceType": "github",
+      "skillPath": "ugc-hot-girl/SKILL.md",
+      "computedHash": "3bb98164f45625e382fcfe808d8b72f61aa3d46c2149b42fbdbf24e57d0fd060",
+      "installMode": "copy"
+    },
+    "ugc-video-auto": {
+      "source": "AKCodez/higgsfield-claude-skills",
+      "commit": "f6698ab7a87223b67a76ce748ca1b936a8b5d399",
+      "sourceType": "github",
+      "skillPath": "ugc-video-auto/SKILL.md",
+      "computedHash": "ccddd9314e40b3a8bca84e67eef580495ff62cf5808dc0e4b44c5bdcbf6150ef",
+      "installMode": "copy"
+    }
+  }
+}

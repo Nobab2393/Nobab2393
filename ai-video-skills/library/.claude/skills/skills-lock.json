@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "skills": {
+    "setup": {
+      "source": "machina-exm/film-studio-skills",
+      "commit": "314517381b1be72c1404c068a9e37a064ec4215c",
+      "sourceType": "github",
+      "skillPath": "skills/setup/SKILL.md",
+      "computedHash": "f22f52bc389478ba6d19cbf23237c4bb23e3d3d3c870fd145fcec830f00ac921",
+      "installMode": "copy"
+    }
+  }
+}
