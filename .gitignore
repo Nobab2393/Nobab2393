@@ -1,0 +1,10 @@
+.claude/skills/*/node_modules/
+.venv/
+__pycache__/
+bin/
+build/**
+build/bin/
+build/stills/
+build/voice.wav
+node_modules/
+output/*.mp4

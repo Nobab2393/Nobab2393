@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "skills": {
+    "directing-stickman-videos": {
+      "source": "../../../tmp/svd",
+      "sourceType": "local",
+      "computedHash": "618426913a57935bb53ad511dda4958fbaac724b22a4f58842b70887180b881e",
+      "installMode": "copy"
+    }
+  }
+}
