@@ -1,0 +1,77 @@
+{
+  "version": 2,
+  "skills": {
+    "3d-animation-short-generator": {
+      "source": "MiniMax-AI/MiniMax-H3",
+      "commit": "199b7d0e1fd95e7b3eafa8c15eca692534142427",
+      "sourceType": "github",
+      "skillPath": "skills/3d-animation-short-generator/SKILL.md",
+      "computedHash": "38547284b63b56e7bc065979a3f42bf419bc5d78db6d4143f9200ca8343c3775",
+      "installMode": "copy"
+    },
+    "brand-promo-video-generator": {
+      "source": "MiniMax-AI/MiniMax-H3",
+      "commit": "199b7d0e1fd95e7b3eafa8c15eca692534142427",
+      "sourceType": "github",
+      "skillPath": "skills/brand-promo-video-generator/SKILL.md",
+      "computedHash": "6cd21e2f7891397f72f0245a2652b623578642bfbad5cb62ef291a18b1d0b5c8",
+      "installMode": "copy"
+    },
+    "co-op-game-intro-generator": {
+      "source": "MiniMax-AI/MiniMax-H3",
+      "commit": "199b7d0e1fd95e7b3eafa8c15eca692534142427",
+      "sourceType": "github",
+      "skillPath": "skills/co-op-game-intro-generator/SKILL.md",
+      "computedHash": "5a6e5fbac611badc77bb0f63ea7c3c3164db89f1038b889603269ea213dff67c",
+      "installMode": "copy"
+    },
+    "h3-prompt-writing": {
+      "source": "MiniMax-AI/MiniMax-H3",
+      "commit": "199b7d0e1fd95e7b3eafa8c15eca692534142427",
+      "sourceType": "github",
+      "skillPath": "skills/h3-prompt-writing/SKILL.md",
+      "computedHash": "e9e4440f558724f6f6ebe710b286c371d4178d6505b0237e83b84ffd00e26e02",
+      "installMode": "copy"
+    },
+    "handdrawn-live-video-generator": {
+      "source": "MiniMax-AI/MiniMax-H3",
+      "commit": "199b7d0e1fd95e7b3eafa8c15eca692534142427",
+      "sourceType": "github",
+      "skillPath": "skills/handdrawn-live-video-generator/SKILL.md",
+      "computedHash": "0f95cbf1ee889f1e46dd2574e19f3261fc502d9cb680aa41c211d2fea546efc5",
+      "installMode": "copy"
+    },
+    "minimalist-product-ad-generator": {
+      "source": "MiniMax-AI/MiniMax-H3",
+      "commit": "199b7d0e1fd95e7b3eafa8c15eca692534142427",
+      "sourceType": "github",
+      "skillPath": "skills/minimalist-product-ad-generator/SKILL.md",
+      "computedHash": "507efbd98261be6cb3b33645392cd3da0a0315d7333ce23687462c1f9e78eeda",
+      "installMode": "copy"
+    },
+    "music-video-subtitle-generator": {
+      "source": "MiniMax-AI/MiniMax-H3",
+      "commit": "199b7d0e1fd95e7b3eafa8c15eca692534142427",
+      "sourceType": "github",
+      "skillPath": "skills/music-video-subtitle-generator/SKILL.md",
+      "computedHash": "df5938e38d8cf4dd4c9a0a6ee66ff976155da03560f8e4f842e1dd45bd08f1b5",
+      "installMode": "copy"
+    },
+    "paper-collage-explainer-generator": {
+      "source": "MiniMax-AI/MiniMax-H3",
+      "commit": "199b7d0e1fd95e7b3eafa8c15eca692534142427",
+      "sourceType": "github",
+      "skillPath": "skills/paper-collage-explainer-generator/SKILL.md",
+      "computedHash": "3b7341651a8f56bdb268ecd8d2f155b8d569cb7eefc6c38bae30e9720a4fa4d6",
+      "installMode": "copy"
+    },
+    "papercraft-stop-motion-explainer": {
+      "source": "MiniMax-AI/MiniMax-H3",
+      "commit": "199b7d0e1fd95e7b3eafa8c15eca692534142427",
+      "sourceType": "github",
+      "skillPath": "skills/papercraft-stop-motion-explainer/SKILL.md",
+      "computedHash": "8c993711c07115bddef298731efcfd6e600853566c3416191905b3f3b5508db0",
+      "installMode": "copy"
+    }
+  }
+}
