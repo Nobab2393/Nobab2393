@@ -1,6 +1,6 @@
 # AI ভিডিও-জেনারেশন স্কিল লাইব্রেরি — ইনডেক্স
 
-GitHub স্ক্যান করে **৫৭টি স্কিল** ইনস্টল করা হয়েছে (`library/.claude/skills/`)। প্রতিটির frontmatter পড়ে শ্রেণিবিন্যাস: কোনটা শুধু *প্রম্পট-ক্রাফট*, কোনটা *রেন্ডার পাইপলাইন*, কোনটা *API বাধ্যতামূলক*।
+GitHub স্ক্যান করে **৫৮টি স্কিল** ইনস্টল করা হয়েছে (`library/.claude/skills/`)। প্রতিটির frontmatter পড়ে শ্রেণিবিন্যাস: কোনটা শুধু *প্রম্পট-ক্রাফট*, কোনটা *রেন্ডার পাইপলাইন*, কোনটা *API বাধ্যতামূলক*।
 
 **স্ক্যান করা ১২টি রিপো:** `machina-exm/film-studio-skills`, `beshuaxian/higgsfield-seedance2-jineng`, `AKCodez/higgsfield-claude-skills`, `black-forest-labs/skills`, `DojoCodingLabs/remotion-superpowers`, `Rimagination/h3lite`, `Yacey/agnes-ai-generation-skill`, `kaomei/stickman-video-director`, `cosmicstack-labs/lazy-frames`, `scenario-labs/skills` (১৮০টি SKILL.md, তবে বেশিরভাগ Blender/3D — ভিডিও-জেনারেশন নয়), `zhanghaonan777/Seedance2-skill`, `Vincentwei1021/anything2explainer`।
 
@@ -127,3 +127,11 @@ GitHub স্ক্যান করে **৫৭টি স্কিল** ইন�
 | `2d-2point5d-animation` | prompt-craft | 2D অ্যানিমেশনের নীতিগুলো সংখ্যায় (squash/stretch, anticipation, arc, follow-through, moving hold, on-1s/2s/3s) + আসল 2.5D মাল্টিপ্লেন রিগ (depth weight `w=1/z`, স্কেল ১.০৫/১.০৯/১.১৪, overscan, seam, DOF) + velocity-matched seam। | কোনো API নেই — লোকাল রেন্ডার |
 
 **ফাইল:** `references/twelve-principles.md` · `references/parallax-rig.md` · `references/timing-and-seams.md` · প্রমাণ: `2d-2point5d-demo/` (১২ সেকেন্ড, ৪ অ্যাক্ট)।
+
+## K. 3D অ্যানিমেশন
+
+| স্কিল | ধরন | কী কাজ করে | ব্যাকএন্ড |
+|---|---|---|---|
+| `3d-animation` | prompt-craft | 3D অ্যানিমেশন — জ্যামিতি/আলো/মোশন তিন স্তরে। ভলিউম-রক্ষা করা squash-stretch, ওজন = স্পেসিং, আর্ক, cycle, লেন্স/DOF/শাটার, ডার্ক-স্টেজ লাইটিং, PBR সাংখ্যিক মান, flat-shaded low-poly, এবং GPU-হীন স্যান্ডবক্সে রেন্ডারের ৩টি রাস্তা। | কোনো API নেই — Blender CLI / three.js / সফটওয়্যার র্যাস্টারাইজার |
+
+**ফাইল:** `references/motion-craft.md` · `references/camera-and-light.md` · `references/materials-and-look.md` · `references/pipeline-and-tools.md` · প্রমাণ: `3d-demo/` (১২ সে, numpy জেড-বাফার র্যাস্টারাইজার, ৩৬০ ফ্রেম, ৪ মিনিট)।
