@@ -1,6 +1,6 @@
 # AI ভিডিও-জেনারেশন স্কিল লাইব্রেরি — ইনডেক্স
 
-GitHub স্ক্যান করে **৫৫টি স্কিল** ইনস্টল করা হয়েছে (`library/.claude/skills/`)। প্রতিটির frontmatter পড়ে শ্রেণিবিন্যাস: কোনটা শুধু *প্রম্পট-ক্রাফট*, কোনটা *রেন্ডার পাইপলাইন*, কোনটা *API বাধ্যতামূলক*।
+GitHub স্ক্যান করে **৫৬টি স্কিল** ইনস্টল করা হয়েছে (`library/.claude/skills/`)। প্রতিটির frontmatter পড়ে শ্রেণিবিন্যাস: কোনটা শুধু *প্রম্পট-ক্রাফট*, কোনটা *রেন্ডার পাইপলাইন*, কোনটা *API বাধ্যতামূলক*।
 
 **স্ক্যান করা ১২টি রিপো:** `machina-exm/film-studio-skills`, `beshuaxian/higgsfield-seedance2-jineng`, `AKCodez/higgsfield-claude-skills`, `black-forest-labs/skills`, `DojoCodingLabs/remotion-superpowers`, `Rimagination/h3lite`, `Yacey/agnes-ai-generation-skill`, `kaomei/stickman-video-director`, `cosmicstack-labs/lazy-frames`, `scenario-labs/skills` (১৮০টি SKILL.md, তবে বেশিরভাগ Blender/3D — ভিডিও-জেনারেশন নয়), `zhanghaonan777/Seedance2-skill`, `Vincentwei1021/anything2explainer`।
 
@@ -109,3 +109,13 @@ GitHub স্ক্যান করে **৫৫টি স্কিল** ইন�
 **এই স্কিলের উৎস (নতুন স্ক্যান, ৪টি রিপো):** `lemomo-ai/lemo-opuscar` (৯৯টি কোড-ড্রন ফিল্ম স্টাইল, STYLE.md ফরম্যাট) · `cth9191/animate` (প্রসিডিউরাল canvas + craft rules) · `artemnovitckii/claude-animation-skills` (কুইক-স্পেক স্কিল, contact sheet, safe-area চেক) · `tuzhechen2005/opus-video-skills`। কোনো স্টাইলের নাম, ড্রয়িং বা ডেমো অ্যাসেট কপি করা হয়নি — শুধু গ্রামার।
 
 **প্রমাণ:** `claude-animation-style/` ফোল্ডারে ৬ সেকেন্ডের রেফারেন্স রেন্ডার — `claude-animation-style-demo-1080x1920.mp4` + `frames/contact-sheet.jpg`।
+
+## I. অ্যানিমেশন স্টাইল অ্যাটলাস (১১৯টি স্টাইল)
+
+| স্কিল | ধরন | কী কাজ করে | ব্যাকএন্ড |
+|---|---|---|---|
+| `animation-style-atlas` | prompt-craft | ১১৯টি অ্যানিমেশন স্টাইলের অ্যাটলাস — ১৭টি পরিবারে ভাগ, প্রতিটির মিডিয়াম, প্যালেট, "not this" কনট্রাস্ট, মোশন সিস্টেম ও use-case। স্টাইল বাছাই, মেশানো ও ব্রিফ লেখার নিয়ম। | কোনো API নেই — লোকাল/এজেন্ট প্রম্পট-ক্রাফট |
+
+**ফাইল:** `references/atlas.md` (১১৯টি, ১৭ পরিবার) · `references/by-use-case.md` (২৬১টি use-case ট্যাগ উল্টে সাজানো) · `references/universal-craft.md` (স্টোরি/ফ্রেম/মোশন/সাউন্ড/রিভিউ — ১১৯টি ফাইল মিলিয়ে) · `references/atlas.json` (মেশিন-এক্সট্র্যাক্টেড ডেটা) · `atlas-poster.png` (প্রতি স্টাইলে একটা প্যালেট-কার্ড) · `scripts/` (রি-এক্সট্র্যাক্ট + রেন্ডার)
+
+**তিনটি অক্ষ:** একটা স্টাইল = **মিডিয়াম** (কাগজ/কালি/পিক্সেল/কাঁচ/আলো) + **যুগ বা ভিজ্যুয়াল ঐতিহ্য** + **মোশন সিস্টেম**। বেশিরভাগ ব্যর্থ চেষ্টা শুধু "যুগ" বেছে নেয়, মিডিয়াম বাদ দেয়।
