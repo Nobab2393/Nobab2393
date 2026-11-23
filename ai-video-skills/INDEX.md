@@ -1,6 +1,6 @@
 # AI ভিডিও-জেনারেশন স্কিল লাইব্রেরি — ইনডেক্স
 
-GitHub স্ক্যান করে **৫৪টি স্কিল** ইনস্টল করা হয়েছে (`library/.claude/skills/`)। প্রতিটির frontmatter পড়ে শ্রেণিবিন্যাস: কোনটা শুধু *প্রম্পট-ক্রাফট*, কোনটা *রেন্ডার পাইপলাইন*, কোনটা *API বাধ্যতামূলক*।
+GitHub স্ক্যান করে **৫৫টি স্কিল** ইনস্টল করা হয়েছে (`library/.claude/skills/`)। প্রতিটির frontmatter পড়ে শ্রেণিবিন্যাস: কোনটা শুধু *প্রম্পট-ক্রাফট*, কোনটা *রেন্ডার পাইপলাইন*, কোনটা *API বাধ্যতামূলক*।
 
 **স্ক্যান করা ১২টি রিপো:** `machina-exm/film-studio-skills`, `beshuaxian/higgsfield-seedance2-jineng`, `AKCodez/higgsfield-claude-skills`, `black-forest-labs/skills`, `DojoCodingLabs/remotion-superpowers`, `Rimagination/h3lite`, `Yacey/agnes-ai-generation-skill`, `kaomei/stickman-video-director`, `cosmicstack-labs/lazy-frames`, `scenario-labs/skills` (১৮০টি SKILL.md, তবে বেশিরভাগ Blender/3D — ভিডিও-জেনারেশন নয়), `zhanghaonan777/Seedance2-skill`, `Vincentwei1021/anything2explainer`।
 
@@ -99,3 +99,13 @@ GitHub স্ক্যান করে **৫৪টি স্কিল** ইন�
 | স্কিল | ধরন | কী কাজ করে | ব্যাকএন্ড |
 |---|---|---|---|
 | `directing-stickman-videos` | prompt-craft | Turn topics, requirements, articles or scripts into stickman (stick figure) animated videos: explainers, short stories and faceless YouTube, Shorts or  Gemini/Veo |
+
+## H. কোড-ড্রন মোশন গ্রাফিক্স (Claude animation style)
+
+| স্কিল | ধরন | কী কাজ করে | ব্যাকএন্ড |
+|---|---|---|---|
+| `claude-animation-style` | render-pipeline | "Claude animation" স্টাইলে ভিডিও — ফ্রেম বাই ফ্রেম কোডে আঁকা ফ্ল্যাট-ভেক্টর মোশন গ্রাফিক্স (ভিডিও মডেল নয়)। ৭টি লুক, টাইমিং টেবিল, প্যালেট, deterministic `seek(t)` কনট্র্যাক্ট, এবং ব্রাউজার ছাড়া PIL+ffmpeg রেন্ডারার। | কোনো API নেই — লোকাল রেন্ডার (PIL/OpenCV → ffmpeg, অথবা Chromium capture) |
+
+**এই স্কিলের উৎস (নতুন স্ক্যান, ৪টি রিপো):** `lemomo-ai/lemo-opuscar` (৯৯টি কোড-ড্রন ফিল্ম স্টাইল, STYLE.md ফরম্যাট) · `cth9191/animate` (প্রসিডিউরাল canvas + craft rules) · `artemnovitckii/claude-animation-skills` (কুইক-স্পেক স্কিল, contact sheet, safe-area চেক) · `tuzhechen2005/opus-video-skills`। কোনো স্টাইলের নাম, ড্রয়িং বা ডেমো অ্যাসেট কপি করা হয়নি — শুধু গ্রামার।
+
+**প্রমাণ:** `claude-animation-style/` ফোল্ডারে ৬ সেকেন্ডের রেফারেন্স রেন্ডার — `claude-animation-style-demo-1080x1920.mp4` + `frames/contact-sheet.jpg`।
