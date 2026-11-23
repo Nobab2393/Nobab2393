@@ -1,14 +1,14 @@
 # AI Video Skills Library
 
-GitHub থেকে স্ক্যান করা AI ভিডিও-জেনারেশন স্কিলের সংগ্রহ — **৫৬টি ইনস্টল করা**।
+GitHub থেকে স্ক্যান করা AI ভিডিও-জেনারেশন স্কিলের সংগ্রহ — **৫৭টি ইনস্টল করা**।
 
 ```
 ai-video-skills/
 ├── README.md          ← এই ফাইল
-├── INDEX.md           ← ৫৬টি স্কিলের পূর্ণ তালিকা (ধরন + ব্যাকএন্ড)
-├── PLAYBOOK.md        ← ৫৬টি পড়ে সংকলিত ইউনিফায়েড প্রোডাকশন প্লেবুক
+├── INDEX.md           ← ৫৭টি স্কিলের পূর্ণ তালিকা (ধরন + ব্যাকএন্ড)
+├── PLAYBOOK.md        ← ৫৭টি পড়ে সংকলিত ইউনিফায়েড প্রোডাকশন প্লেবুক
 └── library/
-    └── .claude/skills/  ← আসল স্কিল ফাইলগুলো (৫৬টি ফোল্ডার)
+    └── .claude/skills/  ← আসল স্কিল ফাইলগুলো (৫৭টি ফোল্ডার)
 ```
 
 ## কীভাবে ব্যবহার করব
@@ -17,7 +17,7 @@ ai-video-skills/
 - **হাতে চালাতে:** `npx skills add https://github.com/<repo> --skill <name>` (রিপো নাম INDEX.md-এ আছে)।
 
 ## উৎস রিপো (১৬)
-machina-exm/film-studio-skills · beshuaxian/higgsfield-seedance2-jineng · AKCodez/higgsfield-claude-skills · black-forest-labs/skills · DojoCodingLabs/remotion-superpowers · Rimagination/h3lite · Yacey/agnes-ai-generation-skill · kaomei/stickman-video-director · cosmicstack-labs/lazy-frames · scenario-labs/skills · zhanghaonan777/Seedance2-skill · Vincentwei1021/anything2explainer · lemomo-ai/lemo-opuscar · cth9191/animate · artemnovitckii/claude-animation-skills · tuzhechen2005/opus-video-skills
+machina-exm/film-studio-skills · beshuaxian/higgsfield-seedance2-jineng · AKCodez/higgsfield-claude-skills · black-forest-labs/skills · DojoCodingLabs/remotion-superpowers · Rimagination/h3lite · Yacey/agnes-ai-generation-skill · kaomei/stickman-video-director · cosmicstack-labs/lazy-frames · scenario-labs/skills · zhanghaonan777/Seedance2-skill · Vincentwei1021/anything2explainer · lemomo-ai/lemo-opuscar · cth9191/animate · artemnovitckii/claude-animation-skills · tuzhechen2005/opus-video-skills · edenfunf/reelmimic
 
 ## সতর্কতা
 স্কিলগুলো এজেন্ট-পারমিশনে চলে। frontmatter ও বর্ণনা যাচাই করা হয়েছে, কিন্তু কোনো স্কিল চালানোর আগে পুরো `SKILL.md` পড়ে নেওয়া ভালো — বিশেষ করে যা API key বা বাইরের সার্ভিস চায়।
