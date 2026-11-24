@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MNS Graphix Dola Downloader</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="hud-frame">
+    <!-- Top Cyber Accent Line -->
+    <div class="hud-cut-line">
+      <span class="hud-notch"></span>
+    </div>
+
+    <!-- 1. Master Brand Deck -->
+    <div class="deck-header">
+      <div class="profile-badge">
+        <img src="icon48.png" alt="Logo" class="avatar-ring">
+        <div class="title-meta">
+          <div class="deck-brand">MNS Graphix</div>
+          <div class="deck-desc">1080P STREAM EXTRACTOR</div>
+        </div>
+      </div>
+      <div class="sys-status">
+        <span class="pulse-beacon"></span>
+        <span>HUD ACTIVE</span>
+      </div>
+    </div>
+
+    <!-- 2. Cyber Telemetry Display -->
+    <div class="telemetry-bar">
+      <div class="telemetry-cell">
+        <span class="metric-tag">TOTAL SAVED</span>
+        <div class="metric-data">
+          <span class="metric-num" id="totalDownloaded">0</span>
+          <span class="metric-unit">MP4</span>
+        </div>
+      </div>
+      <div class="telemetry-divider"></div>
+      <div class="telemetry-cell">
+        <span class="metric-tag">QUEUE CACHE</span>
+        <div class="metric-data">
+          <span class="metric-num highlight-num" id="detectedCount">0</span>
+          <span class="metric-unit">STREAMS</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Tactile Command Matrix -->
+    <div class="matrix-controls">
+      <div class="matrix-card">
+        <div class="matrix-icon">⚡</div>
+        <div class="matrix-text">
+          <span class="m-title">Instant Grab</span>
+          <span class="m-sub">Auto stream dump</span>
+        </div>
+        <label class="tactile-switch">
+          <input type="checkbox" id="autoDownloadToggle">
+          <div class="tactile-core">
+            <span class="core-pip"></span>
+          </div>
+        </label>
+      </div>
+
+      <div class="matrix-card">
+        <div class="matrix-icon">🔔</div>
+        <div class="matrix-text">
+          <span class="m-title">Audio / Push</span>
+          <span class="m-sub">Desktop alert ping</span>
+        </div>
+        <label class="tactile-switch">
+          <input type="checkbox" id="notificationsToggle" checked>
+          <div class="tactile-core">
+            <span class="core-pip"></span>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- 4. Video Stream Monitor -->
+    <div class="stream-monitor">
+      <div class="monitor-header">
+        <div class="monitor-tag">
+          <span class="scanner-dot"></span>
+          <span>DETECTED STREAMS</span>
+        </div>
+        <button id="downloadAllBtn" class="cyber-btn-batch" style="display: none;">BATCH DUMP</button>
+      </div>
+
+      <div class="videos-list" id="videosList">
+        <div class="radar-empty">
+          <div class="radar-scanner">
+            <div class="radar-sweep"></div>
+          </div>
+          <p>Awaiting Dola video stream data...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Trigger Dock (Socials) -->
+    <div class="trigger-dock">
+      <a href="https://youtube.com/@mnsgraphix" target="_blank" class="cyber-trigger trig-yt">
+        <span class="trig-line"></span>
+        <span>YOUTUBE</span>
+      </a>
+      <a href="https://api.whatsapp.com/send?phone=1776591818" target="_blank" class="cyber-trigger trig-wa">
+        <span class="trig-line"></span>
+        <span>WHATSAPP</span>
+      </a>
+      <a href="https://www.facebook.com/mnsgraphix" target="_blank" class="cyber-trigger trig-fb">
+        <span class="trig-line"></span>
+        <span>FACEBOOK</span>
+      </a>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
