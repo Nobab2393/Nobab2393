@@ -341,7 +341,7 @@ def s7(img, lt, dur):
 
     # Angaar peeking in from the bottom corner, flame lit
     qt = round(lt * 4) / 4.0
-    global _CTA_TILE
+    global _CTA_TILE, _CTA_QT
     if _CTA_TILE is None or _CTA_QT != qt:
         cam = cam_for((0.55, 0.85, 3.1), (0.0, 0.62, 0.0), 30)
         pup = place(cast.angaar(t=qt, ear=0.75, flame=1.0, look=0.4, tail=qt), T(0, 0, 0) @ S(1.0))
@@ -389,6 +389,36 @@ def main():
         return
 
     print("timeline", NAR, "end", END_AT, "total", TOTAL, "frames", NF, flush=True)
+
+    if "--seg" in sys.argv:
+        j = sys.argv.index("--seg")
+        a, b, seg = int(sys.argv[j + 1]), int(sys.argv[j + 2]), sys.argv[j + 3]
+        cmd = [FFMPEG, "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
+               "-s", "%dx%d" % (W, H), "-r", str(FPS), "-i", "-",
+               "-c:v", "libx264", "-preset", "medium", "-crf", "20",
+               "-pix_fmt", "yuv420p", seg]
+        proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
+        for i in range(a, b):
+            proc.stdin.write(draw(i / FPS).tobytes())
+            if (i - a) % 60 == 0:
+                print("  seg %d/%d" % (i - a, b - a), flush=True)
+        proc.stdin.close()
+        proc.wait()
+        print("segdone", seg, os.path.getsize(seg), flush=True)
+        return
+
+    if "--join" in sys.argv:
+        segs = sys.argv[sys.argv.index("--join") + 1:]
+        with open("segs.txt", "w") as f:
+            for sp in segs:
+                f.write("file '%s'\n" % os.path.abspath(sp))
+        subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-f", "concat", "-safe", "0",
+                        "-i", "segs.txt", "-i", "audio/mix.wav", "-c:v", "copy",
+                        "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart",
+                        "angaar-baadal-1080x1920.mp4"], check=True)
+        print("joined -> angaar-baadal-1080x1920.mp4",
+              os.path.getsize("angaar-baadal-1080x1920.mp4"))
+        return
     # audio
     inputs, filt, labels = [], [], []
     for k, (p, start) in enumerate(zip(AUD, NAR)):

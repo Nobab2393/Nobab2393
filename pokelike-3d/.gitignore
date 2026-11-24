@@ -1,3 +1,5 @@
 frames/f*.png
 audio/mix.wav
 *.wav
+segs/
+segs.txt

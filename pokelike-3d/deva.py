@@ -123,8 +123,20 @@ def text_image(text, size, weight=700, color=(255, 255, 255), pad=8, align="left
     return img
 
 
+_CACHE = {}
+
+
+def _cached_text(text, size, weight, color):
+    key = (text, size, weight, tuple(color))
+    img = _CACHE.get(key)
+    if img is None:
+        img = text_image(text, size, weight, color)
+        _CACHE[key] = img
+    return img
+
+
 def draw_text(base, xy, text, size, weight=700, color=(255, 255, 255), anchor="mm", shadow=None, shadow_blur=10):
-    img = text_image(text, size, weight, color)
+    img = _cached_text(text, size, weight, color)
     x, y = xy
     if anchor == "mm":
         pos = (int(x - img.width / 2), int(y - img.height / 2))
