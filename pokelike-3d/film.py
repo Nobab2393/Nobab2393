@@ -96,14 +96,29 @@ def compose_3d(img, cams, models, glow_models=()):
         img.alpha_composite(tile, pos)
 
 
-def ground_y(cam, z=0.25):
+def ground_y(cam, z=0.40):
     """Where world y=0 projects to — the painted ground must meet the feet."""
     p = cam.project(cam.to_view(np.array([0.0, 0.0, z])))[0]
     return int(min(H - 1, max(10, p[1])))
 
 
-def stage(img, cam, z=0.25, col=(13, 12, 15)):
-    bg.ground(img, ground_y(cam, z), col)
+def stage(img, cam, z=0.40, col=(26, 24, 31), name=None):
+    """Paint the ground plane at the projected world line, with a falloff.
+
+    A flat black band reads as a void (dark shoes vanish into it); a gradient
+    from a lifted horizon to near-black at the bottom reads as ground.
+    """
+    gy = ground_y(cam, z)
+    if name is not None and name in _FIT:
+        gy = int(min(H - 4, max(10, gy + _FIT[name][3])))
+    bg.ground(img, gy, col)
+    n = H - gy
+    if n > 8:
+        arr = np.asarray(img).astype(np.float32)
+        a = np.linspace(0.0, 0.80, n, dtype=np.float32)[:, None, None]
+        deep = np.array([7, 7, 10], np.float32)[None, None, :]
+        arr[gy:gy + n, :, :3] = arr[gy:gy + n, :, :3] * (1 - a) + deep * a
+        img.paste(Image.fromarray(arr.clip(0, 255).astype(np.uint8)))
 
 
 def cam_for(eye, target, fov, t=None, drift=0.0):
@@ -112,25 +127,97 @@ def cam_for(eye, target, fov, t=None, drift=0.0):
     return c
 
 
+def _bbox(models, cam):
+    """Unclamped screen bbox of every point of every model."""
+    xs, ys = [], []
+    for m in models:
+        for part in m.parts:
+            v, _ = C.mesh(part.kind, part.subdiv)
+            hom = np.concatenate([v, np.ones((len(v), 1))], 1) @ part.m.T
+            uv, _z = cam.project(cam.to_view(hom[:, :3]))
+            xs.append(uv[:, 0])
+            ys.append(uv[:, 1])
+    x = np.concatenate(xs)
+    y = np.concatenate(ys)
+    return float(x.min()), float(x.max()), float(y.min()), float(y.max())
+
+
+def _solve_fit(models, eye, target, fov, top, bottom, side):
+    """Find the (pan, zoom-out) that puts the models inside the safe area."""
+    e = np.array(eye, float)
+    g = np.array(target, float)
+    dx = dy = 0.0
+    s = 1.0
+    for _ in range(6):
+        c = cam_for(tuple(e), tuple(g), fov)
+        x0, x1, y0, y1 = _bbox(models, c)
+        need = max((x1 - x0) / (W - 2 * side), (y1 - y0) / (bottom - top))
+        if need > s:
+            s = min(2.3, need * 1.05)
+            e = g + (np.array(eye, float) - g) * s + np.array([dx, dy, 0.0])
+            continue
+        cx, cy = (x0 + x1) / 2.0, (y0 + y1) / 2.0
+        dist = float(np.linalg.norm(e - g))
+        upp = 2 * math.tan(math.radians(fov) / 2) * dist / H
+        ox = (cx - W / 2.0) * upp
+        oy = -(cy - (top + bottom) / 2.0) * upp
+        dx = float(np.clip(dx + ox, -1.5, 1.5))
+        dy = float(np.clip(dy + oy, -1.5, 1.5))
+        g = np.array(target, float) + np.array([dx, dy, 0.0])
+        e = g + (np.array(eye, float) - np.array(target, float)) * s
+        if abs(ox) < 3 and abs(oy) < 3:
+            break
+    return dx, dy, s
+
+
+_FIT = {}
+SCENE_NAME = None
+
+
+def scene_cam(name, build, t_hero, eye, target, fov, top=230, bottom=1540, side=80):
+    """One constant framing correction per scene, solved on a hero pose.
+
+    Keeping it constant (instead of re-fitting every frame) stops the camera from
+    breathing while characters move, and keeps the render deterministic.
+    """
+    if name not in _FIT:
+        models, _glow = build(t_hero)
+        dx, dy, s = _solve_fit(models, eye, target, fov, top, bottom, side)
+        off = np.array([dx, dy, 0.0])
+        g0 = np.array(target, float) + off
+        c0 = cam_for(tuple(g0 + (np.array(eye, float) - np.array(target, float)) * s), tuple(g0), fov)
+        feet = _bbox(models, c0)[3]
+        _FIT[name] = (dx, dy, s, feet - ground_y(c0, 0.40))
+    dx, dy, s, _dgy = _FIT[name]
+    off = np.array([dx, dy, 0.0])
+    g = np.array(target, float) + off
+    e = g + (np.array(eye, float) - np.array(target, float)) * s
+    return cam_for(tuple(e), tuple(g), fov)
+
+
 # ---------------------------------------------------------------- scenes
 def s1(img, lt, dur):
     """The ember on the ridge. Title."""
+    global SCENE_NAME
+    SCENE_NAME = "s1"
     p = eio(seg(0, dur, lt))
-    storm = 0.0
-    bg.sky(img, lt, storm)
+    bg.sky(img, lt, 0.0)
     bg.stars(img, 130, 7, lt, fade=1.0)
-    bg.moon(img, 800 - 26 * p, 300, 92, halo=1.0)
+    bg.moon(img, 902 - 22 * p, 264, 84, halo=1.0)
     bg.ridge(img, 1320, 240, seed=5, col=(20, 19, 28))
     bg.ridge(img, 1430, 160, seed=11, col=(15, 14, 19))
 
-    eye = (2.05, 1.05 + 0.10 * p, 8.6 - 1.3 * p)
-    target = (0.0, 1.16, 0.0)
-    cam = cam_for(eye, target, 30)
-    stage(img, cam, 0.25, (13, 12, 15))
-    rock = place(cast.rock(0, 0, 0.85), T(-0.55, 0.06, 0.0))
-    pup = place(cast.angaar(t=lt, bounce=-0.14, flame=0.55, ear=0.7, tail=lt),
-                T(-0.55, 0.30, 0.15) @ S(0.92))
-    compose_3d(img, [cam, cam], [rock, pup], glow_models=[pup])
+    def build(t):
+        rock = place(cast.rock(0, 0, 0.85), T(-0.55, 0.06, 0.0))
+        pup = place(cast.angaar(t=t, bounce=-0.14, flame=0.55, ear=0.7, tail=t),
+                    T(-0.55, 0.30, 0.15) @ S(0.92))
+        return [rock, pup], [pup]
+
+    models, glow = build(lt)
+    cam = scene_cam("s1", build, dur * 0.5, (2.05, 1.05 + 0.10 * p, 8.6 - 1.3 * p),
+                    (0.0, 1.16, 0.0), 30, top=600, bottom=1740)
+    stage(img, cam, 0.40, (26, 24, 31), name=SCENE_NAME)
+    compose_3d(img, [cam] * len(models), models, glow_models=glow)
 
     bg.sparks(img, lt, 430, 1080, n=16, spread=180, rise=520, col=(255, 168, 92))
     bg.vignette(img, 110)
@@ -150,6 +237,8 @@ def s1(img, lt, dur):
 
 def s2(img, lt, dur):
     """Ravi finds him."""
+    global SCENE_NAME
+    SCENE_NAME = "s2"
     bg.sky(img, lt, 0.05)
     bg.stars(img, 120, 7, lt)
     bg.moon(img, 810, 320, 84)
@@ -157,18 +246,23 @@ def s2(img, lt, dur):
     bg.ridge(img, 1430, 160, seed=11, col=(15, 14, 19))
 
     walk = eio(seg(0.0, 3.2, lt))
-    cam = cam_for((1.0 + 0.30 * walk, 0.95, 7.4), (0.15, 1.06, 0.0), 30)
-    stage(img, cam, 0.25, (13, 12, 15))
-    rock = place(cast.rock(0, 0, 0.8), T(0.95, 0.05, -0.2))
-    pup = place(cast.angaar(t=lt, bounce=-0.10, ear=0.3 + 0.6 * eio(seg(2.6, 3.2, lt)),
-                           flame=0.6 + 0.25 * eio(seg(3.4, 4.2, lt)),
-                           blink=1.0 - eio(seg(2.5, 2.75, lt)), tail=lt),
-                T(0.95, 0.30, -0.05) @ S(0.92))
-    rx = lerp(-6.4, -1.15, walk)
-    rav = place(cast.ravi(t=lt, walk=lt if walk < 0.98 else 0, arm=eio(seg(3.3, 3.9, lt)) * 0.85,
-                          look=0.7),
-                T(rx, 0, 0.45) @ S(1.02))
-    compose_3d(img, [cam, cam, cam], [rock, pup, rav], glow_models=[pup])
+
+    def build(t):
+        w = eio(seg(0.0, 3.2, t))
+        rock = place(cast.rock(0, 0, 0.8), T(0.85, 0.05, -0.2))
+        pup = place(cast.angaar(t=t, bounce=-0.10, ear=0.3 + 0.6 * eio(seg(2.6, 3.2, t)),
+                               flame=0.6 + 0.25 * eio(seg(3.4, 4.2, t)),
+                               blink=1.0 - eio(seg(2.5, 2.75, t)), tail=t),
+                    T(0.85, 0.30, -0.05) @ S(0.92))
+        rav = place(cast.ravi(t=t, walk=t if w < 0.98 else 0, arm=eio(seg(3.3, 3.9, t)) * 0.85,
+                              look=0.7),
+                    T(lerp(-2.7, -1.15, w), 0, 0.45) @ S(1.02))
+        return [rock, pup, rav], [pup]
+
+    models, glow = build(lt)
+    cam = scene_cam("s2", build, 3.9, (1.10 + 0.30 * walk, 0.95, 8.4), (0.10, 1.02, 0.0), 30)
+    stage(img, cam, 0.40, (26, 24, 31), name=SCENE_NAME)
+    compose_3d(img, [cam] * len(models), models, glow_models=glow)
 
     sneeze = seg(3.9, 4.15, lt) * (1 - seg(4.5, 4.9, lt))
     if sneeze > 0:
@@ -182,31 +276,39 @@ def s2(img, lt, dur):
 
 def s3(img, lt, dur):
     """The storm takes the flame."""
+    global SCENE_NAME
+    SCENE_NAME = "s3"
     storm = eio(seg(0.0, 2.2, lt))
     bg.sky(img, lt, 0.55 * storm)
     bg.stars(img, 90, 7, lt, fade=1 - 0.7 * storm)
-    bg.moon(img, 790, 330, 88, halo=1 - 0.5 * storm)
+    bg.moon(img, 196, 306, 86, halo=1 - 0.5 * storm)
     bg.ridge(img, 1320, 240, seed=5, col=(20, 19, 28))
     bg.ridge(img, 1430, 160, seed=11, col=(15, 14, 19))
     bg.wind(img, lt, 0.5 + 0.5 * storm)
 
-    # the hawk's dive: an arc from the moon down to the pup
     k = eio(seg(0.6, 3.6, lt))
-    hx = lerp(3.6, -0.15, k)
-    hy = lerp(3.05, 1.05, k) - 0.55 * math.sin(math.pi * k)
-    flap = 0.5 + 0.5 * math.sin(lt * 9.0)
 
-    cam = cam_for((0.4, 1.45 + 0.30 * storm, 8.2 - 0.6 * k), (0.0, 1.55, 0.0), 32)
-    stage(img, cam, 0.25, (13, 12, 15))
-    rock = place(cast.rock(0, 0, 0.75), T(-0.9, 0.05, -0.1))
-    flame_out = 1.0 - eio(seg(3.4, 3.8, lt))           # the flame is taken
-    pup = place(cast.angaar(t=lt, bounce=-0.05, ear=0.9, flame=0.8 * flame_out,
-                           look=-0.6, tail=lt),
-                T(-0.9, 0.30, 0.0) @ S(0.9))
-    rav = place(cast.ravi(t=lt, arm=0.9, look=-0.9), T(-2.35, 0, 0.35) @ S(0.95))
-    haw = place(cast.baadal(t=lt, flap=flap, dive=0.55 * k, y=0.0),
-                T(hx, hy, 0.15) @ S(0.95))
-    compose_3d(img, [cam, cam, cam, cam], [rock, pup, rav, haw], glow_models=[pup, haw])
+    def build(t):
+        kk = eio(seg(0.6, 3.6, t))
+        hx = lerp(3.0, -0.35, kk)
+        hy = lerp(2.90, 1.30, kk) - 0.45 * math.sin(math.pi * kk)
+        flame_out = 1.0 - eio(seg(3.4, 3.8, t))
+        rock = place(cast.rock(0, 0, 0.75), T(-0.75, 0.05, -0.1))
+        pup = place(cast.angaar(t=t, bounce=-0.05, ear=0.9, flame=0.8 * flame_out,
+                                look=-0.6, tail=t),
+                    T(-0.75, 0.30, 0.0) @ S(0.9))
+        haw = place(cast.baadal(t=t, flap=0.5 + 0.5 * math.sin(t * 9.0), dive=0.55 * kk, y=0.0),
+                    T(hx, hy, 0.15) @ S(0.95))
+        return [rock, pup, haw], [pup]
+
+    models, glow = build(lt)
+    # anchor the framing on the pup; the hawk flies in from off-frame by design
+    anchors = models[:2]
+    cam = scene_cam("s3", lambda t: (build(t)[0][:2], None), 2.6,
+                    (0.35, 1.45 + 0.30 * storm, 8.6 - 0.6 * k), (0.0, 1.50, 0.0), 32,
+                    top=260, bottom=1500)
+    stage(img, cam, 0.40, (26, 24, 31), name=SCENE_NAME)
+    compose_3d(img, [cam] * len(models), models, glow_models=glow)
 
     if lt > 3.6:
         bg.sparks(img, lt, 500, 780, n=10, spread=260, rise=420)
@@ -218,27 +320,35 @@ def s3(img, lt, dur):
 
 def s4(img, lt, dur):
     """The clash."""
+    global SCENE_NAME
+    SCENE_NAME = "s4"
     bg.sky(img, lt, 0.75)
     bg.stars(img, 70, 7, lt, fade=0.35)
     bg.ridge(img, 1320, 240, seed=5, col=(18, 17, 25))
     bg.ridge(img, 1430, 160, seed=11, col=(14, 13, 18))
     bg.wind(img, lt, 1.0)
 
-    jump = eout(seg(0.5, 1.5, lt), 2)
     air = math.sin(math.pi * seg(0.5, 2.4, lt))
     hit = seg(1.9, 2.35, lt)
     sh = shake(lt, 26 * (1 - hit) * air)
 
-    cam = cam_for((0.2 + sh[0] / 300, 1.15 + air * 0.30 + sh[1] / 300, 7.4 - 0.5 * air),
-                  (0.0, 1.34 + air * 0.30, 0.0), 33)
-    stage(img, cam, 0.25, (12, 11, 14))
-    pup = place(cast.angaar(t=lt, bounce=0.10 + 0.95 * air, lean=0.9 * air, ear=1.0,
-                           flame=1.0 + 0.5 * air, look=0.8, tail=lt),
-                T(-0.15, 0.10 * air, 0.35) @ S(0.95))
-    haw = place(cast.baadal(t=lt, flap=0.85, dive=0.35 + 0.45 * hit, bank=-20 * (1 - hit)),
-                T(0.55 - 0.9 * hit, 1.35 + 0.18 * air - 0.55 * hit, 0.1) @ S(1.0))
-    rav = place(cast.ravi(t=lt, arm=0.7, look=0.6), T(-2.10, 0, 0.15) @ S(0.92))
-    compose_3d(img, [cam, cam, cam], [pup, haw, rav], glow_models=[pup])
+    def build(t):
+        a = math.sin(math.pi * seg(0.5, 2.4, t))
+        h = seg(1.9, 2.35, t)
+        pup = place(cast.angaar(t=t, bounce=0.10 + 0.95 * a, lean=0.9 * a, ear=1.0,
+                               flame=1.0 + 0.5 * a, look=0.8, tail=t),
+                    T(-0.52, 0.10 * a, 0.35) @ S(0.95))
+        haw = place(cast.baadal(t=t, flap=0.85, dive=0.35 + 0.45 * h, bank=-20 * (1 - h)),
+                    T(0.92 - 1.15 * h, 1.30 + 0.18 * a - 0.42 * h, 0.1) @ S(1.0))
+        return [pup, haw], [pup]
+
+    models, glow = build(lt)
+    cam = scene_cam("s4", build, 2.65, (0.2 + sh[0] / 300, 1.15 + air * 0.30 + sh[1] / 300,
+                                       8.0 - 0.5 * air), (0.0, 1.34 + air * 0.30, 0.0), 33,
+                    top=300, bottom=1470)
+    stage(img, cam, 0.40, (24, 22, 29), name=SCENE_NAME)
+    rav = place(cast.ravi(t=lt, arm=0.7, look=0.6), T(-3.30, 0, 0.15) @ S(0.92))
+    compose_3d(img, [cam] * len(models) + [cam], models + [rav], glow_models=glow)
 
     if air > 0.35:
         bg.speed_lines(img, lt, n=30, cx=540, cy=950, inner=230, strength=air)
@@ -254,26 +364,32 @@ def s4(img, lt, dur):
 
 def s5(img, lt, dur):
     """The choice: he lights the way instead of burning."""
+    global SCENE_NAME
+    SCENE_NAME = "s5"
     bg.sky(img, lt, 0.45)
     bg.stars(img, 80, 7, lt, fade=0.5)
-    bg.moon(img, 250, 380, 74, halo=0.7)
+    bg.moon(img, 168, 318, 68, halo=0.7)
     bg.ridge(img, 1330, 250, seed=5, col=(19, 18, 26))
     bg.ridge(img, 1440, 150, seed=11, col=(14, 13, 18))
     calm = eio(seg(0.4, 1.8, lt))
-    cam = cam_for((1.15, 0.95, 8.6 - 0.5 * calm), (0.25, 1.02, 0.0), 30)
-    stage(img, cam, 0.25, (12, 11, 14))
-    haw = place(cast.baadal(t=lt, flap=0.0, dive=0.0, y=-0.62, bank=74),
-                T(0.42, 0.10, -0.15) @ S(0.95))
-    pup = place(cast.angaar(t=lt, bounce=0.02, ear=0.55, flame=0.85, look=0.5, tail=lt),
-                T(-0.62, 0.08, 0.15) @ S(0.92))
-    rav = place(cast.ravi(t=lt, arm=0.35, look=0.3), T(-2.05, 0, -0.15) @ S(0.9))
-    compose_3d(img, [cam, cam, cam], [haw, pup, rav], glow_models=[pup])
 
-    # the warm path the flame lights
+    def build(t):
+        haw = place(cast.baadal(t=t, flap=0.22, dive=0.10, y=-0.48, bank=14),
+                    T(0.62, 0.06, -0.10) @ S(0.95))
+        pup = place(cast.angaar(t=t, bounce=0.02, ear=0.55, flame=0.85, look=0.5, tail=t),
+                    T(-0.55, 0.08, 0.15) @ S(0.92))
+        return [haw, pup], [pup]
+
+    models, glow = build(lt)
+    cam = scene_cam("s5", build, 2.2, (1.15, 0.95, 8.9 - 0.5 * calm), (0.05, 1.00, 0.0), 30)
+    stage(img, cam, 0.40, (24, 22, 29), name=SCENE_NAME)
+    rav = place(cast.ravi(t=lt, arm=0.35, look=0.3), T(-2.15, 0, -0.15) @ S(0.9))
+    compose_3d(img, [cam] * len(models) + [cam], models + [rav], glow_models=glow)
+
     lay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(lay)
-    d.polygon([(300, 1560), (700, 1560), (900, 1920), (140, 1920)], fill=(255, 170, 90, 26))
-    lay = lay.filter(ImageFilter.GaussianBlur(24))
+    d.polygon([(320, 1560), (680, 1560), (880, 1920), (160, 1920)], fill=(255, 170, 90, 34))
+    lay = lay.filter(ImageFilter.GaussianBlur(64))
     img.alpha_composite(lay)
     bg.sparks(img, lt, 380, 900, n=12, spread=200, rise=380)
     bg.vignette(img, 110)
@@ -284,19 +400,28 @@ def s5(img, lt, dur):
 
 def s6(img, lt, dur):
     """Together."""
+    global SCENE_NAME
+    SCENE_NAME = "s6"
     bg.sky(img, lt, 0.12)
     bg.stars(img, 140, 3, lt)
     bg.moon(img, 860, 300, 96)
     bg.ridge(img, 1310, 235, seed=5, col=(20, 19, 28))
     bg.ridge(img, 1430, 150, seed=11, col=(15, 14, 19))
     k = eio(seg(0.0, dur, lt))
-    cam = cam_for((0.62, 0.95, 8.8 - 1.0 * k), (0.08, 1.00, 0.0), 30)
-    stage(img, cam, 0.25, (13, 12, 15))
-    rock = place(cast.rock(0, 0, 0.9), T(-1.35, 0.05, -0.6))
-    pup = place(cast.angaar(t=lt, bounce=-0.02, ear=0.5, flame=0.9, tail=lt), T(-0.45, 0.14, 0.25) @ S(0.9))
-    rav = place(cast.ravi(t=lt, arm=0.2), T(0.55, 0, 0.30) @ S(0.95))
-    haw = place(cast.baadal(t=lt, flap=0.0, y=-0.66, dive=0.0), T(1.45, 0.10, -0.15) @ S(0.9))
-    compose_3d(img, [cam, cam, cam, cam], [rock, pup, rav, haw], glow_models=[pup])
+
+    def build(t):
+        rock = place(cast.rock(0, 0, 0.9), T(-0.92, 0.05, -0.6))
+        pup = place(cast.angaar(t=t, bounce=-0.02, ear=0.5, flame=0.9, tail=t),
+                    T(-0.34, 0.14, 0.25) @ S(0.9))
+        rav = place(cast.ravi(t=t, arm=0.2), T(0.20, 0, 0.30) @ S(0.95))
+        haw = place(cast.baadal(t=t, flap=0.0, y=-0.64, dive=0.0), T(0.66, 0.10, -0.15) @ S(0.86))
+        return [rock, pup, rav, haw], [pup]
+
+    models, glow = build(lt)
+    cam = scene_cam("s6", build, dur * 0.6, (0.10, 0.84, 6.6 - 0.7 * k), (0.00, 0.90, 0.0), 30,
+                    top=560, bottom=1640, side=30)
+    stage(img, cam, 0.40, (26, 24, 31), name=SCENE_NAME)
+    compose_3d(img, [cam] * len(models), models, glow_models=glow)
 
     bg.sparks(img, lt, 520, 780, n=14, spread=520, rise=520)
     bg.vignette(img, 110)
@@ -346,10 +471,11 @@ def s7(img, lt, dur):
         cam = cam_for((0.55, 0.85, 3.1), (0.0, 0.62, 0.0), 30)
         pup = place(cast.angaar(t=qt, ear=0.75, flame=1.0, look=0.4, tail=qt), T(0, 0, 0) @ S(1.0))
         tile, _ = C.render_model_tiled(pup, cam, ss=SS, outline=F_INK, glow=True, outline_px=7)
-        scale = 330 / max(1, tile.width)
+        scale = 286 / max(1, tile.width)
         tile = tile.resize((int(tile.width * scale), int(tile.height * scale)), Image.LANCZOS)
         _CTA_TILE, _CTA_QT = tile, qt
-    img.alpha_composite(_CTA_TILE, (int(W / 2 - _CTA_TILE.width / 2), 1330))
+    img.alpha_composite(_CTA_TILE, (int(W / 2 - _CTA_TILE.width / 2),
+                                    min(1300, 1836 - _CTA_TILE.height)))
 
 
 _CTA_TILE = None

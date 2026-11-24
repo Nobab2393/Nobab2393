@@ -15,7 +15,14 @@ audio/      # s1..s7.mp3  Hindi voice-over, one clip per block
 fonts/      # NotoSansDevanagari.ttf (SIL OFL)
 ```
 
-**Output:** `angaar-baadal-1080x1920.mp4` — 1080×1920, 24 fps, 51.8 s, H.264 + AAC.
+**Output:** [`angaar-baadal-1080x1920.mp4`](angaar-baadal-1080x1920.mp4) — 1080×1920, 24 fps,
+51.80 s, 4.9 MB, H.264 + AAC stereo.
+
+| file | what |
+|---|---|
+| `angaar-baadal-1080x1920.mp4` | the film (Vertical 9:16, Hindi) |
+| `poster.png` | 1080×1920 cover / thumbnail frame (the CTA card) |
+| `preview-contact-sheet.png` | 16 frames across the whole timeline |
 
 ## How the look is made
 
@@ -62,3 +69,15 @@ python3 film.py --sheet          # contact sheet of the finished frames
 
 `ffmpeg` comes from `imageio_ffmpeg.get_ffmpeg_exe()`; raw RGB frames are piped straight into
 it with the VO mixed to `audio/mix.wav` (`adelay` + `amix`) beforehand.
+
+## Render pipeline (and why it is segmented)
+
+`python3 film.py` renders the whole film in one pass, but a 40-minute single pass is a bad
+place to lose work — so `film.py --seg A B out.mp4` renders a frame range to its own silent
+segment, and `film.py --join seg1 ... seg7` concatenates the segments and muxes the VO. A
+mistake in one scene costs 4 minutes instead of 40, and re-cutting one scene needs no re-render
+of the rest.
+
+Framing is solved, not eyeballed: `scene_cam()` fits the camera to the cast's projected bbox
+(one constant correction per scene, computed on a hero pose so the camera never breathes) and
+`stage()` paints the ground at the corrected world line, so feet and horizon always agree.

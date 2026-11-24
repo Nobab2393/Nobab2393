@@ -20,7 +20,7 @@ BEAK = (0.94, 0.76, 0.30)
 SKIN = (0.86, 0.66, 0.52)
 HAIR = (0.10, 0.08, 0.08)
 JACKET = (0.90, 0.44, 0.28)
-JEANS = (0.22, 0.26, 0.36)
+JEANS = (0.30, 0.35, 0.48)
 
 
 def _part(kind, color, mat, emissive=0.0, subdiv=2, shade=1.0):

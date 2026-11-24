@@ -244,9 +244,9 @@ def render_model_tiled(model, cam, ss=1.8, outline=None, glow=False, outline_px=
 
     if glow:
         a = tile.split()[3]
-        halo = Image.new("RGBA", tile.size, (255, 170, 90, 0))
-        halo.putalpha(a.point(lambda v: int(v * 0.55)))
-        halo = halo.filter(ImageFilter.GaussianBlur(14 * ss))
+        halo = Image.new("RGBA", tile.size, (255, 138, 66, 0))
+        halo.putalpha(a.point(lambda v: int(v * 0.46)))
+        halo = halo.filter(ImageFilter.GaussianBlur(22 * ss))
         tile = Image.alpha_composite(halo, tile)
 
     tile = tile.resize((tw, th), Image.LANCZOS)

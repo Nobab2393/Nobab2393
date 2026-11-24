@@ -123,8 +123,8 @@ def impact(img, t, k, cx=540, cy=980):
                   fill=(255, 236, 196, int(210 * k)))
     layer = layer.filter(ImageFilter.GaussianBlur(3))
     img.alpha_composite(layer)
-    if k > 0.55:
-        flash = Image.new("RGBA", (W, H), (255, 245, 225, int(150 * (k - 0.55) / 0.45)))
+    if k > 0.78:
+        flash = Image.new("RGBA", (W, H), (255, 245, 225, int(86 * (k - 0.78) / 0.22)))
         img.alpha_composite(flash)
 
 
