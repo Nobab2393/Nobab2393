@@ -8,7 +8,9 @@ dev-skills/
 └── .claude/skills/
     └── chrome-mv3-media-interceptor/
         ├── SKILL.md                           ← পুরো টেকনিক + MV3 ফাঁদ
-        └── skeleton/                          ← কাজ করা স্টার্টার (manifest + ৪টি JS + popup)
+        ├── skeleton/                          ← কাজ করা স্টার্টার (manifest + ৪টি JS + popup + icon)
+        ├── reference/                         ← token-decode · asset-matching · hud-css
+        └── tools/                             ← verify-decode.mjs · match-cards.mjs (টেস্ট চলে)
 ```
 
 ## ইনস্টল করা স্কিল
@@ -24,6 +26,17 @@ dev-skills/
 3. **"আনওয়াটারমার্কড" প্রায়ই একটা ফ্ল্যাগ** — `channel=no&codec_type=8&logo_type=unwatermarked`; শিল্পটা হলো পেজ কোন প্যারাম দিয়ে প্রিভিউ চায়, সেটার সঙ্গে ফারাকটা খুঁজে বের করা।
 4. **অপাক টোকেন** — `SHA-512(seed) → SHA-512(d1‖salt)` থেকে key/iv, AES-CBC, এবং চারটি লেআউট পারমুটেশন চেষ্টা করা।
 5. **যে ১০টা বাগ নীরবে কাজ নষ্ট করে** — worker-এর মেমরি মরে যাওয়া, config রেস, `.mp4.mp4`, CSP-ব্লকড ইনলাইন হ্যান্ডলার, ডাউনলোড বার্স্ট, অনুপস্থিত `downloads.onChanged` — সবগুলোর ফিক্স সহ।
+
+### দ্বিতীয় পাসে যা যোগ হলো (কোড পড়ে + টেস্ট লিখে)
+
+৬. **কার্ড ↔ অ্যাসেট মেলানো** — TOS key সমতা → substring → সমান-সংখ্যার positional; কিছুই না মিললে `null`। মূল কোডে ছিল `allMedia[i % length]` — অর্থাৎ সবসময় একটা ফাইল হতো, মাঝে মাঝে **ভুল ভিডিও**।
+৭. **SPA-তে বাটন ইনজেকশন** — `MutationObserver` + `:scope >` গার্ড + প্রতি ফ্রেমে একবার (মূল কোডে পুরো ডকুমেন্ট প্রতি মিউটেশনে স্ক্যান হতো)।
+৮. **ডিকোড পাথে দুটো আসল বাগ, টেস্ট লিখে ধরা** — base64 variant ল্যাডার প্রথম "পার্স হওয়া" ক্যান্ডিডেটেই ফিরে যেত ( `_` আর `+` দুটোই বৈধ → ভুল বাইট, নীরবে); আর `/^https?:\/\//` দিয়ে সফলতা মাপা ভুল, কারণ ভুল-কি ডিক্রিপ্টও `https://` দিয়ে শুরু হতে পারে। দুটোরই ফিক্স + কোড।
+
+```bash
+node tools/verify-decode.mjs   # 4 passed, 0 failed
+node tools/match-cards.mjs     # 7/7 matcher assertions passed
+```
 
 মূল অডিট ও ফিক্স করা এক্সটেনশন: [`../dola-downloader/AUDIT.md`](../dola-downloader/AUDIT.md)
 

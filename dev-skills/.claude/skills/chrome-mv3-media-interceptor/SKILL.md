@@ -148,6 +148,12 @@ attempts = [
 All of this runs in `crypto.subtle`, so it works in a service worker (no Node crypto, no WASM).
 Keep a plain-base64 path first — half of all tokens are just base64 of the URL.
 
+Two traps, both found by running [`tools/verify-decode.mjs`](tools/verify-decode.mjs) against a
+synthetic server: a base64 "variant ladder" that `return`s on the first candidate that *parses*
+silently picks the wrong substitution (`_` and `+` are both legal), and `/^https?:\/\//` is not a
+success test — an aligned wrong-key decrypt can start with `https://`. Decode every candidate,
+then validate the whole string. Details: [reference/token-decode.md](reference/token-decode.md).
+
 ---
 
 ## 5. Metadata without a JSON parser
@@ -188,6 +194,43 @@ score = bitrate + width * height        // then pick the first max, not the last
 ```
 
 ---
+
+## 6b. Pairing a captured asset with a DOM card
+
+Two lists made by different machinery: network arrival order vs. visual order. Pair by **asset
+key equality**, never by index — and if a key is ambiguous, if the counts disagree, or if nothing
+matches, **return nothing** and let the UI ask. The reference build ended its ladder with
+`allMedia[i % length]`, i.e. it always produced a file, sometimes the wrong video.
+
+```js
+exact key, unique      → confidence: exact
+key inside url, unique → confidence: substring
+cardCount === mediaCount && no keys → positional
+otherwise              → null  (never guess)
+```
+
+```js
+node tools/match-cards.mjs      // 7 assertions, including "ambiguous is not a match"
+```
+
+[reference/asset-matching.md](reference/asset-matching.md) also covers scraping a human title out
+of the DOM (table row → nearest heading → `Scene N`) and sanitising it into a filename.
+
+## 6c. Injecting a button into a live SPA
+
+`MutationObserver` on `body` + `setInterval` is right; unthrottled, it re-queries the whole
+document dozens of times a second while a chat stream renders. Coalesce to one pass per frame:
+
+```js
+let queued = false;
+new MutationObserver(() => {
+  if (queued) return;
+  queued = true;
+  requestAnimationFrame(() => { queued = false; attachButtons(); });
+}).observe(document.body, { childList: true, subtree: true });
+```
+
+Then: `:scope > .my-btn` guard → remove duplicates → set `position: relative` on the card → append.
 
 ## 7. The handoff protocol (copy this table into any clone)
 
@@ -271,8 +314,27 @@ the extension fetches.
 
 ---
 
-## Reference implementation
+## Reference & tools
 
-`skeleton/` in this skill folder is a **generic, cleaned-up clone** of the architecture above —
-same three-world split, persistence, allow-list, completion accounting and sequential batch
-download — with the app-specific bits (host names, the token salt) removed. Start there.
+```
+chrome-mv3-media-interceptor/
+├── SKILL.md                        ← this file
+├── skeleton/                        ← generic, valid, loadable clone of the architecture
+│   ├── manifest.json  interceptor.js  content.js  background.js  popup.html  popup.js
+│   └── icon128.png
+├── reference/
+│   ├── token-decode.md             ← the qAAB derivation + 2 bugs the harness found
+│   ├── asset-matching.md           ← card↔asset ladder, DOM titles, SPA injection
+│   └── hud-css.md                  ← the popup's visual system, and what to change
+└── tools/
+    ├── verify-decode.mjs           ← builds tokens, decodes them, 4/4 pass
+    └── match-cards.mjs             ← confidence matcher, 7/7 pass
+```
+
+```bash
+node tools/verify-decode.mjs     # 4 passed, 0 failed
+node tools/match-cards.mjs       # 7/7 matcher assertions passed
+```
+
+`skeleton/` is the starting point for a new site; `tools/` is how you prove the two pieces that
+fail silently — the crypto and the matching — before you ever ship.
