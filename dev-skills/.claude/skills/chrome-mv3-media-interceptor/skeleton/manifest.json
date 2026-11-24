@@ -1,0 +1,54 @@
+{
+  "manifest_version": 3,
+  "name": "Media Interceptor (skeleton)",
+  "version": "0.1.0",
+  "description": "Captures the best-quality media stream a web app loads. Generic skeleton — set your hosts, then load unpacked.",
+  "minimum_chrome_version": "116",
+  "icons": {
+    "128": "icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "icon128.png"
+    }
+  },
+  "permissions": [
+    "downloads",
+    "storage",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://app.example.com/*",
+    "https://api.example.com/*",
+    "https://cdn.example.com/*"
+  ],
+  "optional_host_permissions": [
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://app.example.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "interceptor.js"
+      ],
+      "matches": [
+        "https://app.example.com/*"
+      ]
+    }
+  ]
+}

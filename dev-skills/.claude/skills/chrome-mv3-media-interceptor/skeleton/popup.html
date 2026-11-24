@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Media Interceptor</title>
+  <style>
+    :root { --cream:#F0EEE6; --ink:#191919; --grey:#6b645c; --coral:#D97757; }
+    * { box-sizing: border-box; }
+    body {
+      width: 360px; margin: 0; padding: 14px;
+      font: 13px/1.45 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      background: var(--cream); color: var(--ink);
+    }
+    header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+    h1 { font-size: 14px; letter-spacing: .08em; margin: 0; text-transform: uppercase; }
+    .count { color: var(--grey); font-variant-numeric: tabular-nums; }
+    ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; max-height: 340px; overflow: auto; }
+    li { display: flex; gap: 8px; align-items: center; padding: 6px; border: 1px solid #ded9cf; border-radius: 8px; }
+    li img, .ph { width: 44px; height: 44px; border-radius: 6px; object-fit: cover; background: #e4dfd4; }
+    .meta { min-width: 0; flex: 1; }
+    .title { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sub { color: var(--grey); font-size: 11px; }
+    button {
+      font: inherit; cursor: pointer; border: 0; border-radius: 6px; padding: 6px 10px;
+      background: var(--ink); color: var(--cream);
+    }
+    button:disabled { opacity: .55; cursor: default; }
+    #all { width: 100%; margin-top: 10px; background: var(--coral); color: #fff; }
+    .empty { color: var(--grey); padding: 18px 4px; text-align: center; }
+    .warn { margin-top: 10px; font-size: 11px; color: var(--grey); }
+    .warn button { background: none; color: var(--coral); padding: 0; text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Captured</h1>
+    <span class="count" id="count">0 clips</span>
+  </header>
+
+  <ul id="list"></ul>
+  <button id="all" hidden>Download all</button>
+  <p class="warn" id="perm" hidden>
+    Some CDNs are not in the allow-list. <button id="grant">Grant wide access</button>
+  </p>
+
+  <script src="popup.js"></script>
+</body>
+</html>
