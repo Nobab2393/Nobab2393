@@ -1,0 +1,6 @@
+frames/
+audio/
+vo/track.wav
+seg*.mp4
+segs.txt
+__pycache__/
