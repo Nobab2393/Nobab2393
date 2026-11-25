@@ -94,6 +94,28 @@
    "version": "1.0.0",
    "installedAt": "2026-11-23",
    "note": "working layer: MCSLA routine, lanes, negative blocks, camera vocab, build_prompt.py"
+  },
+  "directing-stickman-videos": {
+   "source": "kaomei/stickman-video-director",
+   "commit": "10287822ba47579321068da1b93801face9160dd",
+   "sourceType": "github",
+   "skillPath": "skills/directing-stickman-videos/SKILL.md",
+   "computedHash": "fcbab3e8ec1b96d7dff414f3847567baf2415952b5e5a289902bdf482c83bb18",
+   "installMode": "copy",
+   "version": "1.0.0",
+   "installedAt": "2026-11-23",
+   "note": "text layer only (515 files, 4.75 MB); 554 MB reference media not vendored — see MEDIA-NOT-INSTALLED.md"
+  },
+  "stickman-video-director": {
+   "source": "kaomei/stickman-video-director",
+   "commit": "10287822ba47579321068da1b93801face9160dd",
+   "sourceType": "github",
+   "skillPath": "distilled",
+   "computedHash": "16f6a8d1bfef05dbd4eb5d5114c5d0172ef3c5abb14542151911290e9c5041ac",
+   "installMode": "authored",
+   "version": "1.0.0",
+   "installedAt": "2026-11-23",
+   "note": "working layer: A/B routing, style map, A five-block prompt formula, B runtime commands, delivery gates"
   }
  }
 }
