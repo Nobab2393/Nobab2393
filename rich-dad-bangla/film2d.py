@@ -348,9 +348,9 @@ def s_board(p, e):
     # left: a purse that fills · right: a pocket with a hole
     purse(p, bx - 180, by + 20, 1.05 + 0.05 * math.sin(t * 1.6))
     pocket(p, bx + 180, by + 40, 1.05)
-    coins_into(p, bx - 180, by - 130, t)
-    coins_out(p, bx + 180, by + 130, t)
-    C.eagle(p, 830, GY - 2, 1.34, wings=0.16 + 0.5 * max(0.0, 1 - abs(q - 0.35) * 4),
+    coins_into(p, bx - 180, by + 10, t)
+    coins_out(p, bx + 180, by + 110, t)
+    C.eagle(p, 830, GY - 2, 1.34, wings=0.0,
             blink=blink_of(t, 0.9), mouth=mouth_of(e, "eagle"), look=(0.6, 0), tilt=6)
     C.rabbit(p, 470, GY - 4, 1.16, blink=blink_of(t, 2.6), mouth=mouth_of(e, "rabbit"),
              look=(0.6, 0), arm=0.5)
