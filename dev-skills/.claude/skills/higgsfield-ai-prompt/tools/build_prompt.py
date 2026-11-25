@@ -71,8 +71,7 @@ def build(a):
     if a.look:
         body_parts.append("Style: %s." % a.look.strip().rstrip("."))
     body = " ".join(body_parts)
-    if body:
-        body = body[0].upper() + body[1:]
+    body = ". ".join(seg[0].upper() + seg[1:] if seg else seg for seg in body.split(". "))
 
     lines = []
     if not a.body_only:
