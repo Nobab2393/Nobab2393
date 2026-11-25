@@ -500,20 +500,32 @@ def s_walk(p, e):
 @scene("end")
 def s_end(p, e):
     q, t = e["q"], e["t"]
-    sky_flat(p, (242, 206, 174))
-    p.poly([(-200, 900), (WW + 200, 900), (WW + 200, WH + 400), (-200, WH + 400)],
-           (238, 196, 160), 0)
-    sun(p, 1780, 860, r=210, col=(247, 196, 128), ring=(234, 172, 104))
-    hills(p, base=900, amp=90, col=(214, 164, 130), col2=(196, 146, 116))
-    p.poly([(-200, 1010), (WW + 200, 1010), (WW + 200, WH + 400), (-200, WH + 400)],
-           (226, 176, 142), 0)
-    p.poly([(1200, WH + 200), (1480, WH + 200), (2600, 1040), (2400, 1010)], (240, 200, 168), 0)
-    # two small figures walking away up the path
-    wx = 1480 + 34 * q
-    wy = 1012 - 5 * q
-    C.rabbit(p, wx, wy, 0.42, blink=0.0, look=(0.5, 0),
+    sky_flat(p, (244, 208, 176))
+    p.poly([(-200, 906), (WW + 200, 906), (WW + 200, WH + 400), (-200, WH + 400)],
+           (240, 198, 162), 0)
+    sun(p, 1810, 868, r=206, col=(248, 198, 130), ring=(234, 172, 104))
+    hills(p, base=904, amp=86, col=(216, 166, 132), col2=(198, 148, 118))
+    for tx, ts in ((150, 0.85), (420, 0.55), (2180, 0.75)):
+        tree(p, tx, 900, ts, col=(168, 148, 94))
+    p.poly([(-200, 1012), (WW + 200, 1012), (WW + 200, WH + 400), (-200, WH + 400)],
+           (228, 176, 142), 0)
+    # a road widening toward us
+    p.poly([(1290, 1014), (1452, 1014), (2260, WH + 300), (520, WH + 300)],
+           (242, 200, 166), 0)
+    for i in range(9):
+        yy = 1046 + i * 34
+        w = 16 + i * 13
+        p.line([(1372 - w / 2, yy), (1372 + w / 2, yy)], (232, 190, 156), 5.0)
+    # two small figures walking away up the road
+    wx = 1310 + 30 * q
+    wy = 1014 - 4 * q
+    C.rabbit(p, wx, wy, 0.52, blink=0.0, look=(0.5, 0),
              ears=0.08 * math.sin(2 * math.pi * 1.2 * t))
-    C.eagle(p, wx + 62, wy, 0.44, wings=0.0, blink=0.0, look=(-0.5, 0))
+    C.eagle(p, wx + 74, wy, 0.54, wings=0.0, blink=0.0, look=(-0.5, 0))
+    for gx in (240, 380, 1900, 2080, 2230):
+        p.line([(gx, WH + 60), (gx + 4, WH - 30)], (206, 158, 126), 4.0)
+        for k in (-2, 0, 2):
+            p.line([(gx, WH - 10), (gx + 16 * k, WH - 68)], (206, 158, 126), 3.4)
     a = min(1.0, q / 0.16)
     e["card"] = (END1, END2, NEXT, a)
 
