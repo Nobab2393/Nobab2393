@@ -1,0 +1,6 @@
+frames/
+audio/mix.wav
+*.wav
+segs/
+segs.txt
+__pycache__/
