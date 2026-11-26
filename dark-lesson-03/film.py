@@ -42,7 +42,10 @@ try:
 except Exception:
     FFMPEG = "ffmpeg"
 
-AUD = ["audio/v%d.mp3" % i for i in range(1, 8)]
+VO_DIR = os.environ.get("VO_DIR", "audio")      # VO_DIR=audio-v15 to re-voice
+MIX = os.path.join(VO_DIR, "mix.wav")
+OUT = os.environ.get("OUT", "dark-lesson-03-1080x1920.mp4")
+AUD = [os.path.join(VO_DIR, "v%d.mp3" % i) for i in range(1, 8)]
 
 
 def probe(path):
@@ -498,8 +501,8 @@ def main():
         fc = ";".join(filt) + ";" + "".join(labels) + "amix=inputs=7:normalize=0,apad[a]"
         subprocess.run([FFMPEG, "-y", "-loglevel", "error"] + inputs +
                        ["-filter_complex", fc, "-map", "[a]", "-ar", "44100", "-ac", "2",
-                        "-t", "%.3f" % TOTAL, "audio/mix.wav"], check=True)
-        print("mix ok", os.path.getsize("audio/mix.wav"))
+                        "-t", "%.3f" % TOTAL, MIX], check=True)
+        print("mix ok", os.path.getsize(MIX))
         return
 
     if "--join" in sys.argv:
@@ -508,15 +511,15 @@ def main():
             for sp in segs:
                 f.write("file '%s'\n" % os.path.abspath(sp))
         subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-f", "concat", "-safe", "0",
-                        "-i", "segs.txt", "-i", "audio/mix.wav", "-c:v", "copy",
+                        "-i", "segs.txt", "-i", MIX, "-c:v", "copy",
                         "-c:a", "aac", "-b:a", "144k", "-movflags", "+faststart",
-                        "dark-lesson-03-1080x1920.mp4"], check=True)
-        print("joined", os.path.getsize("dark-lesson-03-1080x1920.mp4"))
+                        OUT], check=True)
+        print("joined", os.path.getsize(OUT))
         return
 
-    out = "dark-lesson-03-1080x1920.mp4"
+    out = OUT
     cmd = [FFMPEG, "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
-           "-s", "%dx%d" % (W, H), "-r", str(FPS), "-i", "-", "-i", "audio/mix.wav",
+           "-s", "%dx%d" % (W, H), "-r", str(FPS), "-i", "-", "-i", MIX,
            "-map", "0:v", "-map", "1:a", "-c:v", "libx264", "-preset", "medium", "-crf", "20",
            "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "144k", "-movflags", "+faststart", out]
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)

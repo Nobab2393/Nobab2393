@@ -95,3 +95,33 @@ python3 film2d.py --join segA.mp4 segB.mp4
   one-accent rule, make Mira grey and lose the colour coding.
 - The voice-over was not transcribed back — there is no speech recogniser in this sandbox, so
   sync is verified by waveform and by ear only.
+
+---
+
+## Re-voiced with the new narrator (`voice-15`)
+
+**`dark-lesson-03-2d-voice15-1080x1920.mp4`** — the same film, 1:08.34 instead of 56.1 s,
+now read by the narrator of episode 3 of the *rich-dad* line (*কেনা সম্মান*), so the two
+series share one voice.
+
+The original narration was never committed as text — only as `audio/v1…v7.mp3` — so the
+seven lines were **rewritten to the same beats** and recorded fresh in `audio-v15/`. If you
+have the original script, paste it and the same pipeline re-renders it verbatim.
+
+What changed under the hood:
+
+- `VO_DIR=audio-v15` switches every read — takes, mix, timings — to the new voice-over.
+- `NAR`, `BOUNDS` and `TOTAL` are no longer hardcoded: `_timings()` probes the takes and
+  `_bounds()` derives the seven scene cuts from them. Pointed at the original `audio/`, it
+  reproduces the old `[0.9, 7.07, 14.19, …]` and 56.10 s exactly, so the first cut still
+  renders identically.
+- The cel build (`../dark-lesson-03/film.py`) takes the same `VO_DIR` / `OUT` variables;
+  it was not re-rendered here because it needs well over 25 minutes on 2 vCPU.
+
+```bash
+VO_DIR=audio-v15 python3 film2d.py --mix
+VO_DIR=audio-v15 python3 film2d.py --seg 0 1025 /tmp/segA.mp4
+VO_DIR=audio-v15 python3 film2d.py --seg 1025 2050 /tmp/segB.mp4
+VO_DIR=audio-v15 OUT=dark-lesson-03-2d-voice15-1080x1920.mp4 \
+  python3 film2d.py --join /tmp/segA.mp4 /tmp/segB.mp4
+```

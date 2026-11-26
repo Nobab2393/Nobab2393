@@ -13,6 +13,7 @@ Flat vector motion graphics, built to the grammar in
 """
 import math
 import os
+import re
 import subprocess
 import sys
 
@@ -25,10 +26,51 @@ import rig2d
 from flat import eio, eout, lerp, mix, seg, W, H
 
 FPS = 30
-AUD = "audio/v%d.mp3"
-NAR = [0.90, 7.07, 14.19, 20.61, 29.66, 37.93, 44.54]
-BOUNDS = [0.0, 6.75, 13.87, 20.29, 29.34, 37.61, 44.22, 51.94]
-TOTAL = 56.1
+VO_DIR = os.environ.get("VO_DIR", "audio")      # VO_DIR=audio-v15 to re-voice
+MIX = os.path.join(VO_DIR, "mix.wav")
+OUT = os.environ.get("OUT", "dark-lesson-03-2d-1080x1920.mp4")
+AUD = os.path.join(VO_DIR, "v%d.mp3")
+NAR_HARD = [0.90, 7.07, 14.19, 20.61, 29.66, 37.93, 44.54]
+GAP_AFTER = 0.45        # breath between lines
+TAIL = 4.5              # room after the last word for the CTA card
+
+
+def _probe_dur(path):
+    try:
+        import imageio_ffmpeg
+        exe = imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        exe = "ffmpeg"
+    try:
+        out = subprocess.run([exe, "-i", path], capture_output=True, text=True).stderr
+    except Exception:
+        return None
+    m = re.search(r"Duration: (\d+):(\d+):(\d+\.\d+)", out)
+    if not m:
+        return None
+    h, mi, sec = m.groups()
+    return int(h) * 3600 + int(mi) * 60 + float(sec)
+
+
+def _timings():
+    """Line starts follow the takes themselves, so a new voice-over stays in sync."""
+    durs = [_probe_dur(AUD % (k)) for k in range(1, 8)]
+    if any(d is None for d in durs):
+        return list(NAR_HARD), 56.1
+    nar = [NAR_HARD[0]]
+    for d in durs[:-1]:
+        nar.append(round(nar[-1] + d + GAP_AFTER, 3))
+    total = round(nar[-1] + durs[-1] + TAIL, 3)
+    return nar, total
+
+
+def _bounds(nar, total):
+    """Scene cuts sit a third of a second before the next line, like the original cut."""
+    return [0.0] + [round(n - 0.32, 3) for n in nar[1:]] + [round(total - TAIL + 0.34, 3)]
+
+
+NAR, TOTAL = _timings()
+BOUNDS = _bounds(NAR, TOTAL)
 NF = int(round(TOTAL * FPS))
 
 # ---- palette -----------------------------------------------------------------------
@@ -401,7 +443,7 @@ def main():
         print("still", t)
         return
 
-    out = "dark-lesson-03-2d-1080x1920.mp4"
+    out = OUT
     print("timeline", NAR, "total", TOTAL, "frames", NF, flush=True)
 
     if "--mix" in sys.argv:
@@ -414,7 +456,7 @@ def main():
         fc = ";".join(filt) + ";" + "".join(labels) + "amix=inputs=7:normalize=0,apad[a]"
         subprocess.run([ffmpeg(), "-y", "-loglevel", "error"] + inputs +
                        ["-filter_complex", fc, "-map", "[a]", "-ar", "44100", "-ac", "2",
-                        "-t", "%.3f" % TOTAL, "audio/mix.wav"], check=True)
+                        "-t", "%.3f" % TOTAL, MIX], check=True)
         print("mix ok")
         return
 
@@ -440,7 +482,7 @@ def main():
             for sp in segs:
                 fh.write("file '%s'\n" % os.path.abspath(sp))
         subprocess.run([ffmpeg(), "-y", "-loglevel", "error", "-f", "concat", "-safe", "0",
-                        "-i", "segs.txt", "-i", "audio/mix.wav", "-c:v", "copy",
+                        "-i", "segs.txt", "-i", MIX, "-c:v", "copy",
                         "-c:a", "aac", "-b:a", "144k", "-movflags", "+faststart", out], check=True)
         print("joined", os.path.getsize(out))
         return
