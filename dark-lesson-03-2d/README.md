@@ -125,3 +125,40 @@ VO_DIR=audio-v15 python3 film2d.py --seg 1025 2050 /tmp/segB.mp4
 VO_DIR=audio-v15 OUT=dark-lesson-03-2d-voice15-1080x1920.mp4 \
   python3 film2d.py --join /tmp/segA.mp4 /tmp/segB.mp4
 ```
+
+---
+
+## Acting pass — nobody stands still any more
+
+The picture was re-blocked so the seven scenes play as *performance*, not pose-swapping.
+Same cuts, same captions, same 68.34 s; only the bodies moved.
+
+- **Idle is animated.** `life(lt, seed, rate, amp)` layers breath, a slow head drift and a
+  micro shift on the torso for every figure that is on screen, so a character waiting for
+  his line still reads as alive.
+- **Beat-by-beat acting.** The crowd turns to look in a stagger (`0.3 / 2.1 / 4.4` s seeds);
+  Ayan stops dead, flinches, recoils and wipes his hand across his face; Rafiq squashes on
+  landing, rolls a shoulder and throws a *come-here* arm; the bag toss gets a wind-up →
+  snatch → throw, the books land, flutter and then give up; the ring of onlookers gets five
+  different gazes — one stares, one looks away, one raises a phone; he lifts his head once;
+  a passer-by glances back; two figures step aside to let Mira through; in the closing beat
+  the two of them look at each other.
+- **Two new helpers**, `life()` and `dust()` (the landing puff), sit above the scenes in
+  `film2d.py`.
+- **Bug this pass exposed:** the rig's `head` channel is a *tilt* (±0.16 head-radius per
+  unit), not a turn, so the first pass's ±20 "gaze" values pulled the head clean off the
+  neck. `rig2d.draw()` now clamps it to ±9.5 and the scene values were re-scaled to what the
+  channel actually does. Worth knowing before writing gaze animation again.
+
+Bitrate went 1037 → 1175 kb/s of video for the same 68.34 s: more movement, more residual.
+
+```bash
+VO_DIR=audio-v15 python3 film2d.py --mix
+VO_DIR=audio-v15 python3 film2d.py --seg 0 1025 /tmp/segA.mp4
+VO_DIR=audio-v15 python3 film2d.py --seg 1025 2050 /tmp/segB.mp4          # ≈7 m 30 s total
+VO_DIR=audio-v15 OUT=dark-lesson-03-2d-voice15-1080x1920.mp4 \
+  python3 film2d.py --join /tmp/segA.mp4 /tmp/segB.mp4
+```
+
+`--join` writes to `OUT`, which defaults to the **original** cut's filename — set `OUT`
+explicitly, or it will overwrite `dark-lesson-03-2d-1080x1920.mp4`.

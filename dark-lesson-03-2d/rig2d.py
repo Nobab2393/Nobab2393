@@ -161,6 +161,9 @@ def _arm(cv, ar, h, sleeve, skin, lw):
 
 def _head(cv, spec, h, J, pose, lw, eye=None):
     cx, cy = J["head"]
+    tilt = max(-9.5, min(9.5, float(pose.get("head", 0.0) or 0.0)))
+    pose = dict(pose)
+    pose["head"] = tilt
     if MONO[0] is not None:
         r = 0.108 * h
         cy += pose.get("head", 0.0) * r * 0.16

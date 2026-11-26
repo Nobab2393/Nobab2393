@@ -165,6 +165,27 @@ def caption(cv, y, txt, size=72, k=1.0, col=INK, cx=540):
     cv.text((cx, y), txt, size, 800, col)
 
 
+
+TAU = 2 * math.pi
+
+
+def life(lt, seed=0.0, rate=0.32, amp=1.0):
+    """Everyone is breathing, always. One function keeps a crowd from being statues."""
+    b = amp * math.sin(TAU * rate * lt + seed)
+    return dict(breath=b, head=2.2 * amp * math.sin(TAU * rate * 0.47 * lt + seed * 1.7))
+
+
+def dust(cv, x, y, t0, lt, n=3, size=70, ground_col=(233, 230, 220)):
+    """A flat puff: three rings that open and fade back into the ground."""
+    for i in range(n):
+        k = f(t0 + i * 0.06, t0 + 0.85 + i * 0.06, lt)
+        if not (0.02 < k < 0.995):
+            continue
+        r = size * (0.35 + 0.75 * k)
+        cv.ellipse(x + (i - 1) * size * 0.55 * k, y - r * 0.30, r * 1.15, r * 0.42,
+                   mix(ground_col, INK, 0.14 * (1 - k)))
+
+
 # ---------------------------------------------------------------- scenes
 def s1(cv, lt, dur):
     """Noon. He walks in. Somebody is already standing in the way."""
@@ -178,65 +199,108 @@ def s1(cv, lt, dur):
     meta(cv, "১ / ৭", (SAFE[2], 300), 28, META, anchor="rm")
 
     gy = 1500
-    crowd = [(150, 1180, 300, 0), (930, 1180, 306, 3), (1030, 1260, 322, 6)]
-    for i, (cx, gy2, hh, st) in enumerate(crowd):
-        k = expo(f(0.10 + st / FPS, 0.50 + st / FPS, lt))
+    lean_g = -1.15 - 0.16 * (lt / max(dur, 0.1))     # the sun is already moving
+    # the crowd drifts in one at a time, each on their own clock
+    crowd = [(150, 1180, 300, 0.00, 0.3, 6), (930, 1180, 306, 3 / FPS, 2.1, 8),
+             (1030, 1260, 322, 6 / FPS, 4.4, 3)]
+    for i, (cx, gy2, hh, st, seed, gaze) in enumerate(crowd):
+        k = expo(f(0.10 + st, 0.50 + st, lt))
         if k < 0.02:
             continue
         yy = gy2 + (1 - k) * 80
-        shadow(cv, cx, yy, hh, col=mix(GROUND, INK, 0.10))
-        figure(cv, hh, yy, cx, pose=dict(walk=(0.15 + 0.2 * i) % 1.0), mono=mix(INK, GROUND, 0.55),
-               eye=GROUND)
+        pose = dict(walk=(0.15 + 0.2 * i) % 1.0 * (1 - k), stride=0.6)
+        pose.update(life(lt, seed, amp=0.8))
+        turn = expo(f(1.95 + i * 0.22, 2.40 + i * 0.22, lt))
+        pose["head"] = pose["head"] * (1 - turn) + gaze * turn
+        shadow(cv, cx, yy, hh, lean=lean_g, col=mix(GROUND, INK, 0.10))
+        figure(cv, hh, yy, cx, pose=pose, mono=mix(INK, GROUND, 0.55), eye=GROUND,
+               flip=cx > 700)
 
+    # Ayan walks in, and stops when the other man steps out in front of him
     kw = f(0.35, 1.05, lt)
     if kw > 0.01:
         wx = lerp(-180, 405, back(kw, 1.2))
-        shadow(cv, wx, gy, 330)
-        figure(cv, 330, gy, wx, pose=dict(walk=lt * 1.5, blink=0.0), mono=ACCENT, eye=GROUND,
-           props=("bag",))
+        stop = expo(f(1.02, 1.34, lt))
+        pose = dict(walk=lt * 1.5, stride=1.0 * (1 - 0.92 * stop),
+                    breath=0.8 * (1 - stop) * math.sin(TAU * 1.5 * lt))
+        pose["head"] = -2 + 6 * expo(f(1.22, 1.60, lt))
+        shadow(cv, wx, gy, 330, lean=lean_g)
+        figure(cv, 330, gy, wx, pose=pose, mono=ACCENT, eye=GROUND, props=("bag",))
 
+    # Rafiq lands, rolls his shoulders, and lifts a hand: come here
     kr = f(0.9, 1.4, lt)
     if kr > 0.01:
         ry = gy + (1 - back(kr)) * -60
-        shadow(cv, 800, ry, 384)
-        figure(cv, 384, ry, 800, pose=dict(walk=0.0, head=-3), mono=INK, eye=GROUND)
+        squash = math.sin(min(1.0, f(1.30, 1.72, lt)) * math.pi)
+        hh = 384 * (1 - 0.022 * squash)
+        roll = math.sin(TAU * 0.85 * (lt - 1.35)) * expo(f(1.35, 1.75, lt)) * (1 - 0.5 * expo(f(2.9, 3.4, lt)))
+        pose = dict(walk=0.0, stride=0.0)
+        pose.update(life(lt, 1.1, amp=0.7))
+        pose["head"] = -3 + 6 * roll
+        pose["breath"] = pose["breath"] + 1.5 * roll
+        pose["arm"] = 0.34 * expo(f(2.05, 2.40, lt)) * (1 - expo(f(2.80, 3.15, lt)))
+        shadow(cv, 800, ry, hh, lean=1.15)
+        figure(cv, hh, ry, 800, pose=pose, mono=INK, eye=GROUND, flip=True)
 
     caption(cv, 440, "দুপুরের রোদে সব পরিষ্কার", 76, expo(f(2.4, 2.9, lt)))
     return (ACCENT, (405, gy - 120))
 
 
 def s2(cv, lt, dur):
-    """The bag goes down. The books go everywhere."""
+    """The bag goes down. The books go everywhere. He is pleased with himself."""
     ground(cv, 980, CARD, band=(INK, 3))
     meta(cv, "২ / ৭", (SAFE[2], 300), 30, META)
 
     gy = 1500
-    reach = snap(f(1.4, 2.4, lt))
+    wind = math.sin(f(0.52, 0.84, lt) * math.pi)                  # the wind-up
+    snatch = snap(f(0.84, 1.02, lt))
+    throw = snap(f(1.20, 1.44, lt))
+    taunt = expo(f(1.55, 2.00, lt))
     fly = snap(f(0.85, 1.25, lt))
     land = snap(f(1.25, 1.45, lt))
 
-    figure(cv, 660, gy, 800, pose=dict(walk=0.0, head=-8), mono=INK, eye=CARD, flip=True)
-    shadow(cv, 800, gy, 660, lean=1.15)
+    sway = math.sin(TAU * 1.15 * (lt - 1.5)) * taunt
+    lean = -16 * wind + 30 * snatch - 22 * throw
+    pose = dict(walk=0.0, stride=0.0)
+    pose.update(life(lt, 0.9, amp=0.8))
+    pose["breath"] = pose["breath"] + 1.7 * sway
+    pose["head"] = -5 + 7 * snatch - 9 * throw + 4 * sway
+    pose["reach"] = 0.92 * snatch * (1 - throw)
+    pose["grab"] = snatch * (1 - throw)
+    figure(cv, 660, gy, 800 + lean, pose=pose, mono=INK, eye=CARD, flip=True)
+    shadow(cv, 800 + lean * 0.6, gy, 660, lean=1.15)
 
     if fly < 0.995:
         by = lerp(gy - 210, gy - 40, fly * fly)
-        bag(cv, lerp(300, 560, snap(f(0.3, 0.8, lt))) if fly <= 0 else lerp(560, 545, fly), by, 74,
-            0.1 + 1.8 * fly)
+        bx = lerp(300, 560, snap(f(0.3, 0.8, lt))) if fly <= 0 else lerp(560, 545, fly)
+        bag(cv, bx, by, 74, 0.1 + 1.8 * fly)
     if land > 0.02:
         bag(cv, 548, gy - 30, 76, 0.25)
         cv.line([(430, gy - 18), (690, gy - 10)], mix(CARD, INK, 0.25), 6.0, caps=False)
+        dust(cv, 552, gy - 6, 1.24, lt, n=3, size=76, ground_col=CARD)
 
+    # Ayan flinches, then goes to pick them up anyway
+    recoil = math.sin(min(1.0, f(1.42, 2.10, lt)) * math.pi) * land
+    pose_a = dict(walk=0.0, reach=0.35 + 0.5 * snap(f(1.45, 2.6, lt)))
+    pose_a.update(life(lt, 2.3, amp=1.0 + 1.6 * recoil))
+    pose_a["head"] = 4 - 8 * recoil
+    pose_a["arm"] = 0.46 * recoil
+    pose_a["breath"] = pose_a["breath"] + 2.2 * recoil
+    figure(cv, 650, gy + 10, 330 - 18 * recoil, pose=pose_a, mono=ACCENT, eye=CARD,
+           props=("bag",))
+    shadow(cv, 330 - 10 * recoil, gy + 10, 650, lean=-1.15 - 0.1 * (lt / max(dur, 0.1)))
+
+    # the books land and keep fluttering until they give up
     for i in range(5):
         k = snap(f(0.9 + i * 0.04, 1.45 + i * 0.04, lt))
         if k <= 0.02:
             continue
+        settle = expo(f(1.5 + i * 0.05, 3.1, lt))
+        flut = (1 - settle) * math.sin(TAU * 1.9 * lt + i * 1.1)
         x = lerp(560, 660 + i * 54 - 24 * (i % 2), k)
-        y = lerp(gy - 90, gy - 14 + 8 * (i % 3), k) - 110 * math.sin(k * math.pi)
-        card(cv, x, y, 40, (1 - k) * 2.4 + i * 0.3, col=mix(INK, GROUND, 0.15 * i))
-
-    shadow(cv, 330, gy + 10, 650)
-    figure(cv, 650, gy + 10, 330, pose=dict(walk=0.0, reach=0.35 + 0.5 * reach, head=4),
-           mono=ACCENT, eye=CARD, props=("bag",))
+        y = lerp(gy - 90, gy - 14 + 8 * (i % 3), k) - 110 * math.sin(k * math.pi) - 5 * flut
+        card(cv, x, y, 40, (1 - k) * 2.4 + i * 0.3 + 0.18 * flut,
+             col=mix(INK, GROUND, 0.15 * i))
 
     caption(cv, 400, "ব্যাগটা মাটিতে পড়ল", 76, expo(f(2.1, 2.6, lt)))
     return (ACCENT, (500, gy - 40))
@@ -248,20 +312,32 @@ def s3(cv, lt, dur):
     meta(cv, "৩ / ৭", (SAFE[2], 300), 30, META)
 
     gy = 1400
-    ring = [(120, 1276, 350), (300, 1210, 330), (770, 1200, 332), (930, 1276, 354),
-            (1010, 1196, 324)]
-    for i, (cx, yy, hh) in enumerate(ring):
+    lean_g = -1.15 - 0.14 * (lt / max(dur, 0.1))
+    # gaze: 10 looks at him, -22 looks away, 18 stares
+    ring = [(120, 1276, 350, -8, 0.0), (300, 1210, 330, 5, 1.3), (770, 1200, 332, 7, 2.6),
+            (930, 1276, 354, 4, 3.9), (1010, 1196, 324, 8, 5.2)]
+    for i, (cx, yy, hh, gaze, seed) in enumerate(ring):
         k = expo(f(0.05 + 3 * i / FPS, 0.45 + 3 * i / FPS, lt))
         if k < 0.02:
             continue
         yo = yy + (1 - k) * 60
-        shadow(cv, cx, yo, hh, col=mix(GROUND, INK, 0.10))
-        figure(cv, hh, yo, cx, pose=dict(walk=0.0, head=-6), mono=mix(INK, GROUND, 0.55),
-               eye=GROUND, flip=cx > 540)
+        pose = dict(walk=0.0)
+        pose.update(life(lt, seed, amp=0.9))
+        look = expo(f(1.15 + i * 0.24, 1.55 + i * 0.24, lt))
+        pose["head"] = pose["head"] * (1 - look) + gaze * look
+        if i == 4:                                   # the one who raises a phone
+            pose["arm"] = 0.58 * expo(f(1.70, 2.00, lt))
+        shadow(cv, cx, yo, hh, lean=lean_g, col=mix(GROUND, INK, 0.10))
+        figure(cv, hh, yo, cx, pose=pose, mono=mix(INK, GROUND, 0.55), eye=GROUND,
+               flip=cx > 540)
 
-    shadow(cv, 520, gy, 420)
-    figure(cv, 420, gy, 520, pose=dict(kneel=0.9, reach=0.4, head=6), mono=ACCENT, eye=GROUND,
-           props=("bag",))
+    # he kneels, gathers, and once — just once — lifts his head
+    hop = math.sin(min(1.0, f(2.5, 4.1, lt)) * math.pi)
+    pose_k = dict(kneel=0.9, reach=0.42 + 0.12 * math.sin(TAU * 0.5 * lt))
+    pose_k.update(life(lt, 1.7, amp=1.2))
+    pose_k["head"] = 6 - 7 * hop
+    shadow(cv, 520, gy, 420, lean=lean_g)
+    figure(cv, 420, gy, 520, pose=pose_k, mono=ACCENT, eye=GROUND, props=("bag",))
     for i in range(4):
         card(cv, 610 + i * 44, gy - 14 + 8 * (i % 2), 30, i * 0.5, col=INK)
 
@@ -278,13 +354,21 @@ def s4(cv, lt, dur):
     go = snap(f(0.2, 1.6, lt))
     if go < 0.99:
         x = lerp(760, 1180, go)
-        shadow(cv, x, gy, 560, col=mix(GROUND, INK, 0.10))
-        figure(cv, 760, gy, x, pose=dict(walk=lt * 1.4), mono=INK, eye=GROUND)
+        glance = math.sin(min(1.0, f(1.05, 2.45, lt)) * math.pi)     # one look back
+        pose = dict(walk=lt * 1.4, stride=1.2)
+        pose.update(life(lt, 0.4, amp=1.0))
+        pose["head"] = -8 + 9 * glance
+        shadow(cv, x, gy, 560, lean=-1.15 - 0.12 * (lt / max(dur, 0.1)),
+               col=mix(GROUND, INK, 0.10))
+        figure(cv, 760, gy, x, pose=pose, mono=INK, eye=GROUND)
 
     down = snap(f(0.5, 1.4, lt))
-    shadow(cv, 400, gy, 760, w=0.5, lean=-1.4)
-    figure(cv, 760, gy, 400, pose=dict(kneel=0.95 * down, reach=0.35 + 0.55 * down,
-                                       head=5 * down), mono=ACCENT, eye=GROUND, props=("bag",))
+    wipe = math.sin(min(1.0, f(3.3, 4.3, lt)) * math.pi)             # a hand across the face
+    pose_a = dict(kneel=0.95 * down, reach=0.35 + 0.55 * down + 0.3 * wipe)
+    pose_a.update(life(lt, 2.0, rate=0.26, amp=1.0 + 1.6 * down))
+    pose_a["head"] = 4 * down + 6 * wipe
+    shadow(cv, 400, gy, 760, w=0.5, lean=-1.4 - 0.16 * (lt / max(dur, 0.1)))
+    figure(cv, 760, gy, 400, pose=pose_a, mono=ACCENT, eye=GROUND, props=("bag",))
     for i in range(4):
         k = snap(f(1.2 + i * 0.05, 1.6 + i * 0.05, lt))
         if k < 0.5:
@@ -296,7 +380,7 @@ def s4(cv, lt, dur):
 
 
 def s5(cv, lt, dur):
-    """One girl walks out of the ring. Two shadows become one shape."""
+    """One girl walks out of the ring. The ring opens to let her through."""
     ground(cv, 980, CARD, band=(INK, 3))
     meta(cv, "৫ / ৭", (SAFE[2], 300), 30, META)
 
@@ -304,15 +388,33 @@ def s5(cv, lt, dur):
     come = snap(f(0.15, 1.7, lt))
     kneel = snap(f(1.5, 2.3, lt))
     give = snap(f(2.6, 3.4, lt))
+    hold = math.sin(min(1.0, f(1.05, 1.60, lt)) * math.pi)           # she slows, then goes on
     mx = lerp(1240, 790, come)
+
+    # two of the ring step aside as she passes
+    part = expo(f(0.20, 1.15, lt))
+    for i, (bx, by, bh, seed) in enumerate([(1195, 1258, 336, 2.2), (1030, 1312, 300, 4.1)]):
+        pose = dict(walk=0.0)
+        pose.update(life(lt, seed, amp=0.85))
+        pose["head"] = pose["head"] + 8 * expo(f(0.9, 1.4, lt))
+        shadow(cv, bx + part * (66 + 22 * i), by, bh, col=mix(CARD, INK, 0.08))
+        figure(cv, bh, by, bx + part * (66 + 22 * i), pose=pose,
+               mono=mix(INK, GROUND, 0.62), eye=CARD)
 
     # his shadow, then hers — same tone, no gap: the merge is the argument
     shadow(cv, 400, gy, 760, w=0.52, lean=-1.4)
     shadow(cv, mx, gy, 760 - 330 * kneel, w=0.42, lean=-1.4)
-    figure(cv, 760, gy, 400, pose=dict(kneel=0.95, reach=0.5 + 0.35 * give, head=4),
-           mono=ACCENT, eye=CARD, props=("bag",))
-    figure(cv, 770, gy, mx, pose=dict(walk=(lt * 1.7) % 1.0 * (1 - come), kneel=0.9 * kneel,
-                                      reach=0.7 * give, head=3), mono=COOL, eye=CARD, flip=True,
+    pose_a = dict(kneel=0.95, reach=0.5 + 0.35 * give)
+    pose_a.update(life(lt, 1.2, amp=1.1))
+    pose_a["head"] = 3 - 5 * kneel
+    figure(cv, 760, gy, 400, pose=pose_a, mono=ACCENT, eye=CARD, props=("bag",))
+
+    pose_m = dict(walk=(lt * 1.7) % 1.0 * (1 - come) * (1 - 0.6 * hold),
+                  stride=1.0 * (1 - 0.5 * hold),
+                  kneel=0.9 * kneel, reach=0.7 * give)
+    pose_m.update(life(lt, 3.3, amp=0.9))
+    pose_m["head"] = 3 - 5 * give
+    figure(cv, 770, gy, mx, pose=pose_m, mono=COOL, eye=CARD, flip=True,
            props=("hood", "scarf"))
 
     if give > 0.05:
@@ -326,7 +428,7 @@ def s5(cv, lt, dur):
 
 def s6(cv, lt, dur):
     """The field again. Two people leaving, one long shadow."""
-    w = snap(fast := f(0.0, dur, lt))
+    w = snap(f(0.0, dur, lt))
     ground(cv, 1000 - 40 * w, (236, 233, 223), band=(INK, 3))
     meta(cv, "৬ / ৭", (SAFE[2], 300), 30, META)
 
@@ -335,11 +437,21 @@ def s6(cv, lt, dur):
     x = lerp(640, 250, go)
     h = lerp(380, 300, go)
     yy = gy + 40 * go
-    shadow(cv, x + 60, yy, h * 1.3, lean=-1.75, w=0.9)
-    figure(cv, h, yy, x, pose=dict(walk=lt * 1.5), mono=ACCENT, eye=GROUND, flip=True,
-           props=("bag",))
-    figure(cv, h * 0.96, yy + 4, x + 92, pose=dict(walk=lt * 1.5 + 0.4), mono=COOL,
-           eye=GROUND, flip=True, props=("hood", "scarf"))
+    lean = -1.75 - 0.25 * (lt / max(dur, 0.1))
+    shadow(cv, x + 60, yy, h * 1.3, lean=lean, w=0.9)
+
+    glance_him = math.sin(min(1.0, f(2.5, 3.6, lt)) * math.pi)
+    glance_her = math.sin(min(1.0, f(2.9, 4.0, lt)) * math.pi)
+    pose_h = dict(walk=lt * 1.5, stride=1.0)
+    pose_h.update(life(lt, 0.6, amp=0.9))
+    pose_h["head"] = pose_h["head"] + 7 * glance_him
+    figure(cv, h, yy, x, pose=pose_h, mono=ACCENT, eye=GROUND, flip=True, props=("bag",))
+
+    pose_s = dict(walk=lt * 1.5 + 0.4, stride=1.0)
+    pose_s.update(life(lt, 2.9, amp=0.9))
+    pose_s["head"] = pose_s["head"] + 6 * glance_her
+    figure(cv, h * 0.96, yy + 4, x + 92, pose=pose_s, mono=COOL, eye=GROUND, flip=True,
+           props=("hood", "scarf"))
 
     k = expo(f(1.0, 1.7, lt))
     if k > 0.02:
