@@ -1,0 +1,232 @@
+ffmpeg started on 2026-11-26 at 05:23:20
+Report written to "ffmpeg-20261126-052320.log"
+Log level: 48
+Command line:
+/usr/local/lib/python3.11/dist-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v9.0.2 -y -v error -i frames/s-1.2.png -i frames/s-9.png -i frames/s-30.png -i frames/s-48.png -filter_complex "[0]scale=620:-1[a];[1]scale=620:-1[b];[2]scale=620:-1[c];[3]scale=620:-1[d];[a][b]hstack[t];[c][d]hstack[u];[t][u]vstack" frames/sheet2.png -report
+ffmpeg version n9.0.2-17-g2a571b6068-20260930 Copyright (c) 2000-2026 the FFmpeg developers
+  built with gcc 16.2.0 (crosstool-NG 1.29.0.7_b1a94f6)
+  configuration: --prefix=/ffbuild/prefix --pkg-config-flags=--static --pkg-config=pkg-config --cross-prefix=x86_64-ffbuild-linux-gnu- --arch=x86_64 --target-os=linux --enable-gpl --enable-version3 --disable-debug --enable-iconv --enable-zlib --enable-libxml2 --enable-libsoxr --enable-openssl --enable-libvmaf --enable-libxcb --enable-xlib --enable-fontconfig --enable-libharfbuzz --enable-libfreetype --enable-libfribidi --enable-vulkan --enable-libdav1d --enable-libvorbis --enable-librav1e --enable-librsvg --enable-libpulse --enable-gmp --enable-lzma --enable-liblcevc-dec --enable-opencl --enable-amf --enable-libaom --enable-avisynth --enable-chromaprint --enable-libdavs2 --enable-libdvdread --enable-libdvdnav --disable-libfdk-aac --enable-ffnvcodec --enable-cuda-llvm --enable-frei0r --enable-libgme --enable-libkvazaar --enable-libaribb24 --enable-libaribcaption --enable-libass --enable-libbluray --enable-libjxl --enable-libmp3lame --enable-libopus --enable-libplacebo --enable-librist --enable-libssh --enable  libavutil      61.  1.102 / 61.  1.102
+  libavcodec     63.  1.102 / 63.  1.102
+  libavformat    63.  1.102 / 63.  1.102
+  libavdevice    63.  1.102 / 63.  1.102
+  libavfilter    12.  1.102 / 12.  1.102
+  libswscale     10.  1.102 / 10.  1.102
+  libswresample   7.  1.102 /  7.  1.102
+Splitting the commandline.
+Reading option '-y' ... matched as option 'y' (overwrite output files) with argument '1'.
+Reading option '-v' ... matched as option 'v' (set logging level) with argument 'error'.
+Reading option '-i' ... matched as input url with argument 'frames/s-1.2.png'.
+Reading option '-i' ... matched as input url with argument 'frames/s-9.png'.
+Reading option '-i' ... matched as input url with argument 'frames/s-30.png'.
+Reading option '-i' ... matched as input url with argument 'frames/s-48.png'.
+Reading option '-filter_complex' ... matched as option 'filter_complex' (create a complex filtergraph) with argument '[0]scale=620:-1[a];[1]scale=620:-1[b];[2]scale=620:-1[c];[3]scale=620:-1[d];[a][b]hstack[t];[c][d]hstack[u];[t][u]vstack'.
+Reading option 'frames/sheet2.png' ... matched as output url.
+Reading option '-report' ... matched as option 'report' (generate a report) with argument '1'.
+Finished splitting the commandline.
+Parsing a group of options: global .
+Applying option y (overwrite output files) with argument 1.
+Applying option v (set logging level) with argument error.
+Applying option filter_complex (create a complex filtergraph) with argument [0]scale=620:-1[a];[1]scale=620:-1[b];[2]scale=620:-1[c];[3]scale=620:-1[d];[a][b]hstack[t];[c][d]hstack[u];[t][u]vstack.
+Applying option report (generate a report) with argument 1.
+Successfully parsed a group of options.
+[AVFilterGraph @ 0x564a07354800] Setting 'w' to value '620'
+[AVFilterGraph @ 0x564a07354800] Setting 'h' to value '-1'
+[AVFilterGraph @ 0x564a07354800] Setting 'w' to value '620'
+[AVFilterGraph @ 0x564a07354800] Setting 'h' to value '-1'
+[AVFilterGraph @ 0x564a07354800] Setting 'w' to value '620'
+[AVFilterGraph @ 0x564a07354800] Setting 'h' to value '-1'
+[AVFilterGraph @ 0x564a07354800] Setting 'w' to value '620'
+[AVFilterGraph @ 0x564a07354800] Setting 'h' to value '-1'
+[Parsed_scale_0 @ 0x564a07357240] w:620 h:-1 flags:'' interl:0
+[Parsed_scale_1 @ 0x564a07364840] w:620 h:-1 flags:'' interl:0
+[Parsed_scale_2 @ 0x564a07371dc0] w:620 h:-1 flags:'' interl:0
+[Parsed_scale_3 @ 0x564a0737f440] w:620 h:-1 flags:'' interl:0
+Parsing a group of options: input url frames/s-1.2.png.
+Successfully parsed a group of options.
+Opening an input file: frames/s-1.2.png.
+[in#0 @ 0x564a0737f840] Opening 'frames/s-1.2.png' for reading
+[file @ 0x564a07356380] Setting default whitelist 'file,crypto,data'
+[in#0 @ 0x564a0737f840] Format png_pipe probed with size=2048 and score=99
+[in#0/png_pipe @ 0x564a0737f840] Before avformat_find_stream_info() pos: 0 bytes read:22080 seeks:0 nb_streams:1
+[in#0/png_pipe @ 0x564a0737f840] After avformat_find_stream_info() pos: 22080 bytes read:22080 seeks:0 frames:1
+Input #0, png_pipe, from 'frames/s-1.2.png':
+  Duration: N/A, bitrate: N/A
+  Stream #0:0, 1, 1/25: Video: png, rgb24(pc, gbr/unknown/unknown), 1080x1920, 25 fps, 25 tbr, 25 tbn
+Successfully opened the file.
+Parsing a group of options: input url frames/s-9.png.
+Successfully parsed a group of options.
+Opening an input file: frames/s-9.png.
+[in#1 @ 0x564a0738c140] Opening 'frames/s-9.png' for reading
+[file @ 0x564a0737ad00] Setting default whitelist 'file,crypto,data'
+[in#1 @ 0x564a0738c140] Format png_pipe probed with size=2048 and score=99
+[in#1/png_pipe @ 0x564a0738c140] Before avformat_find_stream_info() pos: 0 bytes read:32768 seeks:0 nb_streams:1
+[in#1/png_pipe @ 0x564a0738c140] After avformat_find_stream_info() pos: 93518 bytes read:93518 seeks:0 frames:1
+Input #1, png_pipe, from 'frames/s-9.png':
+  Duration: N/A, bitrate: N/A
+  Stream #1:0, 1, 1/25: Video: png, rgb24(pc, gbr/unknown/unknown), 1080x1920, 25 fps, 25 tbr, 25 tbn
+Successfully opened the file.
+Parsing a group of options: input url frames/s-30.png.
+Successfully parsed a group of options.
+Opening an input file: frames/s-30.png.
+[in#2 @ 0x564a0737c500] Opening 'frames/s-30.png' for reading
+[file @ 0x564a07371000] Setting default whitelist 'file,crypto,data'
+[in#2 @ 0x564a0737c500] Format png_pipe probed with size=2048 and score=99
+[in#2/png_pipe @ 0x564a0737c500] Before avformat_find_stream_info() pos: 0 bytes read:32768 seeks:0 nb_streams:1
+[in#2/png_pipe @ 0x564a0737c500] After avformat_find_stream_info() pos: 154981 bytes read:154981 seeks:0 frames:1
+Input #2, png_pipe, from 'frames/s-30.png':
+  Duration: N/A, bitrate: N/A
+  Stream #2:0, 1, 1/25: Video: png, rgb24(pc, gbr/unknown/unknown), 1080x1920, 25 fps, 25 tbr, 25 tbn
+Successfully opened the file.
+Parsing a group of options: input url frames/s-48.png.
+Successfully parsed a group of options.
+Opening an input file: frames/s-48.png.
+[in#3 @ 0x564a07380600] Opening 'frames/s-48.png' for reading
+[file @ 0x564a07380a40] Setting default whitelist 'file,crypto,data'
+[in#3 @ 0x564a07380600] Format png_pipe probed with size=2048 and score=99
+[in#3/png_pipe @ 0x564a07380600] Before avformat_find_stream_info() pos: 0 bytes read:32768 seeks:0 nb_streams:1
+[in#3/png_pipe @ 0x564a07380600] After avformat_find_stream_info() pos: 100470 bytes read:100470 seeks:0 frames:1
+Input #3, png_pipe, from 'frames/s-48.png':
+  Duration: N/A, bitrate: N/A
+  Stream #3:0, 1, 1/25: Video: png, rgb24(pc, gbr/unknown/unknown), 1080x1920, 25 fps, 25 tbr, 25 tbn
+Successfully opened the file.
+Parsing a group of options: output url frames/sheet2.png.
+Successfully parsed a group of options.
+Opening an output file: frames/sheet2.png.
+[out#0/image2 @ 0x564a07371940] Creating output stream from unlabeled output of complex filtergraph 0. This overrides automatic video mapping.
+[vost#0:0/png @ 0x564a07384b80] Created video stream from complex filtergraph 0:[vstack:default]
+[vost#0:0/png @ 0x564a07384b80] 
+[out#0/image2 @ 0x564a07371940] No explicit maps, mapping streams automatically...
+Successfully opened the file.
+[fc#0 @ 0x564a07353ec0] Binding input with label '0' to input stream 0:0
+detected 2 logical cores
+[fc#0 @ 0x564a07353ec0] Binding input with label '1' to input stream 1:0
+[fc#0 @ 0x564a07353ec0] Binding input with label '2' to input stream 2:0
+[fc#0 @ 0x564a07353ec0] Binding input with label '3' to input stream 3:0
+Stream mapping:
+  Stream #0:0 (png) -> scale:default
+  Stream #1:0 (png) -> scale:default
+  Stream #2:0 (png) -> scale:default
+  Stream #3:0 (png) -> scale:default
+  vstack:default -> Stream #0:0 (png)
+[vost#0:0/png @ 0x564a07384b80] Starting thread...
+[fc#0 @ 0x564a07353ec0] Starting thread...
+[vist#0:0/png @ 0x564a0737ef80] [dec:png @ 0x564a0736ea00] Starting thread...
+[vist#1:0/png @ 0x564a0737cd40] [dec:png @ 0x564a07359280] Starting thread...
+[vist#2:0/png @ 0x564a07371640] [dec:png @ 0x564a07364580] Starting thread...
+[vist#3:0/png @ 0x564a0737d2c0] [dec:png @ 0x564a073cba00] Starting thread...
+[in#0/png_pipe @ 0x564a0738f200] Starting thread...
+[in#1/png_pipe @ 0x564a0738bd40] Starting thread...
+[in#2/png_pipe @ 0x564a0737c0c0] Starting thread...
+[in#0/png_pipe @ 0x564a0738f200] EOF while reading input
+[in#0/png_pipe @ 0x564a0738f200] Terminating thread with return code 0 (success)
+[in#3/png_pipe @ 0x564a0736da00] Starting thread...
+Press [q] to stop, [?] for help
+[vist#0:0/png @ 0x564a0737ef80] [dec:png @ 0x564a0736ea00] Decoder thread received EOF packet
+[vist#0:0/png @ 0x564a0737ef80] [dec:png @ 0x564a0736ea00] Decoder returned EOF, finishing
+[vist#0:0/png @ 0x564a0737ef80] [dec:png @ 0x564a0736ea00] Terminating thread with return code 0 (success)
+[in#1/png_pipe @ 0x564a0738bd40] EOF while reading input
+[in#1/png_pipe @ 0x564a0738bd40] Terminating thread with return code 0 (success)
+[vist#1:0/png @ 0x564a0737cd40] [dec:png @ 0x564a07359280] Decoder thread received EOF packet
+[in#2/png_pipe @ 0x564a0737c0c0] EOF while reading input
+[in#2/png_pipe @ 0x564a0737c0c0] Terminating thread with return code 0 (success)
+[vist#1:0/png @ 0x564a0737cd40] [dec:png @ 0x564a07359280] Decoder returned EOF, finishing
+[vist#1:0/png @ 0x564a0737cd40] [dec:png @ 0x564a07359280] Terminating thread with return code 0 (success)
+[vist#2:0/png @ 0x564a07371640] [dec:png @ 0x564a07364580] Decoder thread received EOF packet
+[vist#2:0/png @ 0x564a07371640] [dec:png @ 0x564a07364580] Decoder returned EOF, finishing
+[in#3/png_pipe @ 0x564a0736da00] EOF while reading input
+[in#3/png_pipe @ 0x564a0736da00] Terminating thread with return code 0 (success)
+[vist#2:0/png @ 0x564a07371640] [dec:png @ 0x564a07364580] Terminating thread with return code 0 (success)
+[vist#3:0/png @ 0x564a0737d2c0] [dec:png @ 0x564a073cba00] Decoder thread received EOF packet
+[vist#3:0/png @ 0x564a0737d2c0] [dec:png @ 0x564a073cba00] Decoder returned EOF, finishing
+[AVFilterGraph @ 0x7fa278001800] Setting 'w' to value '620'
+[AVFilterGraph @ 0x7fa278001800] Setting 'h' to value '-1'
+[AVFilterGraph @ 0x7fa278001800] Setting 'w' to value '620'
+[AVFilterGraph @ 0x7fa278001800] Setting 'h' to value '-1'
+[AVFilterGraph @ 0x7fa278001800] Setting 'w' to value '620'
+[AVFilterGraph @ 0x7fa278001800] Setting 'h' to value '-1'
+[AVFilterGraph @ 0x7fa278001800] Setting 'w' to value '620'
+[AVFilterGraph @ 0x7fa278001800] Setting 'h' to value '-1'
+[vist#3:0/png @ 0x564a0737d2c0] [dec:png @ 0x564a073cba00] Terminating thread with return code 0 (success)
+[Parsed_scale_0 @ 0x7fa278003680] w:620 h:-1 flags:'' interl:0
+[Parsed_scale_1 @ 0x7fa278010c80] w:620 h:-1 flags:'' interl:0
+[Parsed_scale_2 @ 0x7fa27801e200] w:620 h:-1 flags:'' interl:0
+[Parsed_scale_3 @ 0x7fa27802b880] w:620 h:-1 flags:'' interl:0
+[graph 0 input from stream 0:0 @ 0x7fa27803c7c0] w:1080 h:1920 pixfmt:rgb24 tb:1/25 fr:25/1 sar:0/1 csp:gbr range:pc alpha:unspecified
+[graph 0 input from stream 1:0 @ 0x7fa27803cd80] w:1080 h:1920 pixfmt:rgb24 tb:1/25 fr:25/1 sar:0/1 csp:gbr range:pc alpha:unspecified
+[graph 0 input from stream 2:0 @ 0x7fa27803c680] w:1080 h:1920 pixfmt:rgb24 tb:1/25 fr:25/1 sar:0/1 csp:gbr range:pc alpha:unspecified
+[graph 0 input from stream 3:0 @ 0x7fa27803d440] w:1080 h:1920 pixfmt:rgb24 tb:1/25 fr:25/1 sar:0/1 csp:gbr range:pc alpha:unspecified
+[format @ 0x7fa27803db40] Setting 'pix_fmts' to value 'rgb24|rgba|rgb48be|rgba64be|pal8|gray|ya8|gray16be|ya16be|monob'
+[format @ 0x7fa27803db40] Setting 'alpha_modes' to value 'straight'
+[AVFilterGraph @ 0x7fa278001800] query_formats: 13 queried, 48 merged, 0 already done, 0 delayed
+[Parsed_scale_0 @ 0x7fa278003680] w:1080 h:1920 fmt:rgb24 csp:gbr range:pc sar:0/1 -> w:620 h:1102 fmt:rgb24 csp:gbr range:pc sar:0/1 flags:0x00000004
+[Parsed_scale_0 @ 0x7fa278003680] [framesync @ 0x7fa2780037d0] Selected 1/25 time base
+[Parsed_scale_0 @ 0x7fa278003680] [framesync @ 0x7fa2780037d0] Sync level 1
+[Parsed_scale_1 @ 0x7fa278010c80] w:1080 h:1920 fmt:rgb24 csp:gbr range:pc sar:0/1 -> w:620 h:1102 fmt:rgb24 csp:gbr range:pc sar:0/1 flags:0x00000004
+[Parsed_scale_1 @ 0x7fa278010c80] [framesync @ 0x7fa278010d90] Selected 1/25 time base
+[Parsed_scale_1 @ 0x7fa278010c80] [framesync @ 0x7fa278010d90] Sync level 1
+[Parsed_hstack_4 @ 0x7fa278038e80] [framesync @ 0x7fa2780390b0] Selected 1/25 time base
+[Parsed_hstack_4 @ 0x7fa278038e80] [framesync @ 0x7fa2780390b0] Sync level 1
+[Parsed_scale_2 @ 0x7fa27801e200] w:1080 h:1920 fmt:rgb24 csp:gbr range:pc sar:0/1 -> w:620 h:1102 fmt:rgb24 csp:gbr range:pc sar:0/1 flags:0x00000004
+[Parsed_scale_2 @ 0x7fa27801e200] [framesync @ 0x7fa27801e350] Selected 1/25 time base
+[Parsed_scale_2 @ 0x7fa27801e200] [framesync @ 0x7fa27801e350] Sync level 1
+[Parsed_scale_3 @ 0x7fa27802b880] w:1080 h:1920 fmt:rgb24 csp:gbr range:pc sar:0/1 -> w:620 h:1102 fmt:rgb24 csp:gbr range:pc sar:0/1 flags:0x00000004
+[Parsed_scale_3 @ 0x7fa27802b880] [framesync @ 0x7fa27802b9d0] Selected 1/25 time base
+[Parsed_scale_3 @ 0x7fa27802b880] [framesync @ 0x7fa27802b9d0] Sync level 1
+[Parsed_hstack_5 @ 0x7fa278039280] [framesync @ 0x7fa2780394f0] Selected 1/25 time base
+[Parsed_hstack_5 @ 0x7fa278039280] [framesync @ 0x7fa2780394f0] Sync level 1
+[Parsed_vstack_6 @ 0x7fa278039740] [framesync @ 0x7fa278039970] Selected 1/25 time base
+[Parsed_vstack_6 @ 0x7fa278039740] [framesync @ 0x7fa278039970] Sync level 1
+[swscaler @ 0x7fa278260f40] Forcing full internal H chroma due to input having non subsampled chroma
+[swscaler @ 0x7fa278614080] Forcing full internal H chroma due to input having non subsampled chroma
+[swscaler @ 0x7fa2789c91c0] Forcing full internal H chroma due to input having non subsampled chroma
+[swscaler @ 0x7fa2791b6940] Forcing full internal H chroma due to input having non subsampled chroma
+Output #0, image2, to 'frames/sheet2.png':
+  Metadata:
+    encoder         : Lavf63.1.102
+  Stream #0:0, 0, 1/25: Video: png, rgb24(pc, gbr/unknown/unknown, progressive), 1240x2204, q=2-31, 200 kb/s, 25 fps, 25 tbn
+    Metadata:
+      encoder         : Lavc63.1.102 png
+[out#0/image2 @ 0x564a07371940] Starting thread...
+[Parsed_scale_0 @ 0x7fa278003680] [framesync @ 0x7fa2780037d0] Sync level 0
+[Parsed_scale_1 @ 0x7fa278010c80] [framesync @ 0x7fa278010d90] Sync level 0
+[Parsed_hstack_4 @ 0x7fa278038e80] [framesync @ 0x7fa2780390b0] Sync level 0
+[Parsed_scale_2 @ 0x7fa27801e200] [framesync @ 0x7fa27801e350] Sync level 0
+[Parsed_scale_3 @ 0x7fa27802b880] [framesync @ 0x7fa27802b9d0] Sync level 0
+[Parsed_hstack_5 @ 0x7fa278039280] [framesync @ 0x7fa2780394f0] Sync level 0
+[Parsed_vstack_6 @ 0x7fa278039740] [framesync @ 0x7fa278039970] Sync level 0
+[vost#0:0/png @ 0x564a07384b80] [enc:png @ 0x564a07385440] Encoder thread received EOF
+[out_#0:0 @ 0x7fa27803d8c0] EOF on sink link out_#0:0:default.
+[fc#0 @ 0x564a07353ec0] Filtergraph returned EOF, finishing
+[fc#0 @ 0x564a07353ec0] All consumers returned EOF
+[fc#0 @ 0x564a07353ec0] Terminating thread with return code 0 (success)
+[vost#0:0/png @ 0x564a07384b80] Terminating thread with return code 0 (success)
+[image2 @ 0x564a0736fd00] The specified filename 'frames/sheet2.png' does not contain an image sequence pattern or a pattern is invalid.
+[image2 @ 0x564a0736fd00] Use a pattern such as %03d for an image sequence or use the -update option (with -frames:v 1 if needed) to write a single image.
+[image2 @ 0x564a0736fd00] Opening 'frames/sheet2.png' for writing
+[file @ 0x7fa26c001880] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x7fa26c000ac0] Statistics: 340271 bytes written, 0 seeks, 2 writeouts
+[out#0/image2 @ 0x564a07371940] All streams finished
+[out#0/image2 @ 0x564a07371940] Terminating thread with return code 0 (success)
+[out#0/image2 @ 0x564a07371940] Output file #0 (frames/sheet2.png):
+[out#0/image2 @ 0x564a07371940]   Output stream #0:0 (video): 1 frames encoded; 1 packets muxed (340271 bytes); 
+[out#0/image2 @ 0x564a07371940]   Total: 1 packets (340271 bytes) muxed
+[out#0/image2 @ 0x564a07371940] video:332KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame=    1 fps=0.0 q=-0.0 Lsize=N/A time=00:00:00.04 bitrate=N/A speed=0.206x elapsed=0:00:00.19    
+[in#0/png_pipe @ 0x564a0738f200] Input file #0 (frames/s-1.2.png):
+[in#0/png_pipe @ 0x564a0738f200]   Input stream #0:0 (video): 1 packets read (22080 bytes); 1 frames decoded; 0 decode errors; 
+[in#0/png_pipe @ 0x564a0738f200]   Total: 1 packets (22080 bytes) demuxed
+[AVIOContext @ 0x564a07355e40] Statistics: 22080 bytes read, 0 seeks
+[in#1/png_pipe @ 0x564a0738bd40] Input file #1 (frames/s-9.png):
+[in#1/png_pipe @ 0x564a0738bd40]   Input stream #1:0 (video): 1 packets read (93518 bytes); 1 frames decoded; 0 decode errors; 
+[in#1/png_pipe @ 0x564a0738bd40]   Total: 1 packets (93518 bytes) demuxed
+[AVIOContext @ 0x564a0738b640] Statistics: 93518 bytes read, 0 seeks
+[in#2/png_pipe @ 0x564a0737c0c0] Input file #2 (frames/s-30.png):
+[in#2/png_pipe @ 0x564a0737c0c0]   Input stream #2:0 (video): 1 packets read (154981 bytes); 1 frames decoded; 0 decode errors; 
+[in#2/png_pipe @ 0x564a0737c0c0]   Total: 1 packets (154981 bytes) demuxed
+[AVIOContext @ 0x564a0737d180] Statistics: 154981 bytes read, 0 seeks
+[in#3/png_pipe @ 0x564a0736da00] Input file #3 (frames/s-48.png):
+[in#3/png_pipe @ 0x564a0736da00]   Input stream #3:0 (video): 1 packets read (100470 bytes); 1 frames decoded; 0 decode errors; 
+[in#3/png_pipe @ 0x564a0736da00]   Total: 1 packets (100470 bytes) demuxed
+[AVIOContext @ 0x564a0736d380] Statistics: 100470 bytes read, 0 seeks
+
+Exiting with exit code 0

@@ -1,0 +1,5 @@
+audio/*.wav
+frames/
+__pycache__/
+*.pyc
+seg-*.mp4
