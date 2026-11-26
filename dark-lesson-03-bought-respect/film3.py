@@ -67,45 +67,45 @@ def wrap(text, size, maxw):
 
 
 # ---------------------------------------------------------------- script
-SCRIPT = [
-    ("stall", "narr",
-     "গ্রামে রহিমকে সবাই সালাম দিত। কারণ চায়ের দোকানে সবার বিল রহিমই দিত।"),
-    ("stall", "narr", "রহিম ভাবত — টাকা থাকলে সম্মানও থাকে।"),
-    ("stall", "rahim", "খাও, খাও। আজ সবটাই আমার। দেখো, টাকায় সম্মান কেনা যায়।"),
-    ("stall", "narr", "সালামের শব্দে পুরো দোকানটা ভরে যেত।"),
-    ("stage", "narr", "তারপর সে আরও কিনল। সোনার মেডেল, মঞ্চ, আর মাইকে নিজের নাম।"),
-    ("stage", "rahim", "এই গ্রামে যা কিছু ভালো, সব আমার টাকায়।"),
-    ("stage", "narr", "হাততালি পড়ত ঠিক তখনই — যখন টাকার শব্দ হতো।"),
-    ("stage", "rahim", "সবাই আমার নাম জানে। তুমি জানো না কেন?"),
-    ("oldman", "narr", "শুধু একজন ছিল, যে তাঁর টাকা নিত না।"),
-    ("oldman", "old", "আমি কারও টাকা নিই না। তাই কাউকে সালামও দিই না।"),
-    ("oldman", "rahim", "আমার টাকায় পুরো গ্রাম চলে — তুমি কে?"),
-    ("oldman", "old", "আমি সেই লোক, যে তোমার টাকা ছাড়াও বাঁচতে পারে।"),
-    ("flood", "narr", "বর্ষায় নদী ফুলে উঠল। বাঁধ ভাঙল, আর রহিমের গুদাম ডুবে গেল।"),
-    ("flood", "narr", "যে টাকা সম্মান কিনে এনেছিল, সেই টাকাই ভেসে গেল।"),
-    ("morning", "narr", "সকালে সে চায়ের দোকানে গেল। কেউ সালাম দিল না।"),
-    ("morning", "villager", "ও এখন আমাদের মতোই।"),
-    ("morning", "rahim", "…কেউ নেই?"),
-    ("water", "narr", "তখন একজন এল। যে কখনো তাঁর টাকা নেয়নি।"),
-    ("water", "old", "পানি খাবে?"),
-    ("water", "rahim", "তুমি… কেন?"),
-    ("water", "old", "সম্মান তো আমি বিক্রি করি না।"),
-    ("end", "narr", "সম্মান কিনেছিলে, তাই ভাড়াটে ছিল। ভাড়া শেষ — সম্মানও শেষ।"),
-    ("end", "narr", "আর যে একটা গ্লাস পানি দিল, সে কিছুই বিক্রি করেনি।"),
+# One clip = one recording. Some clips carry two lines: they are the same voice in the
+# same shot, and the subtitle splits itself across the take (see build_timeline).
+CLIPS = [
+    ("stall", [("narr", "গ্রামে রহিমকে সবাই সালাম দিত। কারণ চায়ের দোকানে সবার বিল রহিমই দিত।")]),
+    ("stall", [("narr", "রহিম ভাবত — টাকা থাকলে সম্মানও থাকে।")]),
+    ("stall", [("rahim", "খাও, খাও। আজ সবটাই আমার। দেখো, টাকায় সম্মান কেনা যায়।")]),
+    ("stall", [("narr", "সালামের শব্দে পুরো দোকানটা ভরে যেত।")]),
+    ("stage", [("narr", "তারপর সে আরও কিনল। সোনার মেডেল, মঞ্চ, আর মাইকে নিজের নাম।")]),
+    ("stage", [("rahim", "এই গ্রামে যা কিছু ভালো, সব আমার টাকায়।")]),
+    ("stage", [("narr", "হাততালি পড়ত ঠিক তখনই — যখন টাকার শব্দ হতো।")]),
+    ("stage", [("rahim", "সবাই আমার নাম জানে। তুমি জানো না কেন?")]),
+    ("oldman", [("narr", "শুধু একজন ছিল, যে তাঁর টাকা নিত না।")]),
+    ("oldman", [("old", "আমি কারও টাকা নিই না। তাই কাউকে সালামও দিই না।")]),
+    ("oldman", [("rahim", "আমার টাকায় পুরো গ্রাম চলে — তুমি কে?")]),
+    ("oldman", [("old", "আমি সেই লোক, যে তোমার টাকা ছাড়াও বাঁচতে পারে।")]),
+    ("flood", [("narr", "বর্ষায় নদী ফুলে উঠল। বাঁধ ভাঙল, আর রহিমের গুদাম ডুবে গেল।"),
+               ("narr", "যে টাকা সম্মান কিনে এনেছিল, সেই টাকাই ভেসে গেল।")]),
+    ("morning", [("narr", "সকালে সে চায়ের দোকানে গেল। কেউ সালাম দিল না।"),
+                 ("narr", "কেউ বলল — ও এখন আমাদের মতোই।")]),
+    ("morning", [("rahim", "…কেউ নেই?")]),
+    ("water", [("narr", "তখন একজন এল। যে কখনো তাঁর টাকা নেয়নি।")]),
+    ("water", [("old", "পানি খাবে?")]),
+    ("water", [("rahim", "তুমি… কেন?")]),
+    ("water", [("old", "সম্মান তো আমি বিক্রি করি না।")]),
+    ("end", [("narr", "সম্মান কিনেছিলে, তাই ভাড়াটে ছিল। ভাড়া শেষ — সম্মানও শেষ।"),
+             ("narr", "আর যে একটা গ্লাস পানি দিল, সে কিছুই বিক্রি করেনি।")]),
 ]
 
 CAPTION = {"stall": "সালাম", "stage": "দাম", "oldman": "একজন বাদে",
            "flood": "ভাঙন", "morning": "সকাল", "water": "এক গ্লাস", "end": ""}
 DARK = {"flood", "morning", "water", "end"}
 
-# text that belongs inside the artwork, drawn after the art pass (final resolution)
 OVERLAY = {
     "stage": [(540, 636, "রহিম", 74, INK, 700, "mm")],
 }
 
 LEAD = 2.4
 TAIL = 6.6
-GAP = 0.34
+GAP = 0.36
 
 
 def _dur(path):
@@ -120,16 +120,30 @@ def _dur(path):
 
 
 def build_timeline():
-    t, entries = LEAD, []
-    for i, (sc, spk, text) in enumerate(SCRIPT):
-        vo = os.path.join(AUD, "s%02d.mp3" % (i + 1))
+    """Lay the clips out back to back. Returns (line entries, total, ...).
+
+    Lines inside one clip share its measured duration in proportion to their length, so
+    the subtitle turns over roughly where the reader expects it.
+    """
+    t, entries, ci = LEAD, [], 0
+    for scene, lines in CLIPS:
+        vo = os.path.join(AUD, "s%02d.mp3" % (ci + 1))
         d = _dur(vo)
         if d is None:
-            d = 0.55 + max(1, len(text.split())) / 2.30
+            d = 0.45 + sum(len(x[1]) for x in lines) / 15.5
             vo = None
-        entries.append({"i": i, "scene": sc, "spk": spk, "text": text,
-                        "vo": vo, "t0": t, "dur": d})
+        total_chars = sum(len(x[1]) for x in lines)
+        acc = 0.0
+        for j, (spk, text) in enumerate(lines):
+            share = len(text) / total_chars
+            entries.append({"i": len(entries), "scene": scene, "spk": spk, "text": text,
+                            "t0": t + d * acc, "dur": d * share,
+                            "vo": vo if j == 0 else None,
+                            "vo_t0": t if j == 0 else None,
+                            "clip": ci + 1})
+            acc += share
         t += d + GAP
+        ci += 1
     return entries, t - GAP + TAIL
 
 
@@ -138,10 +152,16 @@ def scene_spans(entries, total):
     for e in entries:
         sc = e["scene"]
         if sc not in spans:
-            spans[sc] = [e["t0"], e["t0"] + e["dur"] + GAP]
+            spans[sc] = [e["t0"], e["t0"] + e["dur"]]
             order.append(sc)
         else:
-            spans[sc][1] = e["t0"] + e["dur"] + GAP
+            spans[sc][1] = e["t0"] + e["dur"]
+    # a scene runs until the next one starts, not until its last line ends
+    for i, sc in enumerate(order):
+        if i + 1 < len(order):
+            spans[sc][1] = max(spans[sc][1], spans[order[i + 1]][0])
+    for sc in order:
+        spans[sc][1] += GAP
     return {k: (a, b) for k, (a, b) in spans.items()}, order
 
 
@@ -183,9 +203,10 @@ def stall(p, e):
         y0 = 444 + i * 20
         p.poly([(588, y0), (W + 40, y0 - 20), (W + 40, y0 - 10), (588, y0 + 10)], mass2)
     hatch = (236, 232, 222) if not dark else (44, 40, 35)
-    p.poly([(660, 560), (1058, 544), (1058, 1206), (660, 1220)], hatch)
+    p.poly([(722, 646), (1024, 632), (1024, 1186), (722, 1200)], hatch)
+    p.poly([(722, 646), (1024, 632), (1024, 654), (722, 668)], (196, 190, 178) if not dark else (56, 51, 45))
     # the tea man inside it
-    person(p, 880, 1204, 360, INK if not dark else PAPER,
+    person(p, 884, 1200, 356, INK if not dark else PAPER,
            hand_r=(-0.20, 0.04), hand_l=(0.16, 0.12), feat=0.92)
 
     # counter, in front of everything the shop owns
@@ -296,21 +317,21 @@ def oldman(p, e):
     p.rrect([150, 1338, 356, 1364], 8, (86, 81, 72))
     p.line([(178, 1364), (178, GY + 6)], (86, 81, 72), 10)
     p.line([(330, 1364), (330, GY + 6)], (86, 81, 72), 10)
-    old = person(p, 252, GY, 452, INK, sit=True, crouch=1.0, beard=1.0, hunch=0.75,
-                 hand_r=(0.26, 0.30), hand_l=(-0.17, 0.26), stick=True)
+    old = person(p, 252, GY, 452, (112, 104, 90), sit=True, crouch=1.0, beard=1.0, hunch=0.75,
+                 hand_r=(0.22, 0.30), hand_l=(-0.15, 0.30), stick=True)
     glass(p, 386, 1352, 38, None, INK)
 
     # villagers, ringing him
     for i, x0 in enumerate((842, 962, 1046)):
-        person(p, x0, GY + 8, 348 + (i % 2) * 24, (62, 58, 51),
+        person(p, x0, GY + 8, 348 + (i % 2) * 24, (150, 143, 130),
                hand_l=(-0.08, 0.30), hand_r=(0.08, 0.30), aw=0.058)
 
     # Rahim, leaning in, gold and enormous
     jab = 0.5 + 0.5 * math.sin(t * 2.0)
-    rah = person(p, 626, GY + 8, 616, INK,
-                 hand_r=(0.10, 0.30),
-                 hand_l=(-0.19 - 0.04 * jab, 0.12 - 0.06 * jab),
-                 lean=0.95, shawl=(64, 59, 51), sash=GOLD, feat=1.12)
+    rah = person(p, 492, GY + 8, 616, INK,
+                 hand_r=(-0.24 - 0.03 * jab, 0.20 - 0.05 * jab),
+                 hand_l=(0.10, 0.30),
+                 lean=0.55, shawl=(64, 59, 51), sash=GOLD, feat=1.12)
     e["anch"] = rah
     e["ink"], e["ground"] = ink, ground
 
@@ -527,10 +548,10 @@ def frame_at(t, entries, total, spans):
                                   "villager": "কেউ একজন"}[cur["spk"]],
           28, (172, 160, 138) if dark else GOLD_D, 700)
     lines = wrap(cur["text"], 38, 880)
-    yy = SUB_Y
+    yy = SUB_Y - 48 * (len(lines) - 1)
     for ln in lines:
         T(art, (96, yy), ln, 38, ink_c, 500, anchor="lm")
-        yy += 50
+        yy += 48
     return art
 
 

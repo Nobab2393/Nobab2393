@@ -153,46 +153,46 @@ def build_score(entries, total):
     # ---- the old man: everything stops but the room
     if "oldman" in spans:
         a, b = spans["oldman"]
-        m = b - a
-        add(L, drone(m, 0.045), a / SR, 1.0)
-        add(R, drone(m, 0.045), a / SR, 1.0)
+        m = int((b - a) * SR)
+        add(L, drone(m, 0.045), a, 1.0)
+        add(R, drone(m, 0.045), a, 1.0)
         x = np.zeros(m)
         for f, w in ((N["A3"], 0.5), (N["D3"], 0.7)):
             x += w * sine(f, m) * env(m, 2.0, 2.5)
-        add(L, x * 0.020, a / SR, 1.0)
-        add(R, x * 0.020, a / SR, 1.0)
+        add(L, x * 0.020, a, 1.0)
+        add(R, x * 0.020, a, 1.0)
 
     # ---- the flood: rain, rumble, no music at all
     for sc, amp in (("flood", 1.0), ("morning", 0.45)):
         if sc not in spans:
             continue
         a, b = spans[sc]
-        m = b - a
+        m = int((b - a) * SR)
         rr = rain(m, 0.055) * env(m, 0.8, 1.2) * amp
-        add(L, rr, a / SR, 1.0)
-        add(R, np.roll(rr, 997) * 0.9, a / SR, 1.0)
+        add(L, rr, a, 1.0)
+        add(R, np.roll(rr, 997) * 0.9, a, 1.0)
         if sc == "flood":
             ru = rumble(m, 0.075) * env(m, 1.4, 1.6)
-            add(L, ru, a / SR, 1.0)
-            add(R, ru, a / SR, 1.0)
+            add(L, ru, a, 1.0)
+            add(R, ru, a, 1.0)
 
     # ---- the glass of water: one bell, and space around it
     if "water" in spans:
         a, b = spans["water"]
-        add(L, bell(N["E5"], 5.0, 0.040), a / SR + 1.4, 1.0)
-        add(R, bell(N["E5"] * 1.003, 5.0, 0.036), a / SR + 1.42, 1.0)
-        m = b - a
+        add(L, bell(N["E5"], 5.0, 0.040), a + 1.4, 1.0)
+        add(R, bell(N["E5"] * 1.003, 5.0, 0.036), a + 1.42, 1.0)
+        m = int((b - a) * SR)
         x = sine(N["D3"], m) * env(m, 2.0, 2.5) * 0.018
-        add(L, x, a / SR, 1.0)
-        add(R, x, a / SR, 1.0)
+        add(L, x, a, 1.0)
+        add(R, x, a, 1.0)
 
     # ---- the last image: the drone walks out
     if "end" in spans:
         a, b = spans["end"]
-        m = b - a
+        m = int((b - a) * SR)
         x = drone(m, 0.055)
-        add(L, x, a / SR, 1.0)
-        add(R, x, a / SR, 1.0)
+        add(L, x, a, 1.0)
+        add(R, x, a, 1.0)
 
     out = np.stack([L, R], axis=1)
     peak = np.abs(out).max()
@@ -251,10 +251,10 @@ def main(what):
             a = a[max(0, idx[0] - 300): idx[-1] + 900]
         a /= max(np.abs(a).max(), 1e-6)
         a *= 0.92
-        s0 = int(e["t0"] * SR)
+        s0 = int(e.get("vo_t0", e["t0"]) * SR)
         e0 = min(n, s0 + len(a))
         vo[s0:e0] += a[: e0 - s0]
-        print("  s%02d %6.2fs  %5.2fs  %s" % (e["i"] + 1, e["t0"], e["dur"], e["text"][:34]))
+        print("  s%02d %6.2fs  %5.2fs  %s" % (e["clip"], e.get("vo_t0", e["t0"]), e["dur"], e["text"][:34]))
 
     env = smooth(np.abs(vo), 150)
     env /= max(env.max(), 1e-6)
