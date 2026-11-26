@@ -1,6 +1,6 @@
 # অন্ধকার পাঠ ০৩ · কেনা সম্মান — Bought Respect
 
-A flat-vector 2D short, **1080×1920, 24 fps, 1:36**, Bangla voice-over and Bangla on-screen
+A flat-vector 2D short, **1080×1920, 24 fps, 1:44.9**, Bangla voice-over and Bangla on-screen
 type. Every frame is drawn by code — no image model, no stock footage.
 
 **Deliverable:** `dark-lesson-03-bought-respect-1080x1920.mp4` (H.264 High + AAC 192k stereo).
@@ -50,13 +50,13 @@ numbers. That is how the jab in the courtyard, the wave from the podium and the 
 |---|---|---|---|
 | 0:00 | title | — | a `০৩` the height of the frame |
 | 0:02 | tea stall | **সালাম** | coins arcing to the counter, the paid-for gold bulb, three regulars |
-| 0:21 | podium | **দাম** | bunting, his name in gold, the medal dropping onto his chest, coin confetti, the crowd clapping |
-| 0:38 | courtyard | **একজন বাদে** | a bare tree, an old man perfectly still on a stool, Rahim looming |
-| 0:53 | flood | **ভাঙন** | rain, a sinking godown, sacks drifting, coins dimming as they go under |
-| 1:02 | morning | **সকাল** | the stall shut, the bulb dead, three backs walking away |
-| 1:11 | doorway | **এক গ্লাস** | the only blue in the film, offered down to a man on the ground |
-| 1:21 | dusk road | — | two men walking, one blue window |
-| 1:30 | end card | — | **ভাড়া শেষ — সম্মানও শেষ।** / সম্মান কি সত্যিই কেনা যায়? |
+| 0:23 | podium | **দাম** | bunting, his name in gold, the medal dropping onto his chest, coin confetti, the crowd clapping |
+| 0:42 | courtyard | **একজন বাদে** | a bare tree, an old man perfectly still on a stool, Rahim looming |
+| 0:57 | flood | **ভাঙন** | rain, a sinking godown, sacks drifting, coins dimming as they go under |
+| 1:08 | morning | **সকাল** | the stall shut, the bulb dead, three backs walking away |
+| 1:18 | doorway | **এক গ্লাস** | the only blue in the film, offered down to a man on the ground |
+| 1:28 | dusk road | — | two men walking, one blue window |
+| 1:38 | end card | — | **ভাড়া শেষ — সম্মানও শেষ।** / সম্মান কি সত্যিই কেনা যায়? |
 
 Full script, all 23 lines and the sound table: [`01-script.md`](01-script.md).
 
@@ -69,7 +69,7 @@ settled. At the flood the melody stops and only rain and a 46 Hz rumble remain. 
 sound is a single E5 bell: the glass of water. Then silence.
 
 Speech is trimmed at both ends, normalised to 0.92, and the bed is ducked by
-`1/(1+10·clip(env·6))`; master peak 0.96, mean −18.6 dB.
+`1/(1+10·clip(env·6))`; master peak 0.96, mean −18.4 dB. Narrator: `voice-15`; Rahim `voice-13`, the old man `voice-14`.
 
 ## Files
 
@@ -90,4 +90,4 @@ ffmpeg -i film3.mp4 -i audio/mix.wav -c:v copy -c:a aac -b:a 192k -shortest \
        -movflags +faststart dark-lesson-03-bought-respect-1080x1920.mp4
 ```
 
-Render time on 2 vCPU: 3 min 14 s for 2309 frames.
+Render time on 2 vCPU: 3 min 32 s for 2517 frames.
