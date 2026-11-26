@@ -122,6 +122,14 @@ guaranteed match for the frame at that timestamp. Rendering is deterministic: sa
 | `01-script.md` | the script beat by beat, both languages, with the mixing notes |
 | `preview-contact-sheet.png` | sixteen frames across the film, from the delivered mp4 |
 
+## Cast designs
+
+`cast/` holds five flat-vector character designs for this episode — the two brothers, বৌদি,
+পুরনো কাস্টমার and ভাইঝি — on one sheet with the film's palette underneath
+(`cast/cast-sheet.png`). They are the *design* pass: the film itself stays silhouette-driven,
+but the sheets fix build, wardrobe and the one gesture each character is allowed. See
+`cast/README.md` for the rules they were drawn to and the two scripts that rebuild the sheet.
+
 ## Note on runtime
 
 This cut is **1:15.0** — a tight vertical short, three beats shorter than episode 3's 1:44.9.

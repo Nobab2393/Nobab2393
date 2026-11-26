@@ -1,3 +1,4 @@
 audio/*.wav
 segs.txt
 frames/*.png
+__pycache__/
