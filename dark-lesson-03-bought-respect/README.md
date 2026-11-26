@@ -71,6 +71,15 @@ sound is a single E5 bell: the glass of water. Then silence.
 Speech is trimmed at both ends, normalised to 0.92, and the bed is ducked by
 `1/(1+10·clip(env·6))`; master peak 0.96, mean −18.4 dB. Narrator: `voice-15`; Rahim `voice-13`, the old man `voice-14`.
 
+## Voice-over only
+
+`audio/voiceover-clean.mp3` (and `voiceover-clean.wav`, regenerate with `python3 cleanvo.py`)
+is the same twenty takes on the film's own timeline with **nothing else in it** — no drone,
+no arpeggio, no bells, no rain, no ducking, no room taps. Each take is trimmed of the
+synthesised silence, matched to one speaking level (−20.5 dB RMS, ceiling −0.45 dBFS) with
+8 ms fades so nothing clicks, and spaced at the picture's own 0.36 s. 1:45, 72.5 s of speech.
+It drops straight onto the cut, or onto anyone else's cut.
+
 ## Files
 
 | file | what it does |
