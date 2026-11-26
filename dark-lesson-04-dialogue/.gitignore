@@ -1,0 +1,5 @@
+audio/*.wav
+frames/*.png
+segs.txt
+__pycache__/
+cast-cut/
