@@ -61,3 +61,11 @@ the shape of each sentence is in the mouth.
 
 "লোভে পাপ, পাপে মৃত্যু" is a proverb, not a claim about the world; the moral card uses it
 in that spirit. Part 1 sets up the trap; part 2 is available if you want the payoff.
+
+## Download
+
+The film is too large for git history, so it lives on its own branch as a plain file:
+
+- **https://github.com/Nobab2393/Nobab2393/raw/media-lesson-part1/sonar_horin_bangla_lesson.mp4**
+
+Release page: https://github.com/Nobab2393/Nobab2393/releases/tag/lesson-part1
