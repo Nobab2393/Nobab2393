@@ -1,0 +1,10 @@
+frames/*.png
+frames/v/*.png
+audio/_env*.wav
+audio/_mix*.wav
+audio/mix.wav
+segs.txt
+seg0.mp4
+seg1.mp4
+seg2.mp4
+__pycache__/
