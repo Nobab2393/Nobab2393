@@ -36,6 +36,27 @@ be dropped onto a cutout set later.
 The tenth is the extra person: always in the frame, never facing the camera. The roster has
 nine names; the room has ten bodies.
 
+## Status — পর্ব ১১ shipped
+
+`dark-lesson-11-hostel-1080x1920.mp4` — 2:00.50, 1080×1920, 24 fps, ten scenes, one
+narrator (voice-45), 2892 frames. Every cut sits in the silence before its line: 0 cuts on
+speech, picture 2892 frames = 120.500 s, audio 120.500 s, drift 0.0 ms.
+
+```bash
+python3 plan.py        # timeline from the audio; prints the shot table
+python3 sheets.py      # plates -> cast/*.png (RGBA) + lineup + cards
+python3 film.py        # -> build/video-ship.mp4
+python3 mix.py         # -> build/mix.wav, then muxes the deliverable
+python3 verify.py      # measures the finished mp4, not the plan
+python3 contact.py     # -> dark-lesson-11-hostel-contact.png
+```
+
+The acting is in the joints: `film.py` finds each plate's neck (the narrowest row in the
+top third), turns the head slab about it through a ramp mask so the join is a gradient and
+not a line across the face, breathes the shoulder slab, leans the body about its feet, and
+for the tenth steps the whole puppet a centimetre forward. One grade over the composed
+plate, then the table is pasted back over everyone so the ten stand behind it.
+
 ## Stature
 
 `STATURE` ratios for the five drawn: 01 `0.96` · 02 `0.98` · 03 `1.04` · 04 `1.06` · 05 `0.99`.

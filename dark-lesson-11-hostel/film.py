@@ -35,8 +35,8 @@ MW, MH = int(W * M), int(H * M)
 CREAM = (243, 236, 222)
 INK = (28, 25, 22)
 BRICK = (163, 66, 44)
-NECK = 0.155             # head slab ends here, as a fraction of the figure's height
-COLLAR = 0.245           # shoulder slab ends here
+NECK = 0.20              # fallback: head slab ends here, as a fraction of the height
+_neck = {}               # per plate, the neck is where the silhouette is narrowest
 
 _bg, _plate, _scaled, _master = {}, {}, {}, {}
 
@@ -97,15 +97,39 @@ def scaled(cid, h, dim, dark):
     return _scaled[key].copy()
 
 
-def turn(band, ang, pivot_in_band):
-    return band.rotate(ang, resample=Image.BICUBIC, center=pivot_in_band, expand=False)
+def neck_of(cid, im):
+    """Where the head stops and the neck starts: the narrowest row in the top third.
+
+    Cutting the head slab at a fixed fraction of the height put the seam across the
+    cheek of every puppet with a big cutout head; measuring the silhouette puts it at
+    the neck, which is where the pin is.
+    """
+    key = (cid, im.height)
+    if key not in _neck:
+        a = np.asarray(im)[..., 3] > 40
+        h = im.height
+        widths = a.sum(axis=1).astype(np.float32)
+        lo, hi = int(h * 0.10), int(h * 0.34)
+        band = widths[lo:hi]
+        y = lo + int(np.argmin(band)) if band.size else int(h * NECK)
+        _neck[key] = y
+    return _neck[key]
 
 
-def add_slab(base, band, y0, ang, pivot_y):
-    """Paste a turned slab back into the figure, clearing what was under it first."""
-    rot = turn(band, ang, (band.width / 2.0, pivot_y - y0))
-    base.paste(Image.new("RGBA", band.size, (0, 0, 0, 0)), (0, y0))
-    base.alpha_composite(rot, (0, y0))
+def add_slab(base, ang, cut, pad=10):
+    """Turn the head slab about the neck pins, blending back into the body.
+
+    The slab is pasted through a ramp mask rather than onto a cleared rectangle, so
+    the join is a gradient instead of a line across the face.
+    """
+    band = base.crop((0, 0, base.width, cut + pad))
+    rot = band.rotate(ang, resample=Image.BICUBIC,
+                      center=(band.width / 2.0, cut), expand=False)
+    m = Image.new("L", band.size, 255)
+    d = ImageDraw.Draw(m)
+    for i in range(pad):
+        d.line([(0, cut + i), (band.width, cut + i)], fill=int(255 * (1 - (i + 1) / pad)))
+    base.paste(rot, (0, 0), m)
     return base
 
 
@@ -161,8 +185,7 @@ def draw_puppet(canvas, fig, t, dark):
     if abs(lean) > 0.02:
         im = im.rotate(lean, resample=Image.BICUBIC, center=(im.width / 2, im.height))
     if abs(head) > 0.02:
-        hy = int(im.height * NECK)
-        add_slab(im, im.crop((0, 0, im.width, hy)), 0, head, hy)
+        add_slab(im, head, neck_of(fig["c"], im))
 
     # breath moves the shoulder slab, not the whole torso
     dy = int(round(breath * 0.9))

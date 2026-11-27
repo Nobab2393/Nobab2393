@@ -62,36 +62,36 @@ SHOTS = {
     ]),
 
     # 2 — the matron counting heads
-    "s2a": dict(bg="back", cam=(320, 1120, 1.62, 336, 1140, 1.74), dark=0.62, occ=OCC, figs=[
-        F("01-nurjahan", 330, 1660, 1240, seed=1,
+    "s2a": dict(bg="back", cam=(320, 1065, 1.40, 334, 1080, 1.50), dark=0.62, occ=OCC, figs=[
+        F("01-nurjahan", 330, 1545, 1010, seed=1,
           acts=[("look", 0.6, 2.0, -4.0), ("look", 3.4, 4.8, 4.0),
                 ("look", 6.2, 7.6, -3.0), ("lean", 8.4, 9.8, -0.8)]),
-        F("02-afsana", 620, 1480, 760, dim=0.66, seed=3),
-        F("06-tanvir", 180, 1460, 720, dim=0.6, seed=7),
+        F("02-afsana", 640, 1440, 720, dim=0.66, seed=3),
+        F("06-tanvir", 170, 1430, 700, dim=0.6, seed=7),
     ]),
 
     # 3 — the tenth, back to the room, by the window
-    "s3a": dict(bg="back", cam=(700, 1100, 1.44, 690, 1120, 1.56), dark=0.58, occ=OCC, figs=[
-        F("10-the-tenth", 700, 1700, 1300, seed=5),
-        F("04-shahed", 320, 1500, 900, dim=0.7, seed=4, acts=[("look", 1.4, 3.2, -6.0)]),
-        F("03-mizanur", 840, 1500, 920, dim=0.64, seed=2),
+    "s3a": dict(bg="back", cam=(700, 1060, 1.34, 692, 1075, 1.44), dark=0.58, occ=OCC, figs=[
+        F("10-the-tenth", 700, 1565, 1070, seed=5),
+        F("04-shahed", 320, 1450, 760, dim=0.7, seed=4, acts=[("look", 1.4, 3.2, -6.0)]),
+        F("03-mizanur", 850, 1450, 780, dim=0.64, seed=2),
     ]),
 
     # 4 — the register, and the name cut out of it
-    "s4a": dict(bg="back", cam=(720, 1100, 1.52, 700, 1130, 1.64), dark=0.52, occ=OCC, figs=[
-        F("03-mizanur", 740, 1690, 1260, seed=2,
+    "s4a": dict(bg="back", cam=(720, 1065, 1.36, 706, 1085, 1.46), dark=0.52, occ=OCC, figs=[
+        F("03-mizanur", 740, 1550, 1030, seed=2,
           acts=[("look", 0.4, 2.2, 0.0), ("lean", 3.0, 5.0, 1.4), ("look", 6.0, 7.6, -2.5)]),
-        F("07-suraiya", 330, 1500, 860, dim=0.72, seed=8),
+        F("07-suraiya", 330, 1450, 740, dim=0.72, seed=8),
     ]),
 
     # 5 — the arithmetic: ten chairs, ten glasses, ten plates, nine blankets
     "s5a": dict(bg="table", cam=(470, 1150, 1.30, 620, 1250, 1.42), dark=0.54),
 
     # 6 — the cook, wiping her hands, the empty pot
-    "s6a": dict(bg="back", cam=(320, 1120, 1.60, 340, 1140, 1.72), dark=0.56, occ=OCC, figs=[
-        F("05-rebeka", 340, 1670, 1230, seed=6,
+    "s6a": dict(bg="back", cam=(320, 1065, 1.40, 336, 1080, 1.50), dark=0.56, occ=OCC, figs=[
+        F("05-rebeka", 340, 1545, 1010, seed=6,
           acts=[("lean", 0.8, 2.6, -1.0), ("look", 4.0, 5.6, 4.5)]),
-        F("09-jobeda", 700, 1490, 800, dim=0.66, seed=10),
+        F("09-jobeda", 720, 1445, 720, dim=0.66, seed=10),
     ]),
 
     # 7 — the tube lights go, one by one
@@ -105,10 +105,10 @@ SHOTS = {
     ]),
 
     # 8 — the tenth steps toward the register
-    "s8a": dict(bg="back", cam=(560, 1110, 1.40, 570, 1130, 1.58), dark=0.36, occ=OCC, figs=[
-        F("10-the-tenth", 600, 1690, 1250, seed=5, acts=[("advance", 1.6, 4.2, 26)]),
-        F("03-mizanur", 300, 1520, 960, dim=0.86, seed=2, acts=[("lean", 3.4, 5.2, 1.6)]),
-        F("01-nurjahan", 850, 1510, 940, dim=0.82, seed=1),
+    "s8a": dict(bg="back", cam=(560, 1065, 1.26, 572, 1080, 1.36), dark=0.36, occ=OCC, figs=[
+        F("10-the-tenth", 600, 1560, 1030, seed=5, acts=[("advance", 1.6, 4.2, 30)]),
+        F("03-mizanur", 300, 1460, 800, dim=0.86, seed=2, acts=[("lean", 3.4, 5.2, 1.6)]),
+        F("01-nurjahan", 860, 1455, 790, dim=0.82, seed=1),
     ]),
 
     # 9 — morning: nine people, ten plates
