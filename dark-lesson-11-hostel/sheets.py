@@ -41,6 +41,11 @@ CAST = [
     ("03-mizanur", "মিজানুর রহমান", "হোস্টেল সুপার", 58),
     ("04-shahed", "শাহেদ আলী", "একাদশ শ্রেণির ছাত্র", 19),
     ("05-rebeka", "রেবেকা খাতুন", "হোস্টেলের রাঁধুনি", 42),
+    ("06-tanvir", "তানভীর হাসান", "নবম শ্রেণির ছাত্র", 16),
+    ("07-suraiya", "সুরাইয়া পারভীন", "সহকারী শিক্ষিকা", 31),
+    ("08-kalam", "কালাম শেখ", "কেয়ারটেকার", 25),
+    ("09-jobeda", "জোবেদা বিবি", "পুরনো আয়া", 60),
+    ("10-the-tenth", "দশম জন", "নাম নেই", 20),
 ]
 
 
@@ -135,28 +140,31 @@ def main():
         card(key, name, role, age, rgba)
         print("  %-12s %dx%d" % (key, rgba.width, rgba.height))
 
-    # lineup
+    # lineup — five across, two rows
     COLS = 5
-    tw, th = 400, 700
+    tw, th = 400, 660
     pad = 34
+    rows_n = (len(rows) + COLS - 1) // COLS
     W = COLS * tw + pad * 2
     head = 250
-    H = head + th + 150
+    H = head + rows_n * (th + 40) + 40
     im = Image.new("RGBA", (W, H), PAPER + (255,))
     d = ImageDraw.Draw(im)
     deva.draw_text(im, (pad, 74), "এক শিফট, দশ জন — পর্ব ১১", 54, color=INK, anchor="lm")
-    deva.draw_text(im, (pad, 142), "মফস্বলের স্কুল-হোস্টেল · কাটআউট পাপেট · পাঁচ জন এখন পর্যন্ত",
-               30, color=INK_S, anchor="lm")
+    deva.draw_text(im, (pad, 142), "মফস্বলের স্কুল-হোস্টেল · কাটআউট পাপেট · দশ জন",
+                   30, color=INK_S, anchor="lm")
     d.line([pad, 196, W - pad, 196], fill=INK_S, width=2)
     for i, (key, name, role, age, rgba) in enumerate(rows):
-        s = (th - 150) / rgba.height
+        r, c = divmod(i, COLS)
+        top = head + r * (th + 40)
+        s = (th - 140) / rgba.height
         b = rgba.resize((int(rgba.width * s), int(rgba.height * s)), Image.LANCZOS)
-        x = pad + i * tw + (tw - b.width) // 2
-        im.paste(b, (x, head + (th - 150) - b.height + 30), b)
-        d.line([pad + i * tw + 60, head + th - 120, pad + (i + 1) * tw - 60, head + th - 120],
+        x = pad + c * tw + (tw - b.width) // 2
+        im.paste(b, (x, top + (th - 140) - b.height + 24), b)
+        d.line([pad + c * tw + 56, top + th - 112, pad + (c + 1) * tw - 56, top + th - 112],
                fill=INK_S, width=2)
-        deva.draw_text(im, (pad + i * tw, head + th - 96), name, 36, color=INK, anchor="lm")
-        deva.draw_text(im, (pad + i * tw, head + th - 44), "%s · %d" % (role, age),
+        deva.draw_text(im, (pad + c * tw, top + th - 88), name, 36, color=INK, anchor="lm")
+        deva.draw_text(im, (pad + c * tw, top + th - 38), "%s · %d" % (role, age),
                        24, color=BRICK, anchor="lm")
     im.convert("RGB").save(os.path.join(OUT, "lineup.png"))
     print("wrote sheets/lineup.png (%dx%d) and %d cards" % (W, H, len(rows)))
