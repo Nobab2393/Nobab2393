@@ -1,0 +1,4 @@
+audio/*.wav
+frames/*.png
+segs.txt
+__pycache__/
