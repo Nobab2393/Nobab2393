@@ -79,8 +79,15 @@ def trim(im, pad=0.02):
     # knock the stage out so the plate drops onto a scene cleanly later
     aa = np.asarray(out.convert("RGB")).astype(np.int16)
     dm = np.abs(aa - bg).max(axis=2)
-    alpha = np.clip((dm - 8) * 22, 0, 255).astype(np.uint8)
-    alpha = np.asarray(Image.fromarray(alpha, "L").filter(ImageFilter.GaussianBlur(0.6)))
+    # A black-and-white plate has greys that sit close to the field grey, so a soft
+    # difference mask would make clothes translucent. Threshold, then fill the interior:
+    # flood the *outside* from the border and make everything else solid.
+    solid = (dm > 9).astype(np.uint8) * 255
+    m = Image.fromarray(solid, "L").copy()
+    ImageDraw.floodfill(m, (0, 0), 128, thresh=20)
+    mm = np.asarray(m)
+    alpha = np.where(mm == 128, 0, 255).astype(np.uint8)
+    alpha = np.asarray(Image.fromarray(alpha, "L").filter(ImageFilter.GaussianBlur(0.7)))
     rgba = out.convert("RGBA")
     rgba.putalpha(Image.fromarray(alpha))
     return rgba

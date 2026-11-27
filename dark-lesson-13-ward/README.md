@@ -55,7 +55,46 @@ house grammar (camera move, subject action, light, duration), the narration line
 measured timecode — so the identical edit can be generated on MiniMax and cut against the
 same `build/mix.wav`.
 
-## Next
+## The film
 
-Story, hook, the ten lines and the two-minute timeline. The world is chosen — a ward at
-night — and the cast is five strangers.
+**ঘণ্টা (The Bell).** Two in the morning in a government hospital ward. Five strangers are
+awake: a woman keeping watch over a patient, the ward boy, the intern on nights, a boy with
+his arm in plaster, an old man with a drip stand. The night before, an old man fell in that
+corridor and nobody came. On the nurses' desk there is an old brass hand-bell, and tonight
+every lie told in the ward rings it once — two lies, two rings; two more, two more; the fifth
+stops the monitor. The old man says the quiet part out loud. Then Ruma stands up, says what
+she did, and the bell does not ring. One by one the others say it too. By dawn the ward is
+white.
+
+> চুপ থাকাও একটা মিথ্যে।
+
+- `01-script.md` — the ten scenes, the lines, the staging notes.
+- `lines.py` — the ten narration lines, source of truth for the recording.
+- `audio/scene01…10.mp3` — one narrator, conversational, 106 s of speech.
+- `plan.py` — timeline: 14 shots, every cut inside the silence before its line.
+- `film.py` — the renderer: noir plates on drawn sets, breath and head turns, contact
+  shadows, a grade that steps the ward down with every lie and lets the dawn in at the end.
+- `mix.py` — the fan, the monitor beeping to nobody, the corridor, and the five rings.
+- `verify.py` — measures the finished mp4: length, drift, every cut, every entry.
+- `contact.py` — the twelve-frame contact sheet.
+- `minimax-prompts.md` — the same film as fourteen Hailuo/H3 clips: still prompt, motion
+  prompt, duration and timecode per shot, continuity rules.
+
+```bash
+python3 plan.py
+python3 mix.py --no-mux      # -> build/mix.wav
+python3 film.py --crf 24     # -> build/video.mp4
+python3 mix.py               # mux -> dark-lesson-13-ward-1080x1920.mp4
+python3 verify.py
+python3 contact.py
+```
+
+## Status
+
+Rendered and checked. 2892 frames at 24 fps — 120.500 s of picture against 120.500 s of
+audio, drift 0.0 ms; all ten cuts sit in silence, the worst first word lands 80 ms after its
+shot opens.
+
+- `dark-lesson-13-ward-1080x1920.mp4` — 1080×1920, h264 + aac, 120.5 s
+- `dark-lesson-13-ward-720x1280.mp4` — 720×1280, lighter
+- `dark-lesson-13-ward-contact.png` — twelve frames, 0:00 to 1:58
