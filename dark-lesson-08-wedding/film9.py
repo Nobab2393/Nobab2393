@@ -175,6 +175,14 @@ def _dur(path):
 
 @functools.lru_cache(maxsize=16)
 def envelope(clip):
+    """The take's own loudness on the frame grid.
+
+    Measured at each frame's *midpoint* — a frame is held from i to i+1, so the energy
+    at (i + 0.5) is the energy that frame shows; sampling the frame's start would put
+    the mouth half a frame late. Mapped through dB rather than raw rms so pauses really
+    close, then given a fast attack and a slower release so the lips do not chatter on
+    every syllable.
+    """
     src = os.path.join(AUD, "d%02d.mp3" % clip)
     wav = os.path.join(AUD, "_env%02d.wav" % clip)
     if not os.path.exists(wav):
@@ -184,14 +192,28 @@ def envelope(clip):
     with wave.open(wav) as fh:
         a = np.frombuffer(fh.readframes(fh.getnframes()), dtype=np.int16).astype(np.float32)
     a /= 32768.0
-    hop = 22050 // FPS
-    n = len(a) // hop
-    r = np.sqrt((a[: n * hop].reshape(n, hop) ** 2).mean(1))
-    r = np.convolve(r, np.array([0.18, 0.64, 0.18]), mode="same")
-    top = np.percentile(r, 96) + 1e-9
-    r = np.clip(r / top * 1.45, 0, 1) ** 0.72
-    r[r < 0.09] = r[r < 0.09] * 0.25
-    return tuple(float(v) for v in r)
+    fine_hz = 200
+    hf = 22050 // fine_hz
+    nf = len(a) // hf
+    if nf < 8:
+        return (0.0,) * max(1, int(len(a) / 22050 * FPS))
+    fine = np.sqrt((a[: nf * hf].reshape(nf, hf) ** 2).mean(1))
+    hop = 22050.0 / FPS
+    n = int(len(a) / hop)
+    # frame i is on screen for [i, i+1) frames, so its mouth is the energy at its
+    # midpoint: sampled there, not at its start, which would be half a frame late
+    centres = (np.arange(n) + 0.5) * hop / hf
+    e = np.interp(centres, np.arange(nf), fine)
+    db = 20.0 * np.log10(e + 1e-7)
+    lo = np.percentile(db, 30)
+    hi = np.percentile(db, 99.5)
+    m = np.clip((db - lo) / (hi - lo + 1e-9), 0.0, 1.0) ** 1.2 * 0.95
+    out = np.empty_like(m)
+    prev = 0.0
+    for i, v in enumerate(m):
+        prev += (0.62 if v > prev else 0.30) * (v - prev)
+        out[i] = prev
+    return tuple(float(v) for v in out)
 
 
 def build_timeline():
@@ -210,6 +232,7 @@ CARD_A = PAPER_A + TAIL_PAPER
 TOTAL = CARD_A + TAIL_CARD
 
 RIGS = json.load(open(os.path.join(CAST, "rigs8.json")))
+BEARDED = {"elder", "postman"}   # moustache or beard covers the upper lip
 
 
 def shot_at(t):
@@ -378,23 +401,31 @@ def scaled(name, h, rigged_ok=True):
 def mouth_draw(work, name, k, m, eyes_closed):
     rig = RIGS[name]
     d = ImageDraw.Draw(work)
-    lw = max(2, int(round(4.4 * k)))
-    mx, my, hw, hh = rig["mouth"]
+    lw = max(2, int(round(3.4 * k)))
+    mx, my, hw, hh = rig["mouth"]                 # centre, half-width, half-height
     cx, cy = mx * k, my * k
-    hw, hh = hw * k, hh * k
-    if m < 0.07:
-        w = hw * 1.55
-        d.line([(cx - w / 2, cy), (cx, cy + hh * 0.22), (cx + w / 2, cy)],
+    bare = name in BEARDED          # inside a beard there are no teeth to show
+    w = hw * k * 2.0 * (1.0 if bare else 1.22)
+    # loudness is not jaw position: hold it mostly at rest, open hard on the stressed one
+    op = clamp((m - 0.28) / 0.60) ** 0.85
+    if op < 0.09:
+        d.line([(cx - w * 0.46, cy), (cx, cy + hh * k * 0.34), (cx + w * 0.46, cy)],
                fill=INK + (255,), width=lw, joint="curve")
     else:
-        ow = hw * (1.52 + 0.42 * m)
-        oh = max(ow * 0.52, hh * 1.2) * (0.55 + 0.45 * m)
-        t0 = cy + hh * 0.55
-        d.ellipse([cx - ow / 2, t0, cx + ow / 2, t0 + oh],
-                  fill=(52, 30, 28, 255), outline=INK + (255,), width=max(2, int(lw * 0.72)))
-        if m > 0.42:
-            d.ellipse([cx - ow * 0.22, t0 + oh * 0.52, cx + ow * 0.22, t0 + oh * 0.94],
-                      fill=(138, 58, 54, 255))
+        # the closed mouth is a line at cy; an open one hangs from that same lip line,
+        # so it never fights the moustache or beard sitting just above it
+        top = cy - hh * k * 0.15
+        drop = max(hh * k * 1.5, w * 0.50) * op
+        box = [cx - w * 0.47, top, cx + w * 0.47, top + drop]
+        d.ellipse(box, fill=(58, 33, 29, 255), outline=INK + (255,), width=lw)
+        if op > 0.30 and not bare:                 # upper teeth: what makes it read as speech
+            th = top + min(drop * 0.40, max(2.4 * k, drop * 0.34))
+            r = max(1.0, drop * 0.10)
+            d.rounded_rectangle([box[0] + w * 0.07, top + drop * 0.04, box[2] - w * 0.07, th],
+                                radius=r, fill=(238, 232, 220, 255))
+        if op > 0.58:
+            d.ellipse([cx - w * 0.20, top + drop * 0.58, cx + w * 0.20, top + drop * 0.95],
+                      fill=(146, 60, 55, 255))
     if eyes_closed:
         for ex, ey, er in rig["eyes"]:
             ex, ey, er = ex * k, ey * k, er * k
@@ -570,21 +601,29 @@ def wrap(text, size, maxw):
     return tuple(lines)
 
 
-def caption(art, e):
+def caption(art, e, t=0.0):
+    """The lower third. The band is always there; the words arrive with the voice."""
     d = ImageDraw.Draw(art)
     d.rectangle([0, 1596, W, H], fill=PAPER)
     d.line([(0, 1596), (W, 1596)], fill=INK, width=6)
+    al = clamp((t - (e["t0"] - 0.18)) / 0.22)
+    if al <= 0.01:
+        return
+    lay = Image.new("RGBA", (W, H - 1596), (0, 0, 0, 0))
     lab = LABEL[e["who"]]
     lw = deva.layout(lab, 30)[1]
-    d.rectangle([74, 1638, 74 + lw + 34, 1694], fill=RED)
-    deva.draw_text(art, (92, 1668), lab, 30, 700, CREAM, anchor="lm")
+    ImageDraw.Draw(lay).rectangle([74, 42, 74 + lw + 34, 98], fill=RED)
+    deva.draw_text(lay, (92, 72), lab, 30, 700, CREAM, anchor="lm")
     cap_w = deva.layout(e["cap"], 28)[1]
-    deva.draw_text(art, (W - 76 - cap_w, 1664), e["cap"], 28, 500, (128, 120, 108), anchor="lm")
+    deva.draw_text(lay, (W - 76 - cap_w, 68), e["cap"], 28, 500, (128, 120, 108), anchor="lm")
     lines = wrap(e["text"], 35, 918)
-    y = 1746 if len(lines) < 3 else 1732
+    y = 150 if len(lines) < 3 else 136
     for ln in lines[:3]:
-        deva.draw_text(art, (74, y), ln, 35, 500, (32, 29, 26), anchor="lm")
+        deva.draw_text(lay, (74, y), ln, 35, 500, (32, 29, 26), anchor="lm")
         y += 48
+    if al < 0.999:
+        lay.putalpha(lay.getchannel("A").point(lambda v: int(v * al)))
+    art.alpha_composite(lay, (0, 1596))
 
 
 def header(art):
@@ -611,7 +650,7 @@ def frame(t):
     art = crop_layer(main, *cam)
     being(art, e, t, cam)
     art.alpha_composite(crop_layer(fg, *cam))
-    caption(art, e)
+    caption(art, e, t)
     header(art)
     return art
 

@@ -40,14 +40,27 @@ shift their weight, and they never speak.
 | `prep8.py` | rigs the six faces: floods the head for skin, finds the eye pair and the mouth, paints the drawn-in mouth out by cloning the cheek band above it, writes `cast/rigs8.json`. Four faces needed hand coordinates (`FIX`) — glasses, beard, veil and moustache defeat the detector |
 | `film9.py` | the film: two sets, one camera, puppets, lip-sync, Bangla captions |
 | `mix9.py` | the sound: ten takes placed on the timeline, plus a synthesised afternoon |
+| `verify9.py` | the check: reads the finished file back and correlates the mouth against the delivered sound, frame by frame |
 | `deva.py` | Bangla type as pixels — harfbuzz shaping + fontTools outlines, because PIL here has no libraqm |
 
 **Animation.** The mouth is not a cycle — it is the audio. Each take is turned into a
-24 fps loudness envelope (`envelope()`), cached to `audio/_env*.wav`, and the speaker's
-mouth is drawn from that number: a line when silent, a widening oval when open, with the
-tongue only on the loud frames. Open/close therefore tracks the syllables of that take
-and nothing else. On top of it: breathing, a slow sway, a weight shift, a blink every few
-seconds, and a small dip of the head on stressed syllables.
+24 fps loudness envelope (`envelope()`) and the speaker's mouth is drawn from that
+number. Three details do the work: the energy is sampled at each frame's *midpoint*
+(a frame is on screen from `i` to `i+1`, so its start would be half a frame late); the
+curve is mapped through dB with the take's own percentiles, so pauses really close
+instead of leaving a mouth half open through the breathing; and the opening is
+re-shaped (`op = ((m − 0.28) / 0.60)^0.85`) because loudness is not jaw position — a
+speaking mouth should sit near rest and open hard on the stressed syllable. Teeth are
+drawn only where the face has no moustache; inside a beard the mouth is a dark opening
+and nothing else. On top of it: breathing, a slow sway, a weight shift, a blink every
+few seconds, and a small dip of the head on stressed syllables.
+
+**Sync, measured.** `verify9.py` reads the delivered MP4 back — video at quarter size,
+audio as mono — finds each speaker's mouth from the same camera model the renderer uses,
+and correlates how dark that patch is, frame by frame, against the audio's loudness. It
+prints a correlation per lag; a correct cut peaks at lag 0. Shot 5 peaks at 0 and shot 2
+within a frame. This is how the half-frame offset and the moustache-coloured mouth
+inpaint (which read as a mouth that never shut) were found and fixed.
 
 **One clock.** There is a single timeline: `ENTRIES` is built from the take durations,
 `PAPER_A` and `CARD_A` fall out of it, and every frame is `frame(i / FPS)`. Nothing is
@@ -69,13 +82,14 @@ paper pill so it reads over cream wall and coral cloth alike.
 ## Rebuild
 
 ```bash
-python3 prep8.py                                    # rigs  -> cast/
-python3 film9.py --still 30 --out frames/s.png      # one frame
-python3 film9.py --seg 0 968 --out seg0.mp4         # a third (≈5 fps)
-python3 mix9.py                                     # -> audio/mix.wav
+python3 prep8.py                                         # rigs   -> cast/
+python3 film9.py --still 30 --out frames/s.png           # one frame
+python3 film9.py --seg 0 968 --out seg0.mp4              # a third (≈5 fps)
+python3 mix9.py                                          # -> audio/mix.wav
 ffmpeg -f concat -safe 0 -i segs.txt -i audio/mix.wav \
        -c:v copy -c:a aac -b:a 160k -shortest -movflags +faststart \
        dark-lesson-08-wedding-1080x1920.mp4
+python3 verify9.py dark-lesson-08-wedding-1080x1920.mp4   # is the mouth on the sound?
 ```
 
 `preview-contact-sheet.png` is twelve frames pulled from the finished file — cards, both

@@ -119,8 +119,20 @@ def main():
 
         rigged = im.copy()
         mx, my, mw, mh = rig["mouth"]
-        band = im.crop((mx - mw - 8, my - mh - 20, mx + mw + 8, my - mh - 4))
-        rigged.paste(band.resize((2 * (mw + 8), 2 * (mh + 8)), Image.LANCZOS),
+        # The mouth has to be painted out with something face-coloured. Above it there is
+        # often a moustache, and cloning that leaves a dark block where a closed mouth
+        # should be — which reads as a mouth that never shuts. Take whichever band is
+        # lighter: for a moustache that is the chin, for a beard both are beard.
+        def band(box):
+            c = im.crop(box)
+            a = np.asarray(c.convert("RGBA"), dtype=np.float32)
+            m = a[:, :, 3] > 180
+            lum = (0.30 * a[:, :, 0] + 0.59 * a[:, :, 1] + 0.11 * a[:, :, 2])[m]
+            return c, float(lum.mean()) if lum.size else 0.0
+        up, lu = band((mx - mw - 8, my - mh - 20, mx + mw + 8, my - mh - 4))
+        dn, ld = band((mx - mw - 8, my + mh + 4, mx + mw + 8, my + mh + 20))
+        src = up if lu >= ld else dn
+        rigged.paste(src.resize((2 * (mw + 8), 2 * (mh + 8)), Image.LANCZOS),
                      (mx - mw - 8, my - mh - 8))
         rigged.save(os.path.join(OUT, name + "-rig.png"))
 
