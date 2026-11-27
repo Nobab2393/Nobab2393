@@ -23,8 +23,39 @@ Voice chain: `vo/` (TTS) → `vo_fx/` (pitch + EQ, loudness-matched)
 | Kamal (woodcutter) | 139 Hz | 18 |
 | Headman | 121 Hz | — |
 
-Verified in the finished mix: all ten lines land between 0.0997 and 0.1033 RMS,
-2.6× above the music bed — nobody is buried and nobody shouts over anyone.
+Measured on the delivered MP4, all ten lines:
+
+| line | speaker | RMS |
+|---|---|---|
+| L1 | Rahul | 0.1025 |
+| L2 | Malati | 0.0997 |
+| L3 | Sujon | 0.1032 |
+| L4 | Kamal | 0.1015 |
+| L5 | Rahul | 0.1001 |
+| L6 | Kamal | 0.1027 |
+| L7 | Headman | 0.1017 |
+| L8 | Sujon | 0.1005 |
+| L9 | Malati | 0.1019 |
+| L10 | Headman | 0.1009 |
+
+Spread **1.04×**, peak 0.864 — nobody is buried, nobody shouts, nothing clips.
+
+## Lip sync
+
+Mouth openness vs. the real audio envelope correlates at **r = 0.998** on every one
+of the ten lines, and stays exactly 0.000 in silence. It is not a generic flapper:
+the shape of each sentence is in the mouth.
+
+## Shots
+
+1. Porch, dusk — title, L1, L2
+2. Square, evening — L3 (Sujon walks in)
+3. Fireside — L4, L5
+4. Forest, cold — L6, the golden deer
+5. Banyan, last light — L7
+6. Square — L8
+7. Banyan — L9
+8. Porch wide → headman close → empty porch — L10, down to the moral card
 
 ## Script note
 

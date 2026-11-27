@@ -206,7 +206,9 @@ def forest():
     sd = ImageDraw.Draw(shafts)
     for i in range(4):
         x = 300 + i * 420
-        sd.polygon([(x, 0), (x + 150, 0), (x + 400, H), (x + 180, H)], fill=(22, 26, 16))
+        sd.polygon([(x, 0), (x + 150, 0), (x + 400, H), (x + 180, H)], fill=(30, 36, 20))
+    # one warm shaft down the middle: the only way out, and it is not where he looks
+    sd.polygon([(760, 0), (940, 0), (1180, H), (900, H)], fill=(64, 58, 34))
     shafts = shafts.filter(ImageFilter.GaussianBlur(60))
     img = Image.fromarray(np.clip(np.asarray(img).astype(np.int16) +
                                   np.asarray(shafts).astype(np.int16), 0, 255).astype(np.uint8))
@@ -219,6 +221,19 @@ def forest():
         md.ellipse([cx - rx, cy - ry, cx + rx, cy + ry], fill=rng.randint(40, 90))
     mist = mist.filter(ImageFilter.GaussianBlur(50)).point(lambda v: int(v * 0.55))
     img = Image.composite(Image.new("RGB", (W, H), (150, 168, 140)), img, mist)
+    # thicket: dark undergrowth either side, framing a corridor
+    under = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    ud = ImageDraw.Draw(under)
+    for side in (-1, 1):
+        x0 = 0 if side < 0 else W
+        for _ in range(46):
+            cx = x0 + side * rng.randint(0, 430)
+            cy = rng.randint(740, 980)
+            rx, ry = rng.randint(60, 150), rng.randint(50, 120)
+            ud.ellipse([cx - rx, cy - ry, cx + rx, cy + ry],
+                       fill=(10, 18, 14, rng.randint(150, 230)))
+    under = under.filter(ImageFilter.GaussianBlur(26))
+    img = Image.alpha_composite(img.convert("RGBA"), under).convert("RGB")
     img = _glow(img, 1000, 240, 640, (150, 170, 120), 0.22)
     img = _paper_grid(img, alpha=7)
     img = _grain(img, 5, 14)

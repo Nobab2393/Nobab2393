@@ -200,10 +200,16 @@ def warmth(im, gain=1.06, lift=0.03):
     return Image.fromarray(a.astype(np.uint8), "RGBA")
 
 
-def cold(im, tint=(150, 190, 160), gain=0.92):
+def cold(im, tint=(176, 210, 182), gain=1.0, toe=0.05):
+    """Cold grade that keeps the picture legible: desaturate toward green, lift the
+    shadows a little, and don't touch overall level."""
     a = np.asarray(im.convert("RGBA")).astype(np.float32)
     rgb = a[..., :3] / 255.0
-    rgb = rgb * np.array([t / 255 for t in tint]) * gain
+    lum = rgb @ np.array([0.30, 0.59, 0.11])
+    cold_ = np.stack([lum] * 3, -1) * np.array([t / 255 for t in tint]) * 1.28
+    rgb = rgb * 0.42 + cold_ * 0.58
+    rgb = rgb * gain
+    rgb = rgb * (1 - toe) + toe * np.array([0.06, 0.10, 0.07])
     a[..., :3] = np.clip(rgb, 0, 1) * 255
     return Image.fromarray(a.astype(np.uint8), "RGBA")
 
@@ -407,72 +413,116 @@ def shot_fire(t, dur):
 
 
 def shot_forest(t, dur):
-    """The memory: cold, and the light goes."""
-    P = 700
+    """The memory: Kamal walked in years ago. Cold, open, and too quiet."""
     w = World(lbg.get("forest"))
-    z = 1.05 + 0.08 * smoothstep(0, dur, t)
     mo_k = mouth(t, "kamal")
-
-    # Kamal walking deeper, then stopping
-    walk = smoothstep(0.0, 3.4, t)
-    x = lerp(300, 720, walk)
-    moving = t < 3.4
-    ph = t * 6.4
-    w.char("rival", stand(P,
-                          torso=0.06 if moving else 0.02,
-                          head=-0.05,
-                          hand_n=(0.25 * P, 0.10 * P),
-                          foot_n=(0.105 * P + (0.09 * P * math.sin(ph) if moving else 0),
-                                  0.462 * P),
-                          foot_f=(-0.115 * P + (-0.09 * P * math.sin(ph) if moving else 0),
-                                  0.462 * P),
-                          mouth=mo_k, smile=0.15, brow=0.6,
-                          blink=blink_at(t, 0.7)), x, 900, scale=1.0, darken=0.15)
+    # slow push-in behind him — we are following, not watching
+    z = 1.04 + 0.10 * smoothstep(0, dur, t)
+    # he stops walking halfway through L6, when the deer turns
+    walk = 1.0 - smoothstep(4.2, 5.4, t)
+    ph = t * 5.4
+    xk, gk, sk = place(0.10, 830)
+    w.char("rival", stand(700,
+                          torso=0.04 + 0.02 * walk,
+                          head=-0.04 - 0.05 * smoothstep(5.0, 7.0, t),
+                          foot_n=(0.10 * 700 + 0.085 * 700 * math.sin(ph) * walk,
+                                  0.462 * 700 - 0.05 * 700 * max(0, math.cos(ph)) * walk),
+                          foot_f=(-0.11 * 700 - 0.085 * 700 * math.sin(ph) * walk,
+                                  0.462 * 700 - 0.05 * 700 * max(0, -math.cos(ph)) * walk),
+                          hand_n=(0.24 * 700, (0.12 + 0.02 * math.sin(t * 1.9)) * 700),
+                          hand_f=(-0.22 * 700, 0.18 * 700),
+                          mouth=mo_k, smile=0.10, brow=0.45 + 0.2 * smoothstep(5.0, 7.0, t),
+                          blink=blink_at(t, 0.7)), xk, gk, scale=sk)
 
     # the deer: gold, half-seen, standing still between the trunks
-    if t > 3.9:
-        a = smoothstep(3.9, 5.2, t)
-        deer = deer_sprite(1.0)
+    if t > 3.6:
+        a = smoothstep(3.6, 5.0, t)
+        # it comes a little closer as it is noticed
+        g = 1.02 + 0.10 * smoothstep(4.6, dur, t)
+        deer = deer_sprite(round(g, 2))
         if a < 0.999:
             deer.putalpha(deer.split()[3].point(lambda v: int(v * a)))
-        w.paste(deer, 1210, 470)
-        f0 = w.out()
-        f0 = glow(f0, 1420, 660, 340, (255, 210, 120), 0.30 * a)
-        w = World(f0)
+        dx, dy = 1060, 470
+        w.paste(deer, dx, dy)
+        f = w.out()
+        f = glow(f, dx + 200, dy + 200, 420, (255, 216, 130), 0.40 * a)
+        # rim light so the gold separates from the green
+        f = glow(f, dx + 40, dy + 190, 260, (255, 230, 170), 0.20 * a)
+        return vignette(camera(f, zoom=z, cx=0.5, cy=0.52), 0.60)
 
     f = camera(w.out(), zoom=z, cx=0.5, cy=0.52)
-    f = cold(f).convert("RGB")
+    f = glow(f, 900, 300, 700, (150, 175, 120), 0.18)
+    # a cool rim behind him: the forest is behind, not on top of, the man
+    f = glow(f, xk + 30 * sk, gk - 320 * sk, 330 * sk, (196, 224, 190), 0.26)
     # light drains as the shot runs
-    arr = np.asarray(f).astype(np.float32) * (1 - 0.18 * smoothstep(0, dur, t))
-    f = Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8), "RGB")
-    return vignette(f, 0.62)
+    arr = np.asarray(f).astype(np.float32) * (1 - 0.12 * smoothstep(0, dur, t))
+    return vignette(Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8), "RGB"), 0.58)
 
 
-def shot_last(t, dur):
-    """Last light on the empty porch: what greed costs."""
-    w = World(lbg.get("porch"))
-    mo_m = mouth(t, "malati")
+def _last_setup():
+    """Grandmother on the porch, headman beside her, the boy's absence in the gap."""
+    return World(lbg.get("porch"))
+
+
+def shot_last_a(t, dur):
+    """Wide: L10 begins. The camera is far back and closes in slowly."""
+    w = _last_setup()
     mo_h = mouth(t, "headman")
-    lis = 1.0 if other_talking(t, "malati") else 0.0
-    # grandmother alone in the middle distance; the boy has gone
+    mo_m = mouth(t, "malati")
+    lis = 1.0 if other_talking(t, "headman") else 0.0
     w.char("mentor", stand(672,
-                           torso=0.05, head=0.04,
+                           torso=0.04, head=0.03 - 0.05 * lis,
                            foot_n=(0.14 * 672, 0.430 * 672), foot_f=(-0.14 * 672, 0.430 * 672),
-                           hand_n=(0.20 * 672, (0.17 + 0.02 * lis) * 672),
-                           hand_f=(-0.18 * 672, 0.20 * 672),
-                           mouth=mo_m, smile=0.42 - 0.2 * lis, brow=0.18 + 0.4 * lis,
-                           blink=blink_at(t, 0.5)), 760, 912, scale=1.05)
+                           hand_n=(0.19 * 672, (0.18 + 0.03 * lis) * 672),
+                           hand_f=(-0.18 * 672, 0.21 * 672),
+                           mouth=mo_m, smile=0.40 - 0.14 * lis, brow=0.16 + 0.34 * lis,
+                           blink=blink_at(t, 0.5)), 700, 912, scale=1.02)
     w.char("headman", stand(700, torso=0.02, head=0.03,
-                            hand_n=(0.22 * 700, 0.15 * 700), hand_f=(-0.21 * 700, 0.19 * 700),
-                            mouth=mo_h, smile=0.18, brow=0.25,
-                            blink=blink_at(t, 1.4), flip=True), 1330, 900, scale=1.0)
-    z = 1.0 + 0.10 * smoothstep(0, dur, t)
-    f = camera(w.out(), zoom=z, cx=0.46, cy=0.6)
-    f = glow(f, 400, 500, 460, (255, 176, 96), 0.14)
-    f = glow(f, 1290, 660, 300, (255, 170, 88), 0.10)
-    # the light dies across this scene
-    arr = np.asarray(f).astype(np.float32) * (1 - 0.26 * smoothstep(dur * 0.2, dur, t))
+                            hand_n=(0.25 * 700, (0.11 + 0.04 * math.sin(t * 1.5)) * 700),
+                            hand_f=(-0.22 * 700, 0.18 * 700),
+                            mouth=mo_h, smile=0.14, brow=0.22,
+                            blink=blink_at(t, 1.4), flip=True), 1350, 900, scale=0.99)
+    z = 1.0 + 0.13 * smoothstep(0, dur, t)
+    f = camera(w.out(), zoom=z, cx=0.44, cy=0.60)
+    f = glow(f, 380, 500, 470, (255, 172, 92), 0.13)
+    arr = np.asarray(f).astype(np.float32) * (1 - 0.10 * smoothstep(0, dur, t))
     return vignette(Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8), "RGB"), 0.5)
+
+
+def shot_last_b(t, dur):
+    """Close on the headman. He is the one saying the hard thing."""
+    w = _last_setup()
+    mo_h = mouth(t, "headman")
+    x, g, sc = place(0.18, 620)
+    w.char("headman", stand(760, torso=0.03, head=0.02,
+                            hand_n=(0.24 * 760, (0.13 + 0.03 * math.sin(t * 1.6)) * 760),
+                            hand_f=(-0.23 * 760, 0.19 * 760),
+                            mouth=mo_h, smile=0.12, brow=0.30 + 0.18 * abs(math.sin(t * 0.9)),
+                            blink=blink_at(t, 0.9)), x, g - 60, scale=sc * 1.14)
+    z = 1.06 + 0.07 * smoothstep(0, dur, t)
+    f = camera(w.out(), zoom=z, cx=0.32, cy=0.34)
+    f = glow(f, 360, 470, 430, (255, 168, 88), 0.12)
+    arr = np.asarray(f).astype(np.float32) * (1 - 0.20 * smoothstep(0, dur, t))
+    return vignette(Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8), "RGB"), 0.52)
+
+
+def shot_last_c(t, dur):
+    """The empty side of the porch, and the light going out of it."""
+    w = _last_setup()
+    mo_m = mouth(t, "malati")
+    x, g, sc = place(0.18, 760)
+    w.char("mentor", stand(672,
+                           torso=0.05, head=0.05,
+                           foot_n=(0.14 * 672, 0.430 * 672), foot_f=(-0.14 * 672, 0.430 * 672),
+                           hand_n=(0.19 * 672, (0.18 + 0.02 * math.sin(t * 1.2)) * 672),
+                           hand_f=(-0.18 * 672, 0.21 * 672),
+                           mouth=mo_m, smile=0.30, brow=0.22,
+                           blink=blink_at(t, 1.2)), x, g - 60, scale=sc * 1.10)
+    z = 1.04 + 0.10 * smoothstep(0, dur, t)
+    f = camera(w.out(), zoom=z, cx=0.56, cy=0.36)
+    f = glow(f, 380, 500, 470, (255, 166, 86), 0.13)
+    arr = np.asarray(f).astype(np.float32) * (1 - 0.40 * smoothstep(0, dur, t))
+    return vignette(Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8), "RGB"), 0.55)
 
 
 def shot_banyan(t, dur):
@@ -526,7 +576,12 @@ def render_frame(t):
         return shot_square(t - 63.0, 8.0)
     if t < 80.4:
         return shot_banyan(t - 71.0, 9.4)
-    f = shot_last(t - 80.4, TOTAL - 80.4)
+    if t < 92.0:
+        f = shot_last_a(t - 80.4, 11.6)
+    elif t < 104.0:
+        f = shot_last_b(t - 92.0, 12.0)
+    else:
+        f = shot_last_c(t - 104.0, TOTAL - 104.0)
     if t > 112.0:
         a = smoothstep(112.0, 113.4, t)
         arr = np.asarray(f).astype(np.float32) * (1 - 0.55 * a)
