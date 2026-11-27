@@ -1,0 +1,5 @@
+__pycache__/
+raw/_reject/
+build/
+cs-*.png
+01-script.md
