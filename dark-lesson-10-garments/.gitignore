@@ -1,3 +1,5 @@
 __pycache__/
 raw/_reject/
+build/
+cs-*.png
 check-strip.png

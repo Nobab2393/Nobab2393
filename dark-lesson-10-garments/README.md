@@ -26,12 +26,33 @@ is the map of the room, and it should be visible in a single row.
 | 09 | নাজমা সুলতানা | 35 | প্রেসিং সেকশন | scorched apron, bandaged wrist |
 | 10 | বাবুল মিয়া | 52 | মেশিন মেকানিক | blue coverall, oil at the knees, red gamchha |
 
-## Status
+## Status — পর্ব ১০ shipped
 
-Plates 01–07 are drawn and on the sheet. Plates 08, 09 and 10 are being re-shot: two came
-back as multi-figure sheets instead of one figure, and the mechanic's plate arrived with a
-drawn panel behind him instead of bare paper. The sheet keeps their labels in place until
-the replacements land.
+All ten plates are drawn and on the sheet. `dark-lesson-10-garments-1080x1920.mp4` —
+2:00.62, 1080×1920, 24 fps, ten scenes, one narrator.
+
+The episode: 9:10 p.m., shift over an hour ago, eight people still on the floor, the gate
+chained from the outside, nine names on the roster — and a ninth body that nobody can
+account for. The ninth name is never shown.
+
+## The episode
+
+```bash
+python3 plan.py      # timeline: ten lines -> ten shots; prints the shot table
+python3 film.py      # -> build/video-ship.mp4 (crf 24)
+python3 mix.py       # -> build/mix.wav, then muxes the deliverable
+python3 verify.py    # length, every cut's silence, every scene's first word
+python3 contact.py   # -> dark-lesson-10-garments-contact.png
+```
+
+`plan.py` is the single source of truth for timing: ten narration files, one shot per
+scene, each shot opening 80 ms before its line so that every cut falls in the silence
+ahead of the first word. `film.py` stages the ten figures into the three plates
+(`scene/bg-floor.png`, `bg-gate.png`, `bg-machine.png`) and walks them in and out at
+`STEP = 0.46 s` — neutral plate, mid-stride plate, body bob, a little roll, shadow sliding
+back. `mix.py` places the voice sample-exactly and builds the room: tone, a machine hum
+that dies when the power goes, the relay, the chain, the gate, footsteps panned per walk.
+`verify.py` measures the finished mp4, not the plan.
 
 ## How it is built
 
