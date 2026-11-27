@@ -64,3 +64,13 @@ the exact documents and acceptance rules for that style. B7 · Pixel Theater,
 B5 · Avatar Explainer and B6 · Meme Story each have dedicated renderers under
 `scripts/`; A-styles (A1–A8) deliver prompts/storyboards for a video model
 instead of local rendering.
+
+---
+
+## Also installed: MiniMax H3 skill suite
+
+`npx skills add https://github.com/MiniMax-AI/MiniMax-H3 --skill '*' --copy -y -a claude-code`
+→ 9 skills (`h3-prompt-writing` + 8 style generators + `directing-stickman-videos`) in `.claude/skills/`.
+
+Study notes, the H3 prompt contract, and why H3 cannot be run locally in this sandbox are in
+**`H3_SKILLS_NOTES.md`**; a worked prompt pack is in **`h3-prompts/law5_bangla_h3.md`**.
