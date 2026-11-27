@@ -1,4 +1,5 @@
 """Bengali text layout + rendering: harfbuzz shaping -> freetype outlines -> PIL mask."""
+import os
 from functools import lru_cache
 
 import freetype
@@ -6,8 +7,9 @@ import numpy as np
 import uharfbuzz as hb
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
-FONT_SANS = "assets/fonts/NotoSansBengali-VF.ttf"
-FONT_SERIF = "assets/fonts/NotoSerifBengali-VF.ttf"
+_ROOT = os.path.dirname(os.path.abspath(__file__))
+FONT_SANS = os.path.join(_ROOT, "assets/fonts/NotoSansBengali-VF.ttf")
+FONT_SERIF = os.path.join(_ROOT, "assets/fonts/NotoSerifBengali-VF.ttf")
 
 
 class BengaliFont:

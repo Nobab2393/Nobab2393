@@ -339,6 +339,17 @@ def render(ch, pose, scale=1.0):
     def mx(p):
         return (-p[0], p[1]) if flip else p
 
+    def _ispt(v):
+        return isinstance(v, (tuple, list)) and len(v) == 2 and all(
+            isinstance(k, (int, float)) for k in v)
+
+    def _mir(v):
+        if _ispt(v):
+            return (-v[0], v[1]) if flip else v
+        if isinstance(v, (list, tuple)) and v and all(_ispt(q) for q in v):
+            return [(-q[0], q[1]) if flip else q for q in v]
+        return v
+
     class Mirror:
         def __init__(self, lay):
             self.l = lay
@@ -346,12 +357,16 @@ def render(ch, pose, scale=1.0):
         def __getattr__(self, name):
             fn = getattr(self.l, name)
 
-            def wrapped(pts, *a, **kw):
-                if name in ("capsule", "line", "poly", "blob"):
-                    pts = [mx(p) for p in pts]
+            def wrapped(*args, **kw):
+                # geometry args may be a single point or a list of points;
+                # widths / radii must pass through untouched.
+                if name == "capsule":
+                    args = (_mir(args[0]), _mir(args[1])) + args[2:]
+                elif name in ("line", "poly", "blob"):
+                    args = (_mir(args[0]),) + args[1:]
                 elif name == "ellipse":
-                    pts = mx(pts)
-                return fn(pts, *a, **kw)
+                    args = (_mir(args[0]),) + args[1:]
+                return fn(*args, **kw)
 
             return wrapped
 
