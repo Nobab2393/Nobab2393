@@ -44,7 +44,44 @@ would break the conjuncts).
 python3 sheets.py            # -> cast/*.png, sheets/lineup.png, five cards
 ```
 
-## Next
+## The film
 
-Story, hook, sets and the two-minute script are still to come. The world is chosen — a
-market godown, daylight, a sealed back door — and the cast is five strangers.
+**থলি (The Sack).** Five strangers are in a wholesale godown when the steel shutter comes
+down from the street side. In the corner there is a jute sack with its mouth open, and every
+time someone touches it the shutter drops another notch — one finger, a hand, to the knees.
+The room darkens by degrees; the afternoon walks out of it. The old teacher is the only one
+who knows the arithmetic: the sack belonged to a porter who died under that same shutter.
+The way out is not to fight the door but to put back what is not yours — all five of them,
+together.
+
+> যা তোমার নয়, তার ওজন একদিন তোমার ঘাড়েই আসে।
+
+- `01-script.md` — the ten scenes, the lines, the staging notes.
+- `lines.py` — the ten narration lines, the source of truth for the recording.
+- `audio/scene01…10.mp3` — one narrator, conversational, 99.7 s of speech.
+- `plan.py` — timeline: 14 shots, every cut inside the silence before its line.
+- `film.py` — the renderer: cel plates on drawn sets, walk cycles, breath, contact shadows,
+  a grade that goes from noon to dusk as the shutter comes down.
+- `mix.py` — the bazaar behind the wall, the shutter's steps, jute under a hand, the ratchet
+  of it climbing again.
+- `verify.py` — measures the finished mp4: length, drift, every cut, every entry.
+- `contact.py` — the twelve-frame contact sheet.
+
+```bash
+python3 plan.py
+python3 mix.py --no-mux      # -> build/mix.wav
+python3 film.py --crf 24     # -> build/video.mp4
+python3 mix.py               # mux -> dark-lesson-12-market-1080x1920.mp4
+python3 verify.py
+python3 contact.py
+```
+
+## Status
+
+Rendered and checked. 2892 frames at 24 fps — 120.500 s of picture against 120.500 s of
+audio, drift 0.0 ms; all ten cuts sit in silence, the worst first word lands 66 ms after its
+shot opens.
+
+- `dark-lesson-12-market-1080x1920.mp4` — 1080×1920, h264 + aac, 120.5 s
+- `dark-lesson-12-market-720x1280.mp4` — 720×1280, lighter
+- `dark-lesson-12-market-contact.png` — twelve frames, 0:00 to 1:58
