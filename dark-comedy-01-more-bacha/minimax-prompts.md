@@ -1,7 +1,7 @@
 # MiniMax / Hailuo pack — মরে বাঁচা (ডার্ক কমেডি)
 
 Vertical 1080×1920, Hailuo 2.3 image-to-video, one voice. This film uses the **new pastel
-cast-card look** (`style-reference/STYLE.md`), not the noir of the murder series.
+cast-card look** (`style-reference/pastel-cast.md`), not the noir of the murder series.
 
 **Global style token (scenes):**
 

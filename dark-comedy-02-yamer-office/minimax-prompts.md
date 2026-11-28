@@ -1,7 +1,7 @@
 # MiniMax / Hailuo pack — যমের অফিস (ডার্ক কমেডি, দুই কণ্ঠ)
 
 Vertical 1080×1920, Hailuo 2.3 image-to-video, one narrator and one clerk. Same pastel cast-card
-look as «মরে বাঁচা» (`style-reference/STYLE.md`).
+look as «মরে বাঁচা» (`style-reference/pastel-cast.md`).
 
 **Global style token (scenes):**
 
