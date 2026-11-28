@@ -92,12 +92,122 @@ SHOTS = {
     "s7b": dict(bg="queue", cam=(676, 1200, 1.06, 680, 1182, 1.13), dark=1.0),
     "s7c": dict(bg="corridor", cam=(676, 1210, 1.10, 680, 1196, 1.17), dark=0.62),
     "s7d": dict(bg="counter", cam=(800, 1010, 1.50, 806, 998, 1.58), dark=1.0),
-    "s7e": dict(bg="end-counter", cam=(676, 1200, 1.02, 680, 1182, 1.09), dark=0.99),
-    "s7f": dict(bg="end-counter", cam=(690, 1120, 1.22, 694, 1104, 1.31), dark=0.97),
+    "s7e": dict(bg="end-counter2", cam=(676, 1200, 1.02, 680, 1182, 1.09), dark=0.99),
+    "s7f": dict(bg="end-counter2", cam=(700, 1180, 1.26, 704, 1164, 1.34), dark=0.97),
 
     # out — to black
     "out": dict(bg="black", dark=1.0),
 }
+
+# --------------------------------------------------------------------------- the people
+# x, feet and h are master-frame pixels (1350 × 2400); keys are shot-relative seconds. The clerk
+# stands behind the counter, so his shot repaints everything below the counter top over him.
+A = dict
+ACTORS = {
+    # 1 — at his desk, one hand on the file, one at his neck
+    "s1a": [A(who="habib", x=392, feet=2185, h=1270, view="back", seed=0.4, keys=[
+        (0.0, A(la=10, ra=12, head=-6)),
+        (1.1, A(ra=64, rb=34, head=-12)),
+        (2.0, A(ra=14, head=4)),
+        (2.9, A(ra=48, rb=40, head=10)),
+        (3.5, A(ra=16))])],
+    # 2 — the queue, and looking up at the signboard
+    "s1b": [A(who="habib", x=980, feet=2350, h=1180, view="back", seed=1.7, keys=[
+        (0.0, A(la=-10, ra=-10, headup=4)),
+        (1.4, A(headup=16, head=-8, la=-14, ra=-14)),
+        (2.6, A(headup=6, head=6))])],
+    "s1c": [A(who="habib", x=340, feet=2330, h=1280, view="back", seed=2.2, keys=[
+        (0.0, A(headup=18, la=-16, ra=-16)), (1.8, A(headup=22, head=-6))])],
+
+    # 2 — the heart attack, then walking into the corridor
+    "s2a": [A(who="habib", x=430, feet=2190, h=1290, view="back", seed=0.9, keys=[
+        (0.0, A(la=12, ra=12)),
+        (0.7, A(la=-34, lb=62, ra=-38, rb=64, crouch=0.30, lean=-6, head=-10)),
+        (1.7, A(la=-44, lb=74, ra=-46, rb=76, crouch=0.52, lean=-11, head=-16)),
+        (2.7, A(la=-24, lb=44, ra=-26, rb=46, crouch=0.78, lean=-15, head=-24)),
+        (3.9, A(la=-16, lb=30, ra=-18, rb=32, crouch=0.86, lean=-17, head=-26))])],
+    "s2c": [A(who="habib", x=676, feet=2090, h=1120, view="back", seed=1.2, walk=(15, 0.85),
+              keys=[(0.0, A(la=6, ra=6)), (3.0, A(head=4))])],
+    "s2d": [A(who="habib", x=1000, feet=2360, h=1200, view="back", seed=3.1, keys=[
+        (0.0, A(headup=14, la=-12, ra=-12)), (1.8, A(headup=10, head=-8))])],
+    "s2e": [A(who="habib", x=372, feet=2520, h=1930, view="back", seed=0.2, keys=[
+        (0.0, A(ra=8)), (0.9, A(ra=58, rb=26)), (2.0, A(ra=62, rb=16)),
+        (3.4, A(ra=24, rb=14))])],
+
+    # 3 — the clerk behind the window; the stamp tray; the queue side of the glass
+    "s3a": [A(who="clerk", x=676, feet=1795, h=1120, view="front", seed=0.6, keys=[
+        (0.0, A(la=8, lb=12, head=0)),
+        (0.9, A(la=46, lb=30, head=-5)),
+        (1.8, A(la=10, lb=14, head=3)),
+        (2.7, A(la=52, lb=34, head=-3)),
+        (3.3, A(la=12, lb=12))])],
+    "s3d": [A(who="clerk", x=760, feet=1786, h=1100, view="front", seed=2.0, keys=[
+        (0.0, A(la=30, lb=40)), (0.5, A(la=58, lb=18)), (0.8, A(la=14, lb=16)),
+        (1.4, A(la=58, lb=18)), (1.7, A(la=14, lb=16))])],
+    "s3e": [A(who="habib", x=980, feet=2520, h=1900, view="back", seed=1.4, keys=[
+        (0.0, A(la=8, ra=8, head=-4)), (1.2, A(head=6, ra=16))])],
+
+    # 4 — tea-pani, and the pockets
+    "s4a": [A(who="habib", x=352, feet=2530, h=1900, view="back", seed=2.6, keys=[
+        (0.0, A(la=-18, lb=42, ra=-20, rb=44)),
+        (1.4, A(la=-30, lb=58, ra=-32, rb=60, lean=4)),
+        (2.6, A(la=-16, lb=30, ra=-18, rb=32, head=-6))])],
+    "s4c": [A(who="habib", x=400, feet=2350, h=1300, view="back", seed=3.4, keys=[
+        (0.0, A(la=-16, lb=30, ra=-18, rb=32)),
+        (1.2, A(la=-34, lb=66, ra=-36, rb=68, head=-10)),
+        (2.4, A(la=-24, lb=48, ra=-26, rb=50, head=-14)),
+        (4.0, A(la=-6, lb=10, ra=-8, rb=12, head=-18, crouch=0.10))])],
+
+    # 5 — one lakh forty-three thousand files, and a man looking up at them
+    "s5a": [A(who="habib", x=300, feet=2330, h=1290, view="back", seed=0.7, keys=[
+        (0.0, A(headup=12, la=-12, ra=-12)), (2.2, A(headup=24, head=-10))])],
+
+    # 6 — the glasses come off
+    "s6a": [A(who="clerk", x=676, feet=1871, h=1300, view="front", seed=0.3, keys=[
+        (0.0, A(la=10, lb=12, glasses=1.0, smile=0.0)),
+        (0.5, A(la=-58, lb=76, glasses=1.0, smile=0.1)),
+        (0.9, A(la=-62, lb=82, glasses=0.0, smile=0.3)),
+        (1.8, A(la=-30, lb=40, glasses=0.0, smile=0.7, head=-4)),
+        (3.4, A(la=10, lb=12, glasses=0.0, smile=0.9, head=2)),
+        (4.9, A(la=8, lb=12, glasses=0.0, smile=1.0, head=0))])],
+    "s6c": [A(who="habib", x=330, feet=2200, h=1260, view="back", seed=1.1, keys=[
+                (0.0, A(la=-8, ra=-8, head=-6)), (2.6, A(head=4))]),
+            A(who="karim", x=830, feet=2150, h=1330, view="back", seed=2.4, keys=[
+                (0.0, A(la=14, lb=44, ra=12, rb=20, lean=3)),
+                (1.8, A(la=20, lb=52, ra=14, rb=24, lean=5, head=-6)),
+                (3.4, A(la=8, lb=20, ra=10, rb=14, lean=0))])],
+    "s6d": [A(who="clerk", x=740, feet=1829, h=1200, view="front", seed=3.6, keys=[
+        (0.0, A(la=-20, lb=54, ra=-22, rb=56, lean=5, glasses=0.0, smile=0.6)),
+        (1.6, A(la=-24, lb=60, ra=-26, rb=62, lean=7, smile=0.9, head=-4)),
+        (3.2, A(la=-18, lb=50, ra=-20, rb=52, lean=4, smile=0.8, head=2))])],
+
+    # 7 — every morning, and the lights going out
+    "s7a": [A(who="habib", x=676, feet=2080, h=1130, view="back", seed=0.5, walk=(14, 0.8),
+              keys=[(0.0, A(la=-6, ra=-6)), (2.6, A(head=-6))])],
+    "s7b": [A(who="habib", x=990, feet=2350, h=1190, view="back", seed=2.8, keys=[
+        (0.0, A(la=-22, lb=34, ra=-24, rb=36, head=-10, headup=-4)),
+        (2.0, A(la=-22, lb=34, ra=-24, rb=36, head=-6))])],
+    "s7c": [A(who="habib", x=676, feet=2090, h=1120, view="back", seed=1.6, keys=[
+        (0.0, A(la=-10, ra=-10, head=-6)), (2.4, A(la=-12, ra=-12, head=-8))])],
+    "s7d": [A(who="clerk", x=736, feet=1808, h=1150, view="front", seed=0.8, keys=[
+        (0.0, A(la=12, lb=14, smile=0.8)), (0.9, A(la=-50, lb=60, smile=0.9)),
+        (1.8, A(la=-58, lb=66, smile=1.0, head=-4)), (2.9, A(la=10, lb=12, smile=0.9))])],
+    "s7e": [A(who="habib", x=640, feet=2470, h=1760, view="back", seed=3.9, keys=[
+        (0.0, A(la=-14, lb=26, ra=-16, rb=28, head=-8)), (3.0, A(head=-12))])],
+    "s7f": [A(who="habib", x=664, feet=2480, h=1810, view="back", seed=1.3, keys=[
+        (0.0, A(la=-16, lb=30, ra=-18, rb=32, head=-12)),
+        (2.2, A(la=-10, lb=18, ra=-12, rb=20, head=-4, headup=6)),
+        (4.4, A(la=-8, lb=14, ra=-10, rb=16, head=2))])],
+}
+
+# the clerk stands behind the counter, so repaint the counter over his legs
+for _k in ("s3a", "s3d", "s6a", "s6d", "s7d"):
+    SHOTS[_k]["occ"] = (0.55, 0.0, 1.0)
+# the queue rope is in front of the man waiting at the shut counter
+for _k in ("s7e", "s7f"):
+    SHOTS[_k]["occ"] = (0.79, 0.0, 1.0)
+for _k, _v in ACTORS.items():
+    SHOTS[_k]["actors"] = _v
 
 
 # --------------------------------------------------------------------------- audio

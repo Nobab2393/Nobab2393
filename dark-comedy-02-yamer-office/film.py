@@ -25,6 +25,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFilter
 
 import deva
 import plan as P
+import puppet
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CAST = os.path.join(HERE, "cast")
@@ -234,14 +235,20 @@ def compose(stage, t, dark, u=0.0):
     """
     bg = background(stage["bg"], stage.get("flip", False))
     canvas = bg.convert("RGBA")
+    for a in sorted(stage.get("actors", []), key=lambda a: a["feet"]):
+        if a.get("depth") != "front":
+            puppet.draw(canvas, a, t)
     for fig in sorted(stage.get("figs", []), key=lambda f: f["feet"]):
         draw_puppet(canvas, fig, t, 1.0)
     occ = stage.get("occ")
-    if occ:
-        y = int(occ[0] * M)
-        x0 = int(occ[1] * M)
-        x1 = int(occ[2] * M)
+    for band in (occ if isinstance(occ, list) else ([occ] if occ else [])):
+        y = int(band[0] * MH)
+        x0 = int(band[1] * MW)
+        x1 = int(band[2] * MW)
         canvas.paste(bg.crop((x0, y, x1, MH)), (x0, y))
+    for a in sorted(stage.get("actors", []), key=lambda a: a["feet"]):
+        if a.get("depth") == "front":
+            puppet.draw(canvas, a, t)
     return grade(canvas.convert("RGB"), dark)
 
 
@@ -258,7 +265,8 @@ def camera(stage, u):
 
 
 def any_acting(stage):
-    return bool(stage.get("figs")) or isinstance(stage.get("dark"), (tuple, list))
+    return (bool(stage.get("figs")) or bool(stage.get("actors"))
+            or isinstance(stage.get("dark"), (tuple, list)))
 
 
 # --------------------------------------------------------------------------- textures

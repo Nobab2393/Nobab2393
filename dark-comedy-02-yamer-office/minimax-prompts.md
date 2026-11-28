@@ -76,6 +76,26 @@ Habib is tired, dry, unimpressed by his own death; he never raises his voice, no
 last scene does he sound like a person, when he says «আজ তো সময় হবে না। **কাল আসুন।**» The joke
 is in that warmth, so it must not be sarcastic.
 
+## The rig (why these shots move)
+
+In the render each character is a vector figure (`puppet.py`), not a still: shoulders, elbows, hips
+and head are pinned, and every line has its own pose keyframes in shot-relative seconds. Breathing
+(0.31 Hz) and a head sway (0.17 Hz) run continuously underneath, so nobody is ever frozen; the
+walking cycle in the corridor and the queue is a sine on the hip swing with the arms counter-swinging.
+
+| shot | what the body does |
+|---|---|
+| s1a | hand out to the file, neck scratched at «মরার পর বুঝলাম» |
+| s2a | both arms fold to the chest, knees bend, the torso folds — the heart attack |
+| s2c | walks away from camera, 0.85 steps a second |
+| s2e | right hand rises to the window and stays there |
+| s3a/s3d | the clerk slides a file through the window, twice; then stamps it twice |
+| s4a/s4c | hands pat the pockets, find nothing, hang |
+| s6a | hand to the face, **glasses off**, the smile arrives before the caption changes |
+| s6c | করিম চাচা stands at the old desk with his file, leaning slightly |
+| s7a/s7c | the same walk in the corridor, then standing very still in the dark |
+| s7e/s7f | at the shut counter, hands folded, head down, then up |
+
 ## Motion notes
 
 Almost still, all the way through — the comedy is bureaucratic:
