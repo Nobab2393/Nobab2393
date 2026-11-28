@@ -68,7 +68,8 @@ def view(shot, u):
     """The cropped frame, plus the mapping from plate fractions to screen pixels."""
     plate = background(shot["bg"], shot.get("flip", False))
     pw, ph = plate.size
-    cx, cy, z = camera(shot, u)
+    cx, cy, z = camera(shot, min(u, 1.0))
+    z = max(1.0, z)
     cw, ch = pw / z, ph / z
     x0 = min(max(cx * pw - cw / 2, 0), pw - cw)
     y0 = min(max(cy * ph - ch / 2, 0), ph - ch)
@@ -243,8 +244,8 @@ def A(who, fx, fy, fh, keys, **kw):
     return d
 
 
-EAR = dict(ik1=1, hx1=70, hy1=-780, phone=1)      # phone up at her ear
-CHEST = dict(ik1=1, hx1=112, hy1=-556, phone=1)    # phone low, held in both eyes' line
+EAR = dict(ik1=1, hx1=96, hy1=-806, phone=1)      # phone up at her ear, elbow out
+CHEST = dict(ik1=1, hx1=120, hy1=-600, phone=1)   # phone held low, screen up
 DOWN = dict(ik1=0)
 
 
@@ -259,7 +260,7 @@ SHOTS = {
                     (0.0, dict(CHEST, head=-6, eye=0.95, brow=0.4, mouth=-0.2)),
                     (4.0, dict(CHEST, head=8, eye=0.75, brow=0.8, mouth=-0.4)),
                     (8.0, dict(CHEST, head=-2, eye=0.9, brow=0.6, mouth=-0.2))])]),
-    "h02": dict(bg="window-rain", cam=((0.36, 0.63, 1.30), (0.36, 0.65, 1.42)), dark=0.92, rain=0.5,
+    "h02": dict(bg="window-rain", cam=((0.36, 0.61, 1.22), (0.36, 0.63, 1.32)), dark=0.92, rain=0.5,
                 actors=[A("anika", 0.36, 0.955, 0.62, [
                     (0.0, dict(EAR, head=4, eye=0.85, brow=0.8, mouth=-0.4)),
                     (4.5, dict(EAR, head=-4, eye=0.6, brow=1.0, mouth=-0.6))])]),
@@ -270,7 +271,7 @@ SHOTS = {
                 actors=[A("anika", 0.34, 0.965, 0.60, [
                     (0.0, dict(EAR, head=-4, eye=0.95, brow=0.7, mouth=-0.2)),
                     (5.0, dict(EAR, head=6, eye=0.8, brow=0.95, mouth=-0.5))])]),
-    "w03": dict(bg="window-rain", cam=((0.34, 0.66, 1.28), (0.34, 0.68, 1.40)), dark=0.9, rain=0.4,
+    "w03": dict(bg="window-rain", cam=((0.34, 0.63, 1.20), (0.34, 0.65, 1.30)), dark=0.9, rain=0.4,
                 actors=[A("anika", 0.34, 0.955, 0.62, [
                     (0.0, dict(EAR, head=-2, eye=0.75, brow=1.0, mouth=-0.6)),
                     (4.0, dict(EAR, head=3, eye=0.95, brow=0.7, mouth=-0.3))])]),
@@ -290,7 +291,7 @@ SHOTS = {
     "k01": dict(bg="window-rain", cam=((0.60, 0.40, 1.16), (0.58, 0.38, 1.30)), dark=0.92, rain=1.0),
     "k02": dict(bg="blanket", cam=((0.50, 0.50, 1.02), (0.48, 0.47, 1.18)), dark=0.95, warm=1.0),
     "k03": dict(bg="blanket", cam=((0.44, 0.56, 1.22), (0.42, 0.58, 1.36)), dark=0.95, warm=1.0),
-    "k04": dict(bg="window-rain", cam=((0.36, 0.63, 1.24), (0.34, 0.65, 1.38)), dark=0.94, rain=0.5,
+    "k04": dict(bg="window-rain", cam=((0.36, 0.60, 1.18), (0.34, 0.62, 1.28)), dark=0.94, rain=0.5,
                 actors=[A("anika", 0.36, 0.955, 0.62, [
                     (0.0, dict(ik1=1, hx1=16, hy1=-700, head=-2, eye=0.9, brow=0.2, mouth=0.8)),
                     (4.0, dict(ik1=1, hx1=16, hy1=-694, head=6, eye=0.75, brow=0.3, mouth=0.9))])]),
@@ -300,7 +301,7 @@ SHOTS = {
                 actors=[A("anika", 0.38, 0.955, 0.60, [
                     (0.0, dict(la=22, lb=16, head=-8, eye=0.8, brow=0.3, mouth=0.6)),
                     (4.0, dict(la=20, lb=18, head=4, eye=0.7, brow=0.4, mouth=0.8))])]),
-    "l02": dict(bg="window-rain", cam=((0.36, 0.64, 1.34), (0.36, 0.66, 1.46)), dark=0.92, rain=0.4,
+    "l02": dict(bg="window-rain", cam=((0.36, 0.61, 1.24), (0.36, 0.63, 1.34)), dark=0.92, rain=0.4,
                 actors=[A("anika", 0.36, 0.955, 0.62, [
                     (0.0, dict(la=20, lb=18, head=4, eye=0.6, brow=0.3, mouth=0.8)),
                     (4.0, dict(la=18, lb=20, head=-4, eye=0.15, brow=0.4, mouth=0.6))])]),
@@ -334,7 +335,7 @@ SHOTS = {
                                mouth=-0.5))])]),
     "r02": dict(bg="drawer", cam=((0.50, 0.50, 1.02), (0.46, 0.46, 1.20)), dark=0.95),
     "r03": dict(phone="old", dark=0.95),
-    "r04": dict(bg="study", cam=((0.44, 0.54, 1.20), (0.42, 0.56, 1.32)), dark=0.92,
+    "r04": dict(bg="study", cam=((0.44, 0.53, 1.12), (0.42, 0.55, 1.22)), dark=0.92,
                 actors=[A("anika", 0.40, 0.965, 0.60, [
                     (0.0, dict(CHEST, head=-2, eye=1.1, brow=1.0, mouth=-0.4)),
                     (4.0, dict(CHEST, head=-8, eye=1.15, brow=1.1, mouth=-0.6))])]),
@@ -350,12 +351,12 @@ SHOTS = {
                     (5.0, dict(la=4, ra=4, head=2, brow=0.0, mouth=-0.7, eye=0.8))])]),
 
     # 10 — and then the voice on the other end
-    "c01": dict(bg="study", cam=((0.40, 0.60, 1.28), (0.38, 0.62, 1.42)), dark=0.9,
+    "c01": dict(bg="study", cam=((0.40, 0.58, 1.14), (0.38, 0.60, 1.24)), dark=0.9,
                 actors=[A("anika", 0.36, 0.965, 0.60, [
                     (0.0, dict(EAR, head=2, eye=1.15, brow=1.0, mouth=-0.3)),
                     (4.0, dict(EAR, head=-4, eye=1.2, brow=1.2, mouth=-0.6))])]),
     "c02": dict(phone="live", dark=0.92),
-    "c03": dict(bg="study", cam=((0.36, 0.66, 1.38), (0.36, 0.68, 1.52)), dark=0.86,
+    "c03": dict(bg="study", cam=((0.36, 0.62, 1.20), (0.36, 0.64, 1.32)), dark=0.86,
                 actors=[A("anika", 0.34, 0.965, 0.60, [
                     (0.0, dict(EAR, head=-2, eye=1.1, brow=1.2, mouth=-0.7)),
                     (3.0, dict(EAR, head=0, eye=0.9, brow=1.2, mouth=-0.8))])]),
@@ -388,7 +389,11 @@ def frame_at(t, tl):
     s = shots[i]
     shot = SHOTS[s["id"]]
     dur = max(0.2, s["t1"] - s["t0"])
-    u = (t - s["t0"]) / dur
+    u = min(1.0, (t - s["t0"]) / dur)
+    # the tail after the last shot holds the frame and falls to black
+    fade = 1.0
+    if t > s["t1"]:
+        fade = max(0.0, 1.0 - (t - s["t1"]) / max(0.4, tl["black_at"] - s["t1"]))
 
     if shot.get("phone"):
         im = phone_screen(shot["phone"], t - s["t0"], dur)
@@ -412,7 +417,7 @@ def frame_at(t, tl):
         im = rain_layer(im, t, shot["rain"])
     dark0, dark1 = (shot["dark"], shot["dark"]) if isinstance(shot["dark"], float) \
         else shot["dark"]
-    dark = dark0 + (dark1 - dark0) * u
+    dark = (dark0 + (dark1 - dark0) * u) * fade
     return grain_and_vignette(im.convert("RGB"), dark=dark, warm=shot.get("warm", 0.0))
 
 

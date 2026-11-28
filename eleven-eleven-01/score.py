@@ -322,12 +322,13 @@ def narration_track(tl):
     tmp = os.path.join(BUILD, "sped.wav")
     for item in tl["narration"]:
         subprocess.run([ffmpeg(), "-y", "-v", "error", "-i", item["path"],
-                        "-filter:a", "atempo=%0.3f,highpass=f=70,acompressor=threshold=0.12:ratio=3"
-                                     ":attack=8:release=180" % tl["speed"],
+                        "-filter:a", "atempo=%0.3f,highpass=f=70,acompressor=threshold=0.12"
+                                     ":ratio=3:attack=8:release=180"
+                                     % item.get("speed", tl["speed"]),
                         "-ar", str(SR), "-ac", "1", tmp], check=True)
-        raw = subprocess.run([ffmpeg(), "-v", "quiet", "-i", tmp, "-f", "f32le", "-ac", "1",
+        raw = subprocess.run([ffmpeg(), "-v", "quiet", "-i", tmp, "-f", "s16le", "-ac", "1",
                               "-ar", str(SR), "-"], capture_output=True).stdout
-        x = np.frombuffer(raw, dtype=np.float32).copy()
+        x = np.frombuffer(raw, dtype=np.int16).astype(np.float32) / 32768
         x /= max(1e-6, np.abs(x).max()) / 0.92
         place(buf, x, item["at"], 1.0)
     return buf

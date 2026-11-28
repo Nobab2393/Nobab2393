@@ -17,18 +17,21 @@ import numpy as np
 import lines as L
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-AUDIO = os.path.join(HERE, "audio")
+AUDIO = os.path.join(HERE, "audio", "trim")
 BUILD = os.path.join(HERE, "build")
 
 FPS = 24
 SR = 48000
-PRE = 1.15            # rain and a title before the first word
+PRE = 1.05            # rain and a title before the first word
 GAP = 0.34            # the breath between beats — cuts may land here too
-SPEED = 1.10          # the read runs a touch long; 6 % is inaudible on a phone
+SPEED = 1.22          # fallback
+# per beat: the hook and the cliff run hot, the love letter is allowed to breathe
+SPEEDS = {"b01": 1.30, "b02": 1.24, "b03": 1.30, "b04": 1.16, "b05": 1.10,
+          "b06": 1.16, "b07": 1.22, "b08": 1.24, "b09": 1.26, "b10": 1.30}
 LEAD_IN = 0.10        # a hair of air in front of each line
-TAIL_SIL = 2.00       # the script's two seconds of silence before the last line lands
+TAIL_SIL = 1.50       # the script's two seconds of silence before the last line lands
 BEEP_GAP = 0.85       # line drops, beep, then black
-END_CARD = 3.90
+END_CARD = 3.60
 CARD_IN = 0.55        # the hook text comes on this long after the first word
 
 # beat -> [(fraction along the clip, shot id)] — the fraction is a wish; the snap makes it true
@@ -113,16 +116,18 @@ def build(verbose=True):
         if not os.path.exists(path):
             if not os.environ.get("PLAN_ALLOW_MISSING"):
                 raise SystemExit("missing %s — generate the narration first" % path)
+            sp = SPEEDS.get(beat["id"], SPEED)
             d = len(beat["text"]) / 10.4        # a stand-in, for laying out the cut only
             runs = [(d * 0.4, d * 0.55)]
         else:
-            d = duration(path) / SPEED
-            runs = [(a / SPEED, b / SPEED) for a, b in silences(load(path))]
+            sp = SPEEDS.get(beat["id"], SPEED)
+            d = duration(path) / sp
+            runs = [(a / sp, b / sp) for a, b in silences(load(path))]
         start = t + LEAD_IN
-        entry = dict(id=beat["id"], beat=beat["beat"], at=start, dur=d, path=path,
+        entry = dict(id=beat["id"], beat=beat["beat"], at=start, dur=d, path=path, speed=sp,
                      card=CARDS.get(beat["id"]))
         timeline.append(entry)
-        narration.append(dict(id=beat["id"], path=path, at=start, dur=d))
+        narration.append(dict(id=beat["id"], path=path, at=start, dur=d, speed=sp))
 
         # the cuts, snapped into the pauses, and never closer than a second to each other
         marks = [0.0]

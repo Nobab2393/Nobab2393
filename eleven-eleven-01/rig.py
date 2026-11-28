@@ -68,7 +68,7 @@ def two_bone(shoulder, target, r1=R_UPPER, r2=R_FORE, out=1.0):
     # two ways to fold; the elbow goes down and out, never up over her face
     cands = [(sx + math.cos(a + q * theta) * r1, sy + math.sin(a + q * theta) * r1)
              for q in (1, -1)]
-    ex, ey = max(cands, key=lambda c: c[1] * 0.6 + abs(c[0] - sx) * 0.4 * out)
+    ex, ey = max(cands, key=lambda c: abs(c[0] - sx) * 0.8 + c[1] * 0.2)
     # re-aim the forearm at the target from wherever the elbow landed
     hx, hy = sx + math.cos(a) * d, sy + math.sin(a) * d
     return (ex, ey), (hx, hy)

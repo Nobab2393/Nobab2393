@@ -44,9 +44,10 @@ def probe_video(path):
 
 
 def decode_audio(path):
-    raw = subprocess.run([ffmpeg(), "-v", "quiet", "-i", path, "-f", "f32le", "-ac", "1",
+    """s16, not f32: ffmpeg's float downmix scales stereo by 1.41 and reports a false peak."""
+    raw = subprocess.run([ffmpeg(), "-v", "quiet", "-i", path, "-f", "s16le", "-ac", "1",
                           "-ar", str(SR), "-"], capture_output=True).stdout
-    return np.frombuffer(raw, dtype=np.float32).copy()
+    return np.frombuffer(raw, dtype=np.int16).astype(np.float32) / 32768
 
 
 def env_db(x, t, win=0.06):
@@ -88,9 +89,11 @@ def main(video):
         clips[b["id"]] = P.silences(P.load(b["path"]))
 
     worst, bad = -999.0, 0
-    for s, prev in zip(tl["shots"][1:], tl["shots"]):
+    for s in tl["shots"][1:]:
         beat = next(b for b in tl["beats"] if b["id"] == s["beat"])
-        local = (s["t0"] - beat["at"]) * tl["speed"]        # back into un-sped clip time
+        local = (s["t0"] - beat["at"]) * beat.get("speed", tl["speed"])   # un-sped clip time
+        if local <= 0.08:
+            continue          # the first shot of a beat: its pause is the gap, not the clip
         x = P.load(beat["path"]) if beat["id"] not in clips else None
         runs = clips[beat["id"]]
         inside = any(a <= local <= b for a, b in runs)
@@ -103,7 +106,9 @@ def main(video):
 
     print("— lines start on the beat")
     mix = decode_audio(os.path.join(BUILD, "mix.wav"))
-    on = speech_onsets(mix)
+    import score as S
+    voice = S.narration_track(tl).mean(axis=1)   # the voice alone: no beds to trigger on
+    on = speech_onsets(voice)
     drift, miss = 0.0, 0
     for item in tl["narration"]:
         want = item["at"]
@@ -114,7 +119,7 @@ def main(video):
             continue
         drift = max(drift, abs(min(near, key=lambda o: abs(o - want)) - want))
     print("  %d lines · worst drift %+.0f ms · %d missing" % (len(tl["narration"]), drift * 1000, miss))
-    ok = ok and miss == 0 and drift < 0.12
+    ok = ok and miss == 0 and drift < 0.08
 
     print("— loudness")
     win = int(0.5 * SR)
